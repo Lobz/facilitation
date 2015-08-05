@@ -1,2 +1,2 @@
-# RubyLife
-A Ruby framework for species interaction IBMs
+# RcppLife
+A Rcpp framework for species interaction IBMs
