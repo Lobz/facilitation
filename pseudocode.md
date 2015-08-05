@@ -19,7 +19,7 @@ a ESPECIE possui {
 	KERNEL, kernel de disperção de sementes produzidas
 	POPULACAO, uma lista de INDIVIDUOS
 	ACUMULADO, soma dos LAMBDAS de todos os INDIVIDUOS
-
+}
 
 a ARENA possui {
 	ESPECIES, uma lista de espécies presentes nesta arena
