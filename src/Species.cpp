@@ -1,12 +1,15 @@
 #include"Species.hpp"
 
 
-Species::Species(double num){
+Species::Species(double num, Arena ar){
 	num_stages = num;
 	LG = (double*)malloc((num-1)*sizeof(double));
 	LR = (double*) malloc(num*sizeof(double));
 	LS = (double*)malloc(num*sizeof(double));
 	LRad = (double*)malloc(num*sizeof(double));
+
+	population = new DLL<Individual>;
+	arena = ar;
 }
 
 double Species::getG(int stage, double x, double y){

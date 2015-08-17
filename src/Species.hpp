@@ -25,6 +25,7 @@ class Species {
 	double getR(int stage, double x, double y);
 	double getS(int stage, double x, double y);
 	double getRad(int stage, double x, double y);
+	double getTotalRate();
 	void newIndividual(int stage, double x, double y);
 	void newIndividual(double x, double y);
 };
