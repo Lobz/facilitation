@@ -1,9 +1,10 @@
 #include<stdlib.h>
 
 class Arena {
-	array<Species> species;
+	Species *species;
+	int numberSpecies;
+	double width, height;
 
-	double **interactions;
 
 }
 
