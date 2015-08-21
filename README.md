@@ -1,2 +1,2 @@
 # RcppLife
-A Rcpp framework for species interaction IBMs
+A Rcpp framework for facilitation IBMs
