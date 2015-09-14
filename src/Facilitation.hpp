@@ -24,6 +24,7 @@ class Arena {
 
 class Species {
 	protected:
+	int id;
 	double G, R, S, Rad, facilitation;
 	double totalRate;
 
@@ -32,7 +33,7 @@ class Species {
 	Species *nextStage, *seedStage;
 
 	public:
-	Species(Arena *ar,double *par);
+	Species(Arena *ar,int id,double *par);
 	void setFacilitation(double f);
 
 	double getTotalRate();
