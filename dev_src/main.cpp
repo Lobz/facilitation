@@ -15,6 +15,7 @@ extern "C" int test_from_cin(){
 	std::cin >> num_stages;
 	std::cout << "supply width, height and facilitation parameter.\n";
 	std::cin >> w; std::cin >> h; std::cin >> fac;
+	std::cout << "facilitation parameter: " << fac << "\n";
 	std::cout << "supply N+1 parameter matrix in lines of 'G R S Radius'\n";
 	par = (double**)malloc((num_stages+1)*(sizeof(double*)));
 	for(i=0;i<num_stages+1;i++){
@@ -33,7 +34,7 @@ extern "C" int test_from_cin(){
 
 	std::cout << "arena populated!\n";
 
-	for(i=1;i<10;i++) {
+	for(i=1;i<1000;i++) {
 		std::cout << "Turn " << i << "\n";
 		arena->turn();
 		arena->print();

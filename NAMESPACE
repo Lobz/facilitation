@@ -1,2 +1,2 @@
-useDynLib(RcppLife, Cexample)
+useDynLib(Facilitation, test_from_cin)
 exportPattern("^[^\\.]")

@@ -1,12 +1,12 @@
 #include"Random.hpp"
 double Random(double max){
-	return max/2.0;
+	return rand()*max/(double)RAND_MAX;
 }
 
 bool Bernoulli(double p){
-	return true;
+	return Random(1) < p ;
 }
 
 double Exponential(double r){
-	return 1.0/r;
+	return Random(2/r);
 }

@@ -10,17 +10,17 @@ Arena::Arena(int lifestages, double **parameters, double facilitation, double wi
 	ratesList = (double*)malloc(lifestages*(sizeof(double)));
 
 	for(i=0;i<lifestages;i++){
-		stages[i] = new Species(this,parameters[i]);
+		stages[i] = new Species(this,i,parameters[i]);
 	}
+	facilitator = new Species(this,i,parameters[i]);
 
 	for(i=0;i<lifestages-1;i++){
-		stages[i]->setNextStage(stages[i]);
+		stages[i]->setNextStage(stages[i+1]);
 		stages[i]->setSeedStage(stages[0]);
 	}
+	stages[i]->setSeedStage(stages[0]);
 
 	stages[0]->setFacilitation(facilitation);
-
-	facilitator = new Species(this,parameters[i]);
 
 	totalTime = 0.0;
 
@@ -84,7 +84,7 @@ void Arena::print(){
 
 
 
-Species::Species(Arena *ar, double *par){
+Species::Species(Arena *ar,int id, double *par):id(id){
 	G = par[0];
 	R = par[1];
 	S = par[2];
@@ -102,6 +102,14 @@ void Species::setFacilitation(double f){
 }
 
 void Species::addIndividual(double x, double y){
+	if(G > 0 && nextStage==NULL) {
+		printf("WARNING: Next stage set to NULL but G > 0. Check input data. Id = %d. Parameters G=%f,R=%f,S=%f,Rad=%f\n", id,G,R,S,Rad);
+		exit(1);
+	}
+	if(R > 0 && seedStage==NULL) {
+		printf("WARNING: Seed stage set to NULL but R > 0. Check input data. Id = %d. Parameters G=%f,R=%f,S=%f,Rad=%f\n", id,G,R,S,Rad);
+		exit(1);
+	}
 	/*Individual *i =*/ new Individual(this,x,y);
 }
 
