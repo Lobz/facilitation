@@ -1,26 +1,102 @@
-#include"Species.hpp"
+#include"Facilitation.hpp"
+#include"Random.hpp"
 
 
-Species::Species(double num, Arena ar){
-	num_stages = num;
-	LG = (double*)malloc((num-1)*sizeof(double));
-	LR = (double*) malloc(num*sizeof(double));
-	LS = (double*)malloc(num*sizeof(double));
-	LRad = (double*)malloc(num*sizeof(double));
 
-	population = new DLL<Individual>;
+Species::Species(Arena *ar,int id, double *par):id(id){
+	G = par[0];
+	R = par[1];
+	D = par[2];
+	Rad = par[3];
+	facilitation = 0;
+	nextStage = NULL;
+	seedStage = NULL;
+
 	arena = ar;
+
 }
 
-double Species::getG(int stage, double x, double y){
-	return LG[stage];
+void Species::setFacilitation(double f){
+	facilitation = f;
 }
-double Species::getR(int stage, double x, double y){
-	return LR[stage];
+
+void Species::addIndividual(double x, double y){
+	if(G > 0 && nextStage==NULL) {
+		printf("WARNING: Next stage set to NULL but G > 0. Check input data. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f\n", id,G,R,D,Rad);
+		exit(1);
+	}
+	if(R > 0 && seedStage==NULL) {
+		printf("WARNING: Seed stage set to NULL but R > 0. Check input data. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f\n", id,G,R,D,Rad);
+		exit(1);
+	}
+	/*Individual *i =*/ new Individual(this,x,y);
 }
-double Species::getS(int stage, double x, double y){
-	return LS[stage];
+
+double Species::getTotalRate(){
+	double trate = 0;
+	std::list<Individual*>::iterator i;
+
+	for(i=population.begin();i!=population.end();i++){
+		trate += (*i)->getTotalRate();
+	}
+
+	return trate;
 }
-double Species::getRad(int stage, double x, double y){
-	return LRad[stage];
+
+bool Species::isPresent(double x, double y){
+	std::list<Individual*>::iterator i;
+
+	for(i=population.begin();i!=population.end();i++){
+		if((*i)->isPresent(x,y)) return true;
+	}
+
+	return false;
+}
+
+void Species::act(){
+	std::list<Individual*>::iterator i;
+	double r = Random(totalRate);
+
+	for(i=population.begin();i!=population.end();i++){
+		r -= (*i)->getTotalRate();
+		if(r < 0) {
+			(*i)->act();
+			return;
+		}
+	}
+}
+
+void Species::setNextStage(Species *st) {nextStage = st;}
+void Species::setSeedStage(Species *st) {seedStage = st;}
+
+
+void Species::remove(std::list<Individual*>::iterator i){
+	population.erase(i);
+}
+
+std::list<Individual*>::iterator Species::add(Individual *i){
+	population.push_front(i);
+	return population.begin();
+}
+
+Species* Species::getSeedStage() {return seedStage;}
+Species* Species::getNextStage() {return nextStage;}
+double Species::getG(){return G;}
+double Species::getR(){return R;}
+double Species::getRad(){return Rad;}
+double Species::getD(double x, double y){
+	if(facilitation != 0 && arena->findFacilitator(x,y)){
+		return D-facilitation;
+	}
+	else return D;
+}
+
+void Species::print(){
+	std::list<Individual*>::iterator i;
+
+	std::cout << population.size() << "\n";
+
+	for(i=population.begin();i!=population.end();i++){
+		(*i)->print();
+	}
 }

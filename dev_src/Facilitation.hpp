@@ -2,12 +2,15 @@
 #include<cstdlib>
 #include<iostream>
 
+#ifndef FACILITATION_H
+#define FACILITATON_H
+
 class Species;
 class Individual;
 
 class Arena {
 	private:
-	int lifestages;
+	int lifestages,spnum;
 	double width, height;
 	double totalRate, *ratesList, totalTime;
 	Species **stages;
@@ -16,7 +19,7 @@ class Arena {
 	public:
 	Arena(int lifestages, double **baserates, double facilitation, double width, double height);
 	void populate(int *stagesinit);
-	void turn();
+	bool turn();
 	bool findFacilitator(double x, double y);
 	void print();
 
@@ -25,7 +28,7 @@ class Arena {
 class Species {
 	protected:
 	int id;
-	double G, R, S, Rad, facilitation;
+	double G, R, D, Rad, facilitation;
 	double totalRate;
 
 	Arena *arena;
@@ -39,7 +42,7 @@ class Species {
 	double getTotalRate();
 	double getG();
 	double getR();
-	double getS(double x, double y);
+	double getD(double x, double y);
 	double getRad();
 	Species* getNextStage();
 	Species* getSeedStage();
@@ -60,7 +63,7 @@ class Species {
 
 class Individual {
 	private:
-	double R, S, G, x, y, Rad, SqRad;
+	double R, D, G, x, y, Rad, SqRad;
 	double totalRate;
 	int id;
 	Species *species, *seedStage;
@@ -84,4 +87,4 @@ class Individual {
 
 
 
-
+#endif
