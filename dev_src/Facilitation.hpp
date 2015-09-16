@@ -21,7 +21,7 @@ class Arena {
 	Arena(int lifestages, double **baserates, double facilitation, double width, double height);
 	void populate(int *stagesinit);
 	bool turn();
-	bool findFacilitator(double x, double y);
+	bool findFacilitator(Position p);
 	void print();
 
 };
@@ -43,14 +43,17 @@ class Species {
 	double getTotalRate();
 	double getG();
 	double getR();
-	double getD(double x, double y);
+	double getD(Position p);
 	double getRad();
 	Species* getNextStage();
 	Species* getSeedStage();
 
-	bool isPresent(double x, double y);
+	bool isPresent(Position p);
 	void addIndividual(double x, double y);
+	void addIndividual(Position p);	
 	void disperseIndividual(double x, double y);
+	void disperseIndividual(Position p);	
+	Position dispersalKernel();
 	void act();
 
 	void setNextStage(Species *st);
@@ -65,16 +68,18 @@ class Species {
 
 class Individual {
 	private:
-	double R, D, G, x, y, Rad, SqRad;
+	double R, D, G, Rad, SqRad;
+	Position p;
 	double totalRate;
 	int id;
 	Species *species, *seedStage;
 	std::list<Individual*>::iterator ref;
 
 	public:
+	Individual(Species *sp, Position p);
 	Individual(Species *sp, double x, double y);
 	double getTotalRate();
-	bool isPresent(double x, double y);
+	bool isPresent(Position p);
 	void print();
 	void act();
 

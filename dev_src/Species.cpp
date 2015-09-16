@@ -32,15 +32,23 @@ void Species::addIndividual(double x, double y){
 	/*Individual *i =*/ new Individual(this,x,y);
 }
 
+void Species::addIndividual(Position p){
+	addIndividual(p.x,p.y);
+}
+
 void Species::disperseIndividual(double x, double y){
-	/*Position p = dispersionKernel();
-	p.x += x;
-	p.y += y;
-	addIndividual(p.x,p.y);*/
+	Position p(x,y);
+	disperseIndividual(p);
 }
 	
+void Species::disperseIndividual(Position p){
+	addIndividual(p + dispersalKernel());
+}
 
-
+Position Species::dispersalKernel(){
+	Position p(Random(2) -1, Random(2) -1);
+	return p;
+}
 
 double Species::getTotalRate(){
 	double trate = 0;
@@ -53,11 +61,11 @@ double Species::getTotalRate(){
 	return trate;
 }
 
-bool Species::isPresent(double x, double y){
+bool Species::isPresent(Position p){
 	std::list<Individual*>::iterator i;
 
 	for(i=population.begin();i!=population.end();i++){
-		if((*i)->isPresent(x,y)) return true;
+		if((*i)->isPresent(p)) return true;
 	}
 
 	return false;
@@ -94,8 +102,8 @@ Species* Species::getNextStage() {return nextStage;}
 double Species::getG(){return G;}
 double Species::getR(){return R;}
 double Species::getRad(){return Rad;}
-double Species::getD(double x, double y){
-	if(facilitation != 0 && arena->findFacilitator(x,y)){
+double Species::getD(Position p){
+	if(facilitation != 0 && arena->findFacilitator(p)){
 		return D-facilitation;
 	}
 	else return D;

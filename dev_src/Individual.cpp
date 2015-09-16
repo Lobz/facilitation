@@ -2,15 +2,18 @@
 #include"Facilitation.hpp"
 #include"Random.hpp"
 
-	Individual::Individual(Species *sp, double x, double y) :x(x), y(y) {
-	setSpecies(sp);
-}
+	Individual::Individual(Species *sp, double x, double y) : p(x,y){
+		setSpecies(sp);
+	}
+	Individual::Individual(Species *sp, Position p) : p(p){
+		setSpecies(sp);
+	}
 
 void	Individual::setSpecies(Species *sp) {
 	species = sp;
 	G = species->getG();
 	R = species->getR();
-	D = species->getD(x,y);
+	D = species->getD(p);
 	Rad = species->getRad();
 	SqRad = Rad*Rad;
 	seedStage = species->getSeedStage();
@@ -19,12 +22,13 @@ void	Individual::setSpecies(Species *sp) {
 
 double Individual::getTotalRate(){
 
-	D = species->getD(x,y);
+	D = species->getD(p);
 	return G+R+D;
 }
 
-bool   Individual::isPresent(double x2, double y2){
-	if((x-x2)*(x-x2) + (y-y2)*(y-y2) < SqRad) return true;
+bool   Individual::isPresent(Position p2){
+	p2 -= p;
+	if((p2.x)*(p2.x) + (p2.y)*(p2.y) < SqRad) return true;
 	else return false;
 }
 
@@ -40,7 +44,7 @@ void   Individual::act(){
 }
 
 void Individual::print(){
-	std::cout <<  " in " << x << "," << y << "\n";
+	std::cout <<  " in " << p.x << "," << p.y << "\n";
 }
 
 void 	Individual::grow(){
@@ -49,7 +53,7 @@ void 	Individual::grow(){
 }
 
 void	Individual::reproduce(){
-	seedStage->disperseIndividual(x,y);
+	seedStage->disperseIndividual(p);
 }
 
 void 	Individual::die(){

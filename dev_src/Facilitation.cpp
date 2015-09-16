@@ -64,8 +64,8 @@ bool Arena::turn() {
 
 }
 
-bool Arena::findFacilitator(double x, double y){
-	return facilitator->isPresent(x,y);
+bool Arena::findFacilitator(Position p){
+	return facilitator->isPresent(p);
 }
 
 void Arena::print(){
