@@ -49,7 +49,7 @@ void 	Individual::grow(){
 }
 
 void	Individual::reproduce(){
-	seedStage->addIndividual(x,y);
+	seedStage->disperseIndividual(x,y);
 }
 
 void 	Individual::die(){

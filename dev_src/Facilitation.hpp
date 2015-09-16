@@ -1,6 +1,7 @@
 #include<list>
 #include<cstdlib>
 #include<iostream>
+#include"Position.hpp"
 
 #ifndef FACILITATION_H
 #define FACILITATON_H
@@ -49,6 +50,7 @@ class Species {
 
 	bool isPresent(double x, double y);
 	void addIndividual(double x, double y);
+	void disperseIndividual(double x, double y);
 	void act();
 
 	void setNextStage(Species *st);

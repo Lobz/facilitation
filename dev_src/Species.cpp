@@ -32,6 +32,16 @@ void Species::addIndividual(double x, double y){
 	/*Individual *i =*/ new Individual(this,x,y);
 }
 
+void Species::disperseIndividual(double x, double y){
+	/*Position p = dispersionKernel();
+	p.x += x;
+	p.y += y;
+	addIndividual(p.x,p.y);*/
+}
+	
+
+
+
 double Species::getTotalRate(){
 	double trate = 0;
 	std::list<Individual*>::iterator i;
