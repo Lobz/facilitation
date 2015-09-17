@@ -37,14 +37,10 @@ void   Individual::act(){
 	if(r < G) grow();
 	else if (r < G+R) reproduce();
 	else die();
-
-	/* Print when acting */
-	std::cout << "Acting: ";
-	print();
 }
 
 void Individual::print(){
-	std::cout <<  " in " << p.x << "," << p.y << "\n";
+	std::cout <<  ", " << p.x << "," << p.y << "\n";
 }
 
 void 	Individual::grow(){

@@ -115,6 +115,7 @@ void Species::print(){
 	std::cout << population.size() << "\n";
 
 	for(i=population.begin();i!=population.end();i++){
+		std::cout << id;
 		(*i)->print();
 	}
 }
