@@ -44,7 +44,7 @@ bool Arena::turn() {
 	}
 
 	if(totalRate == 0) {
-		std::cout << "This simulation has reached a stable state (totalRate = 0).\n";
+		std::cout << "#This simulation has reached a stable state (totalRate = 0).\n";
 		return false;
 	}
 
@@ -70,11 +70,11 @@ bool Arena::findFacilitator(Position p){
 
 void Arena::print(){
 	int i;
-	std::cout 	<< "Current status:\nTime: " << totalTime;
+	std::cout 	<< "\n#Current status:\n#Time: " << totalTime;
 	for(i=0;i<lifestages;i++){
-		std::cout << "\nStage " << i << ":\n";
-		stages[i]->print();
+		std::cout << "\n#Stage " << i << ":\n";
+		stages[i]->print(totalTime);
 	}
-	std::cout << "\nFacilitators:\n";
-	facilitator->print();
+	std::cout << "\n#Facilitators:\n";
+	facilitator->print(totalTime);
 }

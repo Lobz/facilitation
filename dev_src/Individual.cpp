@@ -2,10 +2,12 @@
 #include"Facilitation.hpp"
 #include"Random.hpp"
 
-	Individual::Individual(Species *sp, double x, double y) : p(x,y){
+unsigned long Individual::id_MAX = 0;
+
+	Individual::Individual(Species *sp, double x, double y) : p(x,y), id(id_MAX++){
 		setSpecies(sp);
 	}
-	Individual::Individual(Species *sp, Position p) : p(p){
+	Individual::Individual(Species *sp, Position p) : p(p), id(id_MAX++){
 		setSpecies(sp);
 	}
 
@@ -40,7 +42,7 @@ void   Individual::act(){
 }
 
 void Individual::print(){
-	std::cout <<  ", " << p.x << "," << p.y << "\n";
+	std::cout << id <<  "," << p.x << "," << p.y << "\n";
 }
 
 void 	Individual::grow(){

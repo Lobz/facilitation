@@ -62,16 +62,17 @@ class Species {
 	void remove(std::list<Individual*>::iterator i);
 	std::list<Individual*>::iterator add(Individual *i);
 
-	void print();
+	void print(double time);
 };
 
 
 class Individual {
 	private:
-	double R, D, G, Rad, SqRad;
+	static unsigned long id_MAX;
 	Position p;
+	const unsigned long id;
+	double R, D, G, Rad, SqRad;
 	double totalRate;
-	int id;
 	Species *species, *seedStage;
 	std::list<Individual*>::iterator ref;
 

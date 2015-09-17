@@ -109,13 +109,13 @@ double Species::getD(Position p){
 	else return D;
 }
 
-void Species::print(){
+void Species::print(double time){
 	std::list<Individual*>::iterator i;
 
-	std::cout << population.size() << "\n";
+	std::cout << "#" << population.size() << "\n";
 
 	for(i=population.begin();i!=population.end();i++){
-		std::cout << id;
+		std::cout << time << "," << id << ",";
 		(*i)->print();
 	}
 }
