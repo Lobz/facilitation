@@ -1,4 +1,4 @@
-Package: Facilitation
+Package: facilitation
 Title: A C++ Framework for Species Interaction IBMs
 Version: 0.0.1
 Authors@R: c(person("Mali", "Salles", email = "marinacs@gmail.com", role = c("aut", "cre")),

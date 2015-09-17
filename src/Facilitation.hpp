@@ -1,13 +1,17 @@
 #include<list>
 #include<cstdlib>
 #include<iostream>
+#include"Position.hpp"
+
+#ifndef FACILITATION_H
+#define FACILITATON_H
 
 class Species;
 class Individual;
 
 class Arena {
 	private:
-	int lifestages;
+	int lifestages,spnum;
 	double width, height;
 	double totalRate, *ratesList, totalTime;
 	Species **stages;
@@ -16,8 +20,8 @@ class Arena {
 	public:
 	Arena(int lifestages, double **baserates, double facilitation, double width, double height);
 	void populate(int *stagesinit);
-	void turn();
-	bool findFacilitator(double x, double y);
+	bool turn();
+	bool findFacilitator(Position p);
 	void print();
 
 };
@@ -25,7 +29,7 @@ class Arena {
 class Species {
 	protected:
 	int id;
-	double G, R, S, Rad, facilitation;
+	double G, R, D, Rad, facilitation;
 	double totalRate;
 
 	Arena *arena;
@@ -39,13 +43,17 @@ class Species {
 	double getTotalRate();
 	double getG();
 	double getR();
-	double getS(double x, double y);
+	double getD(Position p);
 	double getRad();
 	Species* getNextStage();
 	Species* getSeedStage();
 
-	bool isPresent(double x, double y);
+	bool isPresent(Position p);
 	void addIndividual(double x, double y);
+	void addIndividual(Position p);	
+	void disperseIndividual(double x, double y);
+	void disperseIndividual(Position p);	
+	Position dispersalKernel();
 	void act();
 
 	void setNextStage(Species *st);
@@ -54,22 +62,25 @@ class Species {
 	void remove(std::list<Individual*>::iterator i);
 	std::list<Individual*>::iterator add(Individual *i);
 
-	void print();
+	void print(double time);
 };
 
 
 class Individual {
 	private:
-	double R, S, G, x, y, Rad, SqRad;
+	static unsigned long id_MAX;
+	Position p;
+	const unsigned long id;
+	double R, D, G, Rad, SqRad;
 	double totalRate;
-	int id;
 	Species *species, *seedStage;
 	std::list<Individual*>::iterator ref;
 
 	public:
+	Individual(Species *sp, Position p);
 	Individual(Species *sp, double x, double y);
 	double getTotalRate();
-	bool isPresent(double x, double y);
+	bool isPresent(Position p);
 	void print();
 	void act();
 
@@ -84,4 +95,4 @@ class Individual {
 
 
 
-
+#endif
