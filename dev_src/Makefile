@@ -17,7 +17,7 @@ debug: main
 	gdb main
 
 run: main
-	./main < input.txt
+	./main 
 
 clean:
 	rm $(objects)

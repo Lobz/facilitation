@@ -1,7 +1,11 @@
 #include"Facilitation.hpp"
 #include<iostream>
+#include<fstream>
+#include<string>
 
-extern "C" int test_from_cin(){
+extern "C" int test_from_file(std::string filename){
+
+	std::ifstream inputfile;
 
 	int num_stages, h, w, i, *init;
 	double fac, **par;
@@ -10,23 +14,23 @@ extern "C" int test_from_cin(){
 
 	srand(1975659);
 
-	std::cout << "#Hello!\n";
+	inputfile.open(filename);
 	
 	std::cout << "#how many stages?\n";
-	std::cin >> num_stages;
+	inputfile >> num_stages;
 	std::cout << "#supply width, height and facilitation parameter.\n";
-	std::cin >> w; std::cin >> h; std::cin >> fac;
+	inputfile >> w; inputfile >> h; inputfile >> fac;
 	std::cout << "#facilitation parameter: " << fac << "\n";
 	std::cout << "#supply N+1 parameter matrix in lines of 'G R D Radius'\n";
 	par = (double**)malloc((num_stages+1)*(sizeof(double*)));
 	for(i=0;i<num_stages+1;i++){
 		par[i] = (double*)malloc(4*(sizeof(double)));
-		std::cin >> par[i][0]; std::cin >> par[i][1]; std::cin >> par[i][2]; std::cin >> par[i][3];
+		inputfile >> par[i][0]; inputfile >> par[i][1]; inputfile >> par[i][2]; inputfile >> par[i][3];
 	}
 	std::cout << "#supply initial populations\n";
 	init = (int*)malloc((num_stages+1)*(sizeof(int)));
 	for(i=0;i<num_stages+1;i++){
-		std::cin >>init[i];
+		inputfile >>init[i];
 	}
 	std::cout << "#okay!\n";
 
@@ -41,6 +45,8 @@ extern "C" int test_from_cin(){
 		arena->print();
 		test = arena->turn();
 	}
+
+	inputfile.close();
 
 	return 0;
 

@@ -2,6 +2,7 @@
 
 int main(){
 
-	test_from_cin(); 
+	test_from_file("input.txt");
+
 	return 0;
 }
