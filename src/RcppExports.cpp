@@ -16,3 +16,18 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// test_parameter
+int test_parameter(Rcpp::NumericVector parameters, double w, double h, int nb, int nf);
+RcppExport SEXP facilitation_test_parameter(SEXP parametersSEXP, SEXP wSEXP, SEXP hSEXP, SEXP nbSEXP, SEXP nfSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type parameters(parametersSEXP);
+    Rcpp::traits::input_parameter< double >::type w(wSEXP);
+    Rcpp::traits::input_parameter< double >::type h(hSEXP);
+    Rcpp::traits::input_parameter< int >::type nb(nbSEXP);
+    Rcpp::traits::input_parameter< int >::type nf(nfSEXP);
+    __result = Rcpp::wrap(test_parameter(parameters, w, h, nb, nf));
+    return __result;
+END_RCPP
+}
