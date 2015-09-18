@@ -1,2 +1,2 @@
 # facilitation
-A R/cpp framework for facilitation IBMs
+A Rcpp framework for facilitation IBMs
