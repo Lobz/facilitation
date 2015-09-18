@@ -5,14 +5,14 @@
 
 using namespace Rcpp;
 
-// r_test
-RcppExport SEXP r_test(SEXP a);
-RcppExport SEXP facilitation_r_test(SEXP aSEXP) {
+// test_basic
+int test_basic(std::string filename);
+RcppExport SEXP facilitation_test_basic(SEXP filenameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< SEXP >::type a(aSEXP);
-    __result = Rcpp::wrap(r_test(a));
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    __result = Rcpp::wrap(test_basic(filename));
     return __result;
 END_RCPP
 }

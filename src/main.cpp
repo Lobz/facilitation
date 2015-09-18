@@ -4,6 +4,7 @@
 #include<string>
 #include<Rcpp.h>
 
+// [[Rcpp::export]]
 int test_basic(std::string filename){
 
 	std::ifstream inputfile;
@@ -56,10 +57,3 @@ int test_basic(std::string filename){
 	return 0;
 
 }
-
-// [[Rcpp::export]]
-RcppExport SEXP r_test(SEXP a) {
-	std::string filename = Rcpp::as<std::string>(a);
-	return Rcpp::wrap(test_basic(filename));
-}
-
