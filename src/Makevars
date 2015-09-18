@@ -1,0 +1,3 @@
+
+CXX11FLAGS += -Wall -pedantic
+CXX_STD = CXX11

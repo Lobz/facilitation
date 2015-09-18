@@ -2,7 +2,7 @@
 
 int main(){
 
-	test_from_file("input.txt");
+	test_basic("input.txt");
 
 	return 0;
 }

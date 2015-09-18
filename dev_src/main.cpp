@@ -3,7 +3,7 @@
 #include<fstream>
 #include<string>
 
-extern "C" int test_from_file(std::string filename){
+extern "C" int test_basic(std::string filename){
 
 	std::ifstream inputfile;
 

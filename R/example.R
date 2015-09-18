@@ -3,7 +3,7 @@ example <- function (x) {
   print("Sample R function")
 }
 
-testin <- function() {
-	.Call(test_from_cin)
+test_ <- function(inputfile) {
+	.Call(r_test,inputfile)
 	print("End testing function")
 }

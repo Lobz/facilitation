@@ -1,2 +1,2 @@
-useDynLib(facilitation, test_from_cin)
+useDynLib(facilitation)
 exportPattern("^[^\\.]")
