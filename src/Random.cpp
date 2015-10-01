@@ -1,6 +1,8 @@
 #include"Random.hpp"
+#include<Rcpp.h>
+
 double Random(double max){
-	return rand()*max/(double)RAND_MAX;
+	return Rcpp::as<double>(Rcpp::runif(1,0,max));
 }
 
 bool Bernoulli(double p){
@@ -8,5 +10,6 @@ bool Bernoulli(double p){
 }
 
 double Exponential(double r){
-	return Random(2/r);
+	Rcpp::NumericVector s = Rcpp::rexp(1,r);
+	return Rcpp::as<double>(s);
 }

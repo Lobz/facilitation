@@ -1,13 +1,18 @@
 #include<list>
 #include<cstdlib>
 #include<iostream>
+#include<array>
 #include"Position.hpp"
+#include<Rcpp.h>
 
 #ifndef FACILITATION_H
 #define FACILITATON_H
 
 class Species;
 class Individual;
+
+typedef std::array<double,4> status_line;
+typedef std::list<status_line> status_list;
 
 class Arena {
 	private:
@@ -24,11 +29,12 @@ class Arena {
 	bool findFacilitator(Position p);
 	void print();
 
+	status_list getStatus();
 };
 
 class Species {
-	protected:
-	int id;
+	private:
+	unsigned int id;
 	double G, R, D, Rad, facilitation;
 	double totalRate;
 
@@ -45,6 +51,7 @@ class Species {
 	double getR();
 	double getD(Position p);
 	double getRad();
+	unsigned int getId();
 	Species* getNextStage();
 	Species* getSeedStage();
 
@@ -63,6 +70,8 @@ class Species {
 	std::list<Individual*>::iterator add(Individual *i);
 
 	void print(double time);
+
+	status_list getStatus();
 };
 
 
@@ -83,6 +92,8 @@ class Individual {
 	bool isPresent(Position p);
 	void print();
 	void act();
+	
+	status_line getStatus();
 
 	private:
 	void setSpecies(Species *sp);

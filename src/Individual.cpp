@@ -45,6 +45,12 @@ void Individual::print(){
 	std::cout << id <<  "," << p.x << "," << p.y << "\n";
 }
 
+status_line Individual::getStatus(){
+	/* NOTE: on changing this type please change the typedef on Facilitation.hpp */
+	status_line ret  = {species->getId(),id,p.x,p.y};
+	return ret;
+}
+
 void 	Individual::grow(){
 	species->remove(this->ref);
 	setSpecies(species->getNextStage());

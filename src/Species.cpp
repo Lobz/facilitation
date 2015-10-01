@@ -103,6 +103,7 @@ Species* Species::getNextStage() {return nextStage;}
 double Species::getG(){return G;}
 double Species::getR(){return R;}
 double Species::getRad(){return Rad;}
+unsigned int Species::getId(){return id;}
 double Species::getD(Position p){
 	if(facilitation != 0 && arena->findFacilitator(p)){
 		return D-facilitation;
@@ -119,4 +120,14 @@ void Species::print(double time){
 		std::cout << time << "," << id << ",";
 		(*i)->print();
 	}
+}
+
+status_list Species::getStatus(){
+	status_list status;
+	std::list<Individual*>::iterator i;
+
+	for(i=population.begin();i!=population.end();i++){
+		status.push_front((*i)->getStatus());
+	}
+	return status;
 }

@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // test_basic
-int test_basic(std::string filename);
+Rcpp::List test_basic(std::string filename);
 RcppExport SEXP facilitation_test_basic(SEXP filenameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
@@ -17,7 +17,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // test_parameter
-int test_parameter(Rcpp::NumericVector parameters, double w, double h, int nb, int nf);
+Rcpp::List test_parameter(Rcpp::NumericVector parameters, double w, double h, int nb, int nf);
 RcppExport SEXP facilitation_test_parameter(SEXP parametersSEXP, SEXP wSEXP, SEXP hSEXP, SEXP nbSEXP, SEXP nfSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;

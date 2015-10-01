@@ -78,3 +78,12 @@ void Arena::print(){
 	std::cout << "\n#Facilitators:\n";
 	facilitator->print(totalTime);
 }
+
+status_list Arena::getStatus(){
+	int i;
+	status_list status;
+	for(i=0;i<spnum;i++){
+		status.splice(status.end(),stages[i]->getStatus());
+	}
+	return status;
+}

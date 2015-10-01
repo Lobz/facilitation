@@ -1,45 +1,45 @@
+
 #include"Facilitation.hpp"
 #include<iostream>
 #include<fstream>
 #include<string>
 #include<Rcpp.h>
 
-int run_tests(int num_stages, double **par, double fac, double w, double h, int *init){
+status_list run_tests(int num_stages, double **par, double fac, double w, double h, int *init){
 	int i;
 	bool test=true;
 	Arena *arena;
 
-	srand(1975659);
 	arena = new Arena(num_stages,par,fac,w,h);
 	arena->populate(init);
 
 	std::cout << "#arena populated!\n";
 	std::cout << "time,species,individual,x,y\n";
 
-	for(i=1;i<1000 && test;i++) {
+	for(i=1;i<4 && test;i++) {
 		std::cout << "#Turn " << i << "\n";
 		arena->print();
 		test = arena->turn();
 	}
 
 
-	return 0;
+	return arena->getStatus();
 }
 
 // [[Rcpp::export]]
-int test_basic(std::string filename){
+Rcpp::List test_basic(std::string filename){
 
+	Rcpp::List ret;
 	std::ifstream inputfile;
 
 	int num_stages, h, w, i, *init;
 	double fac, **par;
 
-	srand(1975659);
 
 	inputfile.open(filename);
 	if(!inputfile) {
 		std::cout << "#file \""<< filename << "\"not found\n";
-		return 0;
+		return NULL;
 	}
 	
 	std::cout << "#how many stages?\n";
@@ -61,20 +61,24 @@ int test_basic(std::string filename){
 	inputfile.close();
 	std::cout << "#okay!\n";
 
-	return run_tests(num_stages,par,fac,w,h, init);
+	ret =  run_tests(num_stages,par,fac,w,h, init);
+
+	return Rcpp::as<Rcpp::List>(ret);
 
 }
 
 // [[Rcpp::export]]
-int test_parameter(Rcpp::NumericVector parameters, double w, double h, int nb, int nf){
+Rcpp::List test_parameter(Rcpp::NumericVector parameters, double w, double h, int nb, int nf){
 	double **par;
 	int *init;
+	Rcpp::List ret;
 	par = (double**)malloc(sizeof(double*));
 	par[1] = par[0] = parameters.begin();
 	init = (int*)malloc(2*sizeof(int));
 	init[0]=nb; init[1]=nf;
 
-	return run_tests(1,par,0.1,w,h,init);
+	ret = run_tests(1,par,0.1,w,h,init);
 
+	return Rcpp::as<Rcpp::List>(ret);
 }
 
