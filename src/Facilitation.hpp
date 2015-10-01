@@ -3,7 +3,6 @@
 #include<iostream>
 #include<array>
 #include"Position.hpp"
-#include<Rcpp.h>
 
 #ifndef FACILITATION_H
 #define FACILITATON_H
