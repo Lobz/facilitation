@@ -5,10 +5,11 @@
 #include<string>
 #include<Rcpp.h>
 
-status_list run_tests(int num_stages, double **par, double fac, double w, double h, int *init){
+Rcpp::List run_tests(int num_stages, double **par, double fac, double w, double h, int *init){
 	int i;
 	bool test=true;
 	Arena *arena;
+	Rcpp::List ret;
 
 	arena = new Arena(num_stages,par,fac,w,h);
 	arena->populate(init);
@@ -16,27 +17,29 @@ status_list run_tests(int num_stages, double **par, double fac, double w, double
 	std::cout << "#arena populated!\n";
 	std::cout << "time,species,individual,x,y\n";
 
-	for(i=1;i<4 && test;i++) {
+	for(i=1;i<100 && test;i++) {
 		std::cout << "#Turn " << i << "\n";
 		arena->print();
 		test = arena->turn();
+		ret.push_front(arena->getStatus());
 	}
 
 
-	return arena->getStatus();
+	return ret;
 }
 
 // [[Rcpp::export]]
-Rcpp::List test_basic(std::string filename){
+Rcpp::List test_basic(std::string filename,std::string outfilename){
 
 	Rcpp::List ret;
-	std::ifstream inputfile;
+	std::ifstream inputfile(filename);
+	std::ofstream outputfile(outfilename);
+	auto coutbuf = std::cout.rdbuf(outputfile.rdbuf()); //save and redirect output
 
 	int num_stages, h, w, i, *init;
 	double fac, **par;
 
 
-	inputfile.open(filename);
 	if(!inputfile) {
 		std::cout << "#file \""<< filename << "\"not found\n";
 		return NULL;
@@ -61,9 +64,11 @@ Rcpp::List test_basic(std::string filename){
 	inputfile.close();
 	std::cout << "#okay!\n";
 
-	ret =  run_tests(num_stages,par,fac,w,h, init);
+	ret = run_tests(num_stages,par,fac,w,h, init);
 
-	return Rcpp::as<Rcpp::List>(ret);
+	std::cout.rdbuf(coutbuf); //reset to standard output again
+
+	return ret;
 
 }
 

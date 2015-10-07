@@ -6,13 +6,14 @@
 using namespace Rcpp;
 
 // test_basic
-Rcpp::List test_basic(std::string filename);
-RcppExport SEXP facilitation_test_basic(SEXP filenameSEXP) {
+Rcpp::List test_basic(std::string filename, std::string outfilename);
+RcppExport SEXP facilitation_test_basic(SEXP filenameSEXP, SEXP outfilenameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
-    __result = Rcpp::wrap(test_basic(filename));
+    Rcpp::traits::input_parameter< std::string >::type outfilename(outfilenameSEXP);
+    __result = Rcpp::wrap(test_basic(filename, outfilename));
     return __result;
 END_RCPP
 }

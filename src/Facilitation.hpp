@@ -10,7 +10,7 @@
 class Species;
 class Individual;
 
-typedef std::array<double,4> status_line;
+typedef std::list<double> status_line;
 typedef std::list<status_line> status_list;
 
 class Arena {
@@ -70,7 +70,7 @@ class Species {
 
 	void print(double time);
 
-	status_list getStatus();
+	status_list getStatus(double time);
 };
 
 

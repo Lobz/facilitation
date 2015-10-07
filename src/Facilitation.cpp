@@ -83,7 +83,7 @@ status_list Arena::getStatus(){
 	int i;
 	status_list status;
 	for(i=0;i<spnum;i++){
-		status.splice(status.end(),stages[i]->getStatus());
+		status.splice(status.end(),stages[i]->getStatus(totalTime));
 	}
 	return status;
 }

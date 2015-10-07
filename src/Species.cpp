@@ -122,12 +122,15 @@ void Species::print(double time){
 	}
 }
 
-status_list Species::getStatus(){
+status_list Species::getStatus(double time){
 	status_list status;
+	status_line line;
 	std::list<Individual*>::iterator i;
 
 	for(i=population.begin();i!=population.end();i++){
-		status.push_front((*i)->getStatus());
+		line = (*i)->getStatus();
+		line.push_front(time);
+		status.push_front(line);
 	}
 	return status;
 }
