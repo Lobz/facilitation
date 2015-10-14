@@ -3,9 +3,11 @@
 #include<iostream>
 #include<array>
 #include"Position.hpp"
+#include<Rcpp.h>
 
 #ifndef FACILITATION_H
 #define FACILITATON_H
+#define FACILITATION_NUMPARAMETERS 4
 
 class Species;
 class Individual;
@@ -22,7 +24,7 @@ class Arena {
 	Species *facilitator;
 
 	public:
-	Arena(int lifestages, double **baserates, double facilitation, double width, double height);
+	Arena(int lifestages, double * baserates, double facilitation, double width, double height);
 	void populate(int *stagesinit);
 	bool turn();
 	bool findFacilitator(Position p);

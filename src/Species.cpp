@@ -24,11 +24,11 @@ void Species::setFacilitation(double f){
 void Species::addIndividual(double x, double y){
 	if(G > 0 && nextStage==NULL) {
 		printf("WARNING: Next stage set to NULL but G > 0. Check input data. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f\n", id,G,R,D,Rad);
-		exit(1);
+		return;
 	}
 	if(R > 0 && seedStage==NULL) {
 		printf("WARNING: Seed stage set to NULL but R > 0. Check input data. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f\n", id,G,R,D,Rad);
-		exit(1);
+		return;
 	}
 	/*Individual *i =*/ new Individual(this,x,y);
 }

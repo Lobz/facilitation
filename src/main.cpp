@@ -5,7 +5,7 @@
 #include<string>
 #include<Rcpp.h>
 
-Rcpp::List run_tests(int num_stages, double **par, double fac, double w, double h, int *init){
+Rcpp::List run_tests(int num_stages, double * par, double fac, double w, double h, int *init){
 	int i;
 	bool test=true;
 	Arena *arena;
@@ -28,6 +28,7 @@ Rcpp::List run_tests(int num_stages, double **par, double fac, double w, double 
 	return ret;
 }
 
+/*
 // [[Rcpp::export]]
 Rcpp::List test_basic(std::string filename,std::string outfilename){
 
@@ -70,20 +71,17 @@ Rcpp::List test_basic(std::string filename,std::string outfilename){
 
 	return ret;
 
-}
+}*/
 
 // [[Rcpp::export]]
-Rcpp::List test_parameter(Rcpp::NumericVector parameters, double w, double h, int nb, int nf){
-	double **par;
-	int *init;
+Rcpp::List test_parameter(int num_stages,Rcpp::NumericVector parameters, double w, double h, Rcpp::IntegerVector init){
+	double *par;
+	int *in;
 	Rcpp::List ret;
-	par = (double**)malloc(sizeof(double*));
-	par[1] = par[0] = parameters.begin();
-	init = (int*)malloc(2*sizeof(int));
-	init[0]=nb; init[1]=nf;
+	in = init.begin();
+	par = parameters.begin();
 
-	ret = run_tests(1,par,0.1,w,h,init);
+	ret = run_tests(num_stages,par,0.1,w,h,in);
 
-	return Rcpp::as<Rcpp::List>(ret);
+	return ret;
 }
-

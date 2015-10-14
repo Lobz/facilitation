@@ -1,13 +1,13 @@
 #include"Facilitation.hpp"
 #include"Random.hpp"
 
-Arena::Arena(int lifestages, double **parameters, double facilitation, double width, double height) :lifestages(lifestages),spnum(lifestages+1),width(width),height(height) {
+Arena::Arena(int lifestages, double *parameters, double facilitation, double width, double height) :lifestages(lifestages),spnum(lifestages+1),width(width),height(height) {
 	int i;
 	stages = (Species**)malloc(spnum*(sizeof(Species*)));
 	ratesList = (double*)malloc(spnum*(sizeof(double)));
 
 	for(i=0;i<spnum;i++){
-		stages[i] = new Species(this,i,parameters[i]);
+		stages[i] = new Species(this,i,parameters+FACILITATION_NUMPARAMETERS*i);
 	}
 	facilitator = stages[lifestages];
 
