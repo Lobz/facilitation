@@ -87,3 +87,7 @@ status_list Arena::getStatus(){
 	}
 	return status;
 }
+
+double Arena::getTotalTime(){
+	return totalTime;
+}
