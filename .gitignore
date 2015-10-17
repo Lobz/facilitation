@@ -2,3 +2,4 @@
 *.so
 *.out
 output.txt
+R/RcppExports.R
