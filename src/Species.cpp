@@ -12,6 +12,7 @@ Species::Species(Arena *ar,int id, double *par):id(id){
 	facilitation = 0;
 	nextStage = NULL;
 	seedStage = NULL;
+	dispersalRadius = 0.5;
 
 	arena = ar;
 
@@ -47,7 +48,7 @@ void Species::disperseIndividual(Position p){
 }
 
 Position Species::dispersalKernel(){
-	Position p(Random(2) -1, Random(2) -1);
+	Position p(RandomSign()*Exponential(1.0/dispersalRadius),RandomSign()*Exponential(1.0/dispersalRadius));
 	return p;
 }
 

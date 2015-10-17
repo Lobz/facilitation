@@ -34,3 +34,46 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// Random
+double Random(double max);
+RcppExport SEXP facilitation_Random(SEXP maxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< double >::type max(maxSEXP);
+    __result = Rcpp::wrap(Random(max));
+    return __result;
+END_RCPP
+}
+// Bernoulli
+bool Bernoulli(double p);
+RcppExport SEXP facilitation_Bernoulli(SEXP pSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< double >::type p(pSEXP);
+    __result = Rcpp::wrap(Bernoulli(p));
+    return __result;
+END_RCPP
+}
+// Exponential
+double Exponential(double r);
+RcppExport SEXP facilitation_Exponential(SEXP rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    __result = Rcpp::wrap(Exponential(r));
+    return __result;
+END_RCPP
+}
+// RandomSign
+short RandomSign();
+RcppExport SEXP facilitation_RandomSign() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(RandomSign());
+    return __result;
+END_RCPP
+}

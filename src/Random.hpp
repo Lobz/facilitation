@@ -6,4 +6,6 @@ double Random(double max);
 bool Bernoulli(double p);
 
 double Exponential(double r);
+
+short RandomSign();
 #endif
