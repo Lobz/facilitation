@@ -4,8 +4,8 @@ list2dataframe <- function(x) {
 	return(ret)
 }
 
-plot_all <- function(dt,w,h) {
-	plot(dt$x~dt$y, type='n',xlab="x",ylab="y",xlim=c(0,w),ylim=c(0,h));
+plot_all <- function(dt) {
+	plot(dt$x~dt$y, type='n',xlab="x",ylab="y");
 	for(i in unique(dt$sp)){
 		dts<- subset(dt,dt$sp==i);
 		points(dts$x,dts$y,pch=i,col=i);
@@ -13,11 +13,13 @@ plot_all <- function(dt,w,h) {
 }
 
 test_standard <- function(f,t){
-	ret <-  (list2dataframe(test_parameter(t,3,c(1.5,0,2,0, 1,0,1,0, 0,2,0.1,0, 0,0,0,1),f,10,10,c(10,10,10,10))));
+	ret <-  (list2dataframe(test_parameter(t,3,c(1.5,0,2,0, 1,0,1,0, 0,10,0.5,0, 0,0,0,1),f,10,10,c(10,10,10,10))));
 	ret
 }
 
 abundance_matrix <- function(ret){
-	return(tapply(ret$id, list(ret$t, ret$sp), length))
+	m <- (tapply(ret$id, list(ret$t, ret$sp), length))
+	m[is.na(m)]<-0
+	m
 }
 
