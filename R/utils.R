@@ -18,6 +18,6 @@ test_standard <- function(f,t){
 }
 
 abundance_matrix <- function(ret){
-	return(tapply(ret$id, list(ret$sp, ret$t), length))
+	return(tapply(ret$id, list(ret$t, ret$sp), length))
 }
 
