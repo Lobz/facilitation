@@ -37,7 +37,7 @@ class Arena {
 class Species {
 	private:
 	unsigned int id;
-	double G, R, D, Rad, facilitation;
+	double G, R, D, Rad, facilitation, dispersalRadius;
 	double totalRate;
 
 	Arena *arena;

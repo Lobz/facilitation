@@ -14,8 +14,8 @@ status_list run_tests(double maxTime, int num_stages, double * par, double fac, 
 	arena = new Arena(num_stages,par,fac,w,h);
 	arena->populate(init);
 
-	std::cout << "#arena populated!\n";
-	std::cout << "time,species,individual,x,y\n";
+//	std::cout << "#arena populated!\n";
+//	std::cout << "time,species,individual,x,y\n";
 
 	for(i=1;arena->getTotalTime() < maxTime && test;i++) {
 		//std::cout << "#Turn " << i << "\n";
@@ -27,7 +27,6 @@ status_list run_tests(double maxTime, int num_stages, double * par, double fac, 
 
 	return ret;
 }
-
 
 // [[Rcpp::export]]
 Rcpp::List test_basic(std::string filename,std::string outfilename){
