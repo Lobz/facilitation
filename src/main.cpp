@@ -5,8 +5,9 @@
 #include<string>
 #include<Rcpp.h>
 
-status_list run_tests(double maxTime, int num_stages, double * par, double fac, double w, double h, int *init){
-	int i;
+status_list run_tests(bool print, double maxTime, int num_stages, double * par, double fac, double w, double h, int *init){
+	int i, numObservations=50;
+	double nextTime, timeInterval;
 	bool test=true;
 	Arena *arena;
 	status_list ret = {};
@@ -14,14 +15,21 @@ status_list run_tests(double maxTime, int num_stages, double * par, double fac, 
 	arena = new Arena(num_stages,par,fac,w,h);
 	arena->populate(init);
 
-//	std::cout << "#arena populated!\n";
-//	std::cout << "time,species,individual,x,y\n";
+	if(print) std::cout << "#arena populated!\n";
+	if(print) std::cout << "time,species,individual,x,y\n";
 
-	for(i=1;arena->getTotalTime() < maxTime && test;i++) {
-		//std::cout << "#Turn " << i << "\n";
-		//arena->print();
-		test = arena->turn();
+	nextTime = 0;
+	timeInterval = maxTime/(double)numObservations;
+	for(i=1;i < numObservations && test;i++) {
+		std::cout << "#Turn " << i << "\n";
+		std::cout << "#Time: " << arena->getTotalTime() << "\n";
+		if(print) arena->print();
+		while(arena->getTotalTime() < nextTime && test){
+			test = arena->turn();
+		}
+
 		ret.splice(ret.end(),arena->getStatus());
+		nextTime += timeInterval;
 	}
 
 
@@ -29,19 +37,19 @@ status_list run_tests(double maxTime, int num_stages, double * par, double fac, 
 }
 
 // [[Rcpp::export]]
-Rcpp::List test_basic(std::string filename,std::string outfilename){
+Rcpp::List test_basic(std::string filename,std::string outfilename = ""){
 
 	Rcpp::List ret;
-	std::ifstream inputfile(filename);
-	std::ofstream outputfile(outfilename);
-	auto coutbuf = std::cout.rdbuf(outputfile.rdbuf()); //save and redirect output
-
 	int num_stages, h, w, i, *init;
 	double fac, *par;
+	bool out = (outfilename!="");
 
+	std::ifstream inputfile(filename);
+	std::ofstream outputfile(out? outfilename : "output_default.txt");
+	auto coutbuf = std::cout.rdbuf(outputfile.rdbuf()); //save and redirect output
 
 	if(!inputfile) {
-		std::cout << "#file \""<< filename << "\"not found\n";
+		std::cerr << "#file \""<< filename << "\"not found\n";
 		return NULL;
 	}
 	
@@ -63,9 +71,9 @@ Rcpp::List test_basic(std::string filename,std::string outfilename){
 	inputfile.close();
 	std::cout << "#okay!\n";
 
-	ret = run_tests(10,num_stages,par,fac,w,h, init);
+	ret = run_tests(out,5,num_stages,par,fac,w,h, init);
 
-	std::cout.rdbuf(coutbuf); //reset to standard output again
+	if(out) std::cout.rdbuf(coutbuf); //reset to standard output again
 
 	return ret;
 
@@ -79,7 +87,7 @@ Rcpp::List test_parameter(double maxTime, int num_stages,Rcpp::NumericVector par
 	in = init.begin();
 	par = parameters.begin();
 
-	ret = run_tests(maxTime, num_stages,par,f,w,h,in);
+	ret = run_tests(false,maxTime, num_stages,par,f,w,h,in);
 
 	return ret;
 }

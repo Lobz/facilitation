@@ -31,6 +31,7 @@ class Arena {
 	void print();
 
 	status_list getStatus();
+	double* getAbundance();
 	double getTotalTime();
 };
 
@@ -74,6 +75,7 @@ class Species {
 	void print(double time);
 
 	status_list getStatus(double time);
+	double getAbundance();
 };
 
 

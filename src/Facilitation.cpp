@@ -88,6 +88,18 @@ status_list Arena::getStatus(){
 	return status;
 }
 
+/*TODO: should this array be dynamically allocated? */
+double* Arena::getAbundance(){
+	int i;
+	double *ab;
+	ab = (double*)malloc(spnum*sizeof(double));
+	for(i=0;i<spnum;i++){
+		ab[i] = stages[i]->getAbundance();
+	}
+	return ab;
+}
+
+
 double Arena::getTotalTime(){
 	return totalTime;
 }

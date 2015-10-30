@@ -135,3 +135,7 @@ status_list Species::getStatus(double time){
 	}
 	return status;
 }
+	
+double Species::getAbundance(){
+	return population.size();
+}
