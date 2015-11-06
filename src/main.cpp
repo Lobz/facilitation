@@ -26,6 +26,8 @@ status_list run_tests(bool print, int ntimes,double * times, int num_stages, dou
 		else { 
 			while(arena->getTotalTime() < times[i] && test){
 				test = arena->turn();
+				std::cout << "#Turn " << i << ",";
+				std::cout << "#Time: " << arena->getTotalTime() << "\n";
 			}
 
 			ret.splice(ret.end(),arena->getStatus());

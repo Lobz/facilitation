@@ -49,19 +49,19 @@ void Species::disperseIndividual(Position p){
 }
 
 Position Species::dispersalKernel(){
-	Position p(RandomSign()*Exponential(1.0/dispersalRadius),RandomSign()*Exponential(1.0/dispersalRadius));
+	Position p(dispersalRadius? RandomSign()*Exponential(1.0/dispersalRadius):0,dispersalRadius? RandomSign()*Exponential(1.0/dispersalRadius):0);
 	return p;
 }
 
 double Species::getTotalRate(){
-	double trate = 0;
+	totalRate = 0;
 	std::list<Individual*>::iterator i;
 
 	for(i=population.begin();i!=population.end();i++){
-		trate += (*i)->getTotalRate();
+		totalRate += (*i)->getTotalRate();
 	}
 
-	return trate;
+	return totalRate;
 }
 
 bool Species::isPresent(Position p){
@@ -77,7 +77,7 @@ bool Species::isPresent(Position p){
 void Species::act(){
 	std::list<Individual*>::iterator i;
 	double r = Random(totalRate);
-	std::cout << "species selected. - sp=" << id << "\n";
+	//std::cout << "species selected. - sp=" << id << ", time=" << arena->getTotalTime() << ", size=" << population.size()<< ", r= " << r << "\n";
 
 	for(i=population.begin();i!=population.end();i++){
 		r -= (*i)->getTotalRate();

@@ -12,13 +12,8 @@ plot_all <- function(dt) {
 	}
 }
 
-test_standard <- function(){
-	data <- test_parameter(seq(0,3,0.15),3,c(1.5,0,2,0, 1,0,1,0, 0,10,0.5,0, 0,0,0,1),1,c(10,10,10,10))
-	list2dataframe(data);
-}
-
 facByRates <- function(times, n=3, Ds=c(2,rep(1,n-1)), Gs=rep(1,n-1), R=5, fac=0, height=10, width=10,init=rep(10,n+1), rad=2){
-	M <- matrix(c(Gs, 0, rep(R, n),Ds, rep(0, n)), nrow = n)
+	M <- matrix(c(Gs, 0, rep(0, n-1),R,Ds, rep(0, n)), nrow = n)
 	M <- rbind(M,c(0,0,0,rad))
 	M <- as.vector(t(M))
 	test_parameter(times,num_stages=n,parameters=M,f=fac,init=init,h=height,w=width)
