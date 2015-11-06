@@ -47,4 +47,14 @@ dt <- list2dataframe(ret)
 ab <- abundance_matrix(dt)
 ```
 
-If your rates are low and/or your time interval is small, it may happen that the times in the mabundance matrix are less than what you expected. If the length of rownames(ab) is less than length(times), you can fill in the ti
+If your rates are low and/or your time interval is small, it may happen that the times in the abundance matrix are less than what you expected. If the length of rownames(ab) is less than length(times), it means that there were spans of time during which no events happened. To fill in these blanks, you may use the following (warning: might be a slow function):
+```r
+abf <- fillTime(ab,times)
+```
+
+Having a reliable abundance matrix, you can plot your population in a stackplot. Obs.: currently this function ignores the last column, sopposed to be the facilitator's column.
+```r
+stackplot(abf)
+```
+
+
