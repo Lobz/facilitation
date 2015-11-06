@@ -26,7 +26,7 @@ times <- seq(0,3,0.3)         # array of times of interest
 initialpop <- c(10,10,10,10)  # initial pop. sizes for the 3 stages plus the facilitator species
 facindex <- 1                 # this will be the value by which facilitator decreases seeds' deathrates
 
-ret <- facByRates(times=timers, n=numstages, Ds=deathrates, Gs=growthrates, R=reproductionrate, fac=facindex, init=initialpop)
+ret <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, R=reproductionrate, fac=facindex, init=initialpop)
 ```
 
 Another way to run the model, organizing the parameters by lifestage. The parameters in this example are the same as before, so we will reuse some of the variables. Obs.: this function is deprecated and may be removed in the future.
