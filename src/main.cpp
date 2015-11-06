@@ -82,7 +82,7 @@ Rcpp::List test_basic(std::string filename,std::string outfilename = ""){
 }
 
 // [[Rcpp::export]]
-Rcpp::List test_parameter(Rcpp::NumericVector times, int num_stages,Rcpp::NumericVector parameters, double f, double w=10, double h=10, Rcpp::IntegerVector init){
+Rcpp::List test_parameter(Rcpp::NumericVector times, int num_stages,Rcpp::NumericVector parameters, double f, Rcpp::IntegerVector init, double w=10, double h=10){
 	double *par;
 	int *in;
 	Rcpp::List ret;
