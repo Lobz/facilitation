@@ -2,4 +2,11 @@
 *.so
 *.out
 output.txt
-R/RcppExports.R
+*.pdf
+.RData
+.Rhistory
+out.txt
+output_default.txt
+src/.Rhistory
+teste/
+
