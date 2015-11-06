@@ -25,7 +25,7 @@ class Arena {
 
 	public:
 	Arena(int lifestages, double * baserates, double facilitation, double width, double height);
-	void populate(int *stagesinit);
+	bool populate(int *stagesinit);
 	bool turn();
 	bool findFacilitator(Position p);
 	void print();

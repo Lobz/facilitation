@@ -12,14 +12,35 @@ plot_all <- function(dt) {
 	}
 }
 
-test_standard <- function(t){
-	data <- test_parameter(t,3,c(1.5,0,2,0, 1,0,1,0, 0,10,0.5,0, 0,0,0,1),1,10,10,c(10,10,10,1))
+test_standard <- function(){
+	data <- test_parameter(21,seq(0,3,0.15),3,c(1.5,0,2,0, 1,0,1,0, 0,10,0.5,0, 0,0,0,1),1,10,10,c(10,10,10,1))
 	list2dataframe(data);
+}
+
+facByRates <- function(times, n=3, Ds=c(2,rep(1,n-1)), Gs=rep(1,n-1), R=5, fac=0, height=10, width=10,init=rep(10,n+1)){
+	M <- matrix(c(Gs, 0, rep(R, n),Ds, rep(0, n)), nrow = n)
+	M <- rbind(M,c(0,0,0,1))
+	M <- as.vector(t(M))
+	test_parameter(times,num_stages=n,parameters=M,f=fac,h=height,w=width,init=init)
 }
 
 abundance_matrix <- function(ret){
 	m <- (tapply(ret$id, list(ret$t, ret$sp), length))
 	m[is.na(m)]<-0
+	m
+}
+
+fillTime  <- function(ab,times){
+	tm <- rownames(ab)
+	tmm <- sort(c(times,tm))
+	m <- matrix(nrow=length(tmm),ncol=ncol(ab))
+	rownames(m) <- tmm
+	colnames(m) <- colnames(ab)
+	for(i in 1:length(tmm)){
+		for(j in length(tm):1){
+			if(rownames(m)[i] <= rownames(ab)[j]) m[i,]<-ab[j,]
+		}
+	}
 	m
 }
 

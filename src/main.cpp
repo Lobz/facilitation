@@ -5,31 +5,31 @@
 #include<string>
 #include<Rcpp.h>
 
-status_list run_tests(bool print, double maxTime, int num_stages, double * par, double fac, double w, double h, int *init){
-	int i, numObservations=50;
+status_list run_tests(bool print, int ntimes,double * times, int num_stages, double * par, double fac, double w, double h, int *init){
+	int i;
 	double nextTime, timeInterval;
 	bool test=true;
 	Arena *arena;
 	status_list ret = {};
 
 	arena = new Arena(num_stages,par,fac,w,h);
-	arena->populate(init);
+	if(! arena->populate(init)) return ret;;
 
 	if(print) std::cout << "#arena populated!\n";
 	if(print) std::cout << "time,species,individual,x,y\n";
 
-	nextTime = 0;
-	timeInterval = maxTime/(double)numObservations;
-	for(i=1;i < numObservations && test;i++) {
-		std::cout << "#Turn " << i << "\n";
+	for(i=1;i < ntimes && test;i++) {
+		std::cout << "#Turn " << i << ",";
 		std::cout << "#Time: " << arena->getTotalTime() << "\n";
 		if(print) arena->print();
-		while(arena->getTotalTime() < nextTime && test){
-			test = arena->turn();
-		}
+		if(arena->getTotalTime() >= times[i]) std::cout << "Nothing happens\n";
+		else { 
+			while(arena->getTotalTime() < times[i] && test){
+				test = arena->turn();
+			}
 
-		ret.splice(ret.end(),arena->getStatus());
-		nextTime += timeInterval;
+			ret.splice(ret.end(),arena->getStatus());
+		}
 	}
 
 
@@ -40,8 +40,8 @@ status_list run_tests(bool print, double maxTime, int num_stages, double * par, 
 Rcpp::List test_basic(std::string filename,std::string outfilename = ""){
 
 	Rcpp::List ret;
-	int num_stages, h, w, i, *init;
-	double fac, *par;
+	int num_stages, h, w, i, *init,ntime=50;
+	double fac, *par, *time;
 	bool out = (outfilename!="");
 
 	std::ifstream inputfile(filename);
@@ -71,7 +71,9 @@ Rcpp::List test_basic(std::string filename,std::string outfilename = ""){
 	inputfile.close();
 	std::cout << "#okay!\n";
 
-	ret = run_tests(out,5,num_stages,par,fac,w,h, init);
+	time = (double*) malloc(ntime*sizeof(double));
+	for(i=1,time[0]=0;i<ntime;i++) time[i] = time[i-1] + 0.1;
+	ret = run_tests(out,ntime,time,num_stages,par,fac,w,h, init);
 
 	if(out) std::cout.rdbuf(coutbuf); //reset to standard output again
 
@@ -80,14 +82,14 @@ Rcpp::List test_basic(std::string filename,std::string outfilename = ""){
 }
 
 // [[Rcpp::export]]
-Rcpp::List test_parameter(double maxTime, int num_stages,Rcpp::NumericVector parameters, double f, double w, double h, Rcpp::IntegerVector init){
+Rcpp::List test_parameter(Rcpp::NumericVector times, int num_stages,Rcpp::NumericVector parameters, double f, double w, double h, Rcpp::IntegerVector init){
 	double *par;
 	int *in;
 	Rcpp::List ret;
 	in = init.begin();
 	par = parameters.begin();
 
-	ret = run_tests(false,maxTime, num_stages,par,f,w,h,in);
+	ret = run_tests(false,times.length(),times.begin(), num_stages,par,f,w,h,in);
 
 	return ret;
 }

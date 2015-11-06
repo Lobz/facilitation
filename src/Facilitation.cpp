@@ -23,14 +23,21 @@ Arena::Arena(int lifestages, double *parameters, double facilitation, double wid
 
 }
 
-void Arena::populate(int *stagesinit){
+bool Arena::populate(int *stagesinit){
 	int i,j;
 
 	for(i=0;i<spnum;i++){
 		for(j=0;j<stagesinit[i];j++){
-			stages[i]->addIndividual(Random(width),Random(height));
+			try{
+				stages[i]->addIndividual(Random(width),Random(height));
+			}
+			catch(int e){
+				std::cout << "Unable to populate\n";
+				return false;
+			}
 		}
 	}
+	return true;
 }
 
 bool Arena::turn() {

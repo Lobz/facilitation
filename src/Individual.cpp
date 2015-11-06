@@ -36,6 +36,9 @@ bool   Individual::isPresent(Position p2){
 
 void   Individual::act(){
 	double r = Random(G+R+D);
+
+	std::cout << "sp=" << species->getId() << "\n";
+
 	if(r < G) grow();
 	else if (r < G+R) reproduce();
 	else die();

@@ -16,6 +16,7 @@ Species::Species(Arena *ar,int id, double *par):id(id){
 
 	arena = ar;
 
+	std::cout << id << ": G=" << G << " , R=" << R << " , D=" << D << "\n";
 }
 
 void Species::setFacilitation(double f){
@@ -25,11 +26,11 @@ void Species::setFacilitation(double f){
 void Species::addIndividual(double x, double y){
 	if(G > 0 && nextStage==NULL) {
 		printf("WARNING: Next stage set to NULL but G > 0. Check input data. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f\n", id,G,R,D,Rad);
-		return;
+		throw id;
 	}
 	if(R > 0 && seedStage==NULL) {
 		printf("WARNING: Seed stage set to NULL but R > 0. Check input data. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f\n", id,G,R,D,Rad);
-		return;
+		throw id;
 	}
 	/*Individual *i =*/ new Individual(this,x,y);
 }
@@ -40,7 +41,7 @@ void Species::addIndividual(Position p){
 
 void Species::disperseIndividual(double x, double y){
 	Position p(x,y);
-	disperseIndividual(p);
+	 disperseIndividual(p);
 }
 	
 void Species::disperseIndividual(Position p){
@@ -76,6 +77,7 @@ bool Species::isPresent(Position p){
 void Species::act(){
 	std::list<Individual*>::iterator i;
 	double r = Random(totalRate);
+	std::cout << "species selected. - sp=" << id << "\n";
 
 	for(i=population.begin();i!=population.end();i++){
 		r -= (*i)->getTotalRate();
@@ -84,6 +86,8 @@ void Species::act(){
 			return;
 		}
 	}
+	/* if the below code is executed, it's becase no individual was selected */
+	std::cout << "WARNING: no individual selected. - sp=" << id << "\n";
 }
 
 void Species::setNextStage(Species *st) {nextStage = st;}
