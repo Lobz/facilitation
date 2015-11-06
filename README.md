@@ -61,7 +61,7 @@ stackplot(ab)
 The package also include functions to plot the expected abundances according to a linear differential model. To produce the matrix corresponding to the ODE and calculate the solution (that is, the matrix exponential), run the following: 
 ```r
 mat <- mat_model(n=numstages,Ds=deathrates,Gs=growthrates,R=reproductionrate)
-so <- solution.matrix(p0=initialpop, M=mat, times=times)
+so <- solution.matrix(p0=initialpop[1:numstages], M=mat, times=times)
 ```
 Currently this matrix isn't in the same format as the other matrices, so here's a (very rough) code to allow you to compare this result graphicly to the result from the IBM:
 ```r
