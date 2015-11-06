@@ -65,7 +65,7 @@ so <- solution.matrix(p0=initialpop[1:numstages], M=mat, times=times)
 ```
 Currently this matrix isn't in the same format as the other matrices, so here's a (very rough) code to allow you to compare this result graphicly to the result from the IBM:
 ```r
-so <- t(rbind(t(so),rep(0,nrow(so))))   # adds a column of zeroes to the matrix
+s <- t(rbind(t(so),rep(0,nrow(so))))   # adds a column of zeroes to the matrix
 stackplot(s)
 ```
 Note that this is the analitical solution to the ODE model that corresponds to the structured population in the *absence of facilitation*. One way to look at the effect of facilitation is changing the death rate as if it were under facilitation, and recalculating the solution.
@@ -73,7 +73,7 @@ Note that this is the analitical solution to the ODE model that corresponds to t
 deathrates[1] <- deathrates[1]-facindex
 mat <- mat_model(n=numstages,Ds=deathrates,Gs=growthrates,R=reproductionrate)
 so <- solution.matrix(p0=initialpop, M=mat, times=times)
-so <- t(rbind(t(so),rep(0,nrow(so))))   # adds a column of zeroes to the matrix
+s <- t(rbind(t(so),rep(0,nrow(so))))   # adds a column of zeroes to the matrix
 stackplot(s)
 ```
 
