@@ -5,8 +5,8 @@ test_basic <- function(filename, outfilename = "") {
     .Call('facilitation_test_basic', PACKAGE = 'facilitation', filename, outfilename)
 }
 
-test_parameter <- function(maxTime, num_stages, parameters, f, w, h, init) {
-    .Call('facilitation_test_parameter', PACKAGE = 'facilitation', maxTime, num_stages, parameters, f, w, h, init)
+test_parameter <- function(times, num_stages, parameters, f, w, h, init) {
+    .Call('facilitation_test_parameter', PACKAGE = 'facilitation', times, num_stages, parameters, f, w, h, init)
 }
 
 Random <- function(max) {

@@ -19,17 +19,17 @@ mat_model  <- function(n=3,Ds=rexp(n,1),Gs=rexp(n-1,1),R=rexp(1,1)){
 
 expm <- function(M) as.matrix(Matrix::expm(M))
 
-#' solutionMatrix 
+#' solution.matrix 
 #' 
-#' The \code{solutionMatrix} function returns the solution to a linear ODE of the form P' = MP,
-#' which is merely P(t) = exp(Mt)P0 where P0 is the initial condition
-#' @param P0 initial condition, as an array
+#' The \code{solution.matrix} function returns the solution to a linear ODE of the form P' = MP,
+#' which is merely P(t) = exp(Mt)p0 where p0 is the initial condition
+#' @param p0 initial condition, as an array
 #' @param M a square matrix with as many rows as P0
 #' @param times an array containing the times in which to calculate the solution
-solutionMatrix <- function(P0, M, times = c(1:10)){
+solution.matrix <- function(p0, M, times = c(1:10)){
 	S <- matrix(nrow=nrow(M),ncol=length(times))
 	for(i in 1:length(times)){
-		    S[,i] <- expm(M*times[i]) %*% P0
+		    S[,i] <- expm(M*times[i]) %*% p0
 	}
 	colnames(S) <- times
 	t(S)
