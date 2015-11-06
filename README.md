@@ -35,7 +35,7 @@ par.seeds <- c(1, 0, 2, 0)      # parameters are (growthrate, reproductionrate, 
 par.saps <- c(.2, 0, .2, 0)     # only the last(adult) stage can have positive reproduction rate 
 par.adults <- c(0, 5, .2, 0)    # the last(adult) stage is not allowed to have positive growthrate
 par.facilitator <- c(0,0,0,1)   # the facilitator also has parameters! the radius is the radius of facilitating effect
-par <- c(par.seeds,par.sads,par.adults,par.facilitator)   # mind the order
+par <- c(par.seeds,par.saps,par.adults,par.facilitator)   # mind the order
 
 ret <- test_parameter(times=timers, num_stages=numstages, parameters=par, f=facindex, init=initialpop)
 ```
