@@ -19,7 +19,7 @@ library(facilitation)
 The below code creates a simulation with 3 lifestages, runs it up to time 3, and stores the result in ret. In this case, the facilitator has no dynamics.
 ```r
 numstages <- 3
-deathrates <- c(5, 0.2, 0.2)  # death rates for seed, sapling and adult
+deathrates <- c(2, 0.2, 0.2)  # death rates for seed, sapling and adult
 growthrates <- c(1, 0.2)      # transition rates seed-->sapling and sapling-->adult
 reproductionrate <- 5         # reproduction rate (only adult)
 times <- seq(0,2,.05)         # array of times of interest
@@ -32,8 +32,8 @@ ret <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, R=rep
 
 Another way to run the model, organizing the parameters by lifestage. The parameters in this example are the same as before, so we will reuse some of the variables. Obs.: this function is deprecated and may be removed in the future.
 ```r
-par.seeds <- c(1, 0, 5, 0)      # parameters are (growthrate, reproductionrate, deathrate, radius). 
-par.saps <- c(.2, 0, .2, 0)     # only the last(adult) stage can have positive reproduction rate 
+par.seeds <- c(1, 0, 2, 0)      # parameters are (growthrate, reproductionrate, deathrate, radius). 
+par.saps <- c(.2, 0, .2, 0)     # in our example reproduction rates for the first two stages is 0, but you can change 
 par.adults <- c(0, 5, .2, 0)    # the last(adult) stage is not allowed to have positive growthrate
 par.facilitator <- c(0,0,0,2)   # the facilitator also has parameters! the radius is the radius of facilitating effect
 par <- c(par.seeds,par.saps,par.adults,par.facilitator)   # mind the order
