@@ -9,4 +9,6 @@ out.txt
 output_default.txt
 src/.Rhistory
 teste/
+.*.swp
+
 

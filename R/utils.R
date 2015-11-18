@@ -8,7 +8,7 @@ plot_all <- function(dt) {
 	plot(dt$x~dt$y, type='n',xlab="x",ylab="y");
 	for(i in unique(dt$sp)){
 		dts<- subset(dt,dt$sp==i);
-		points(dts$x,dts$y,pch=i,col=i);
+		points(dts$x,dts$y,pch=i,col=2*i);
 	}
 }
 
