@@ -4,11 +4,13 @@
 output.txt
 *.pdf
 .RData
+*/.RData
 .Rhistory
+*/.Rhistory
 out.txt
 output_default.txt
-src/.Rhistory
 teste/
+dev_src/
 .*.swp
 
 
