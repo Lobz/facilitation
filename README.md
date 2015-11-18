@@ -53,9 +53,9 @@ If your rates are low and/or your time interval is small, it may happen that the
 ab <- fillTime(ab,times)
 ```
 
-Having a reliable abundance matrix, you can plot your population in a stackplot. Obs.: currently this function ignores the last column, assumed to be the facilitator's column.
+Having a reliable abundance matrix, you can plot your population in a stackplot. Obs.: the last column corresponds to the facilitator, so it must be removes from this plot .
 ```r
-stackplot(ab)
+stackplot(ab[,1:numstages])
 ```
 
 The package also include functions to plot the expected abundances according to a linear differential model. To produce the matrix corresponding to the ODE and calculate the solution (that is, the matrix exponential), run the following: 
@@ -63,9 +63,8 @@ The package also include functions to plot the expected abundances according to 
 mat <- mat_model(n=numstages,Ds=deathrates,Gs=growthrates,R=reproductionrate)
 so <- solution.matrix(p0=initialpop[1:numstages], M=mat, times=times)
 ```
-Currently this matrix isn't in the same format as the other matrices, so here's a (very rough) code to allow you to compare this result graphicly to the result from the IBM:
+You can also plot the results (plot the whole matrix since there is no facilitator this time):
 ```r
-so <- t(rbind(t(so),rep(0,nrow(so))))   # adds a column of zeroes to the matrix
 stackplot(so)
 ```
 Note that this is the analitical solution to the ODE model that corresponds to the structured population in the *absence of facilitation*. One way to look at the effect of facilitation is changing the death rate as if it were under facilitation, and recalculating the solution.
