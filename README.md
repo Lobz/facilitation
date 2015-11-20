@@ -16,7 +16,7 @@ library(facilitation)
 
 ## Running and testing:
 
-The below code creates a simulation with 3 lifestages, runs it up to time 3, and stores the result in ret. In this case, the facilitator has no dynamics.
+The below code creates a simulation with 3 lifestages, runs it up to time 10, and stores the result in ret. In this case, the facilitator has no dynamics.
 ```r
 numstages <- 3
 deathrates <- c(2, 0.2, 0.2)  # death rates for seed, sapling and adult
