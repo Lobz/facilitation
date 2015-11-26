@@ -4,11 +4,10 @@
 
 
 
-Species::Species(Arena *ar,int id, double *par):id(id){
-	G = par[0];
-	R = par[1];
-	D = par[2];
-	Rad = par[3];
+Species::Species(Arena *ar,int id, double *par) : Species(ar,id,par[2],par[0],par[1],par[3],0.5){}
+
+Species::Species(Arena *ar,int id, double D, double G, double R=0, double Rad=0,double dispersalRadius=0)
+:id(id),G(G),D(D),R(R),Rad(Rad),dispersalRadius(dispersalRadius){
 	facilitation = 0;
 	nextStage = NULL;
 	seedStage = NULL;
@@ -20,6 +19,9 @@ Species::Species(Arena *ar,int id, double *par):id(id){
 }
 
 void Species::setFacilitation(double f){
+	if(facilitation > D){
+		printf("WARNING: facilitation parameter set to be bigger than deathrate. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f\n,facilitation=%d", id,G,R,D,Rad,facilitation);
+	}
 	facilitation = f;
 }
 
@@ -49,7 +51,7 @@ void Species::disperseIndividual(Position p){
 }
 
 Position Species::dispersalKernel(){
-	Position p(dispersalRadius? RandomSign()*Exponential(1.0/dispersalRadius):0,dispersalRadius? RandomSign()*Exponential(1.0/dispersalRadius):0);
+	Position p(Normal(0,dispersalRadius),Normal(0,dispersalRadius));
 	return p;
 }
 
@@ -111,7 +113,7 @@ double Species::getRad(){return Rad;}
 unsigned int Species::getId(){return id;}
 double Species::getD(Position p){
 	if(facilitation != 0 && arena->findFacilitator(p)){
-		return D-facilitation;
+		return (D>facilitation ? D-facilitation : 0);
 	}
 	else return D;
 }

@@ -7,5 +7,7 @@ bool Bernoulli(double p);
 
 double Exponential(double r);
 
+double Normal(double m, double v);
+
 short RandomSign();
 #endif

@@ -9,19 +9,3 @@ test_parameter <- function(times, num_stages, parameters, f, init, w = 10, h = 1
     .Call('facilitation_test_parameter', PACKAGE = 'facilitation', times, num_stages, parameters, f, init, w, h)
 }
 
-Random <- function(max) {
-    .Call('facilitation_Random', PACKAGE = 'facilitation', max)
-}
-
-Bernoulli <- function(p) {
-    .Call('facilitation_Bernoulli', PACKAGE = 'facilitation', p)
-}
-
-Exponential <- function(r) {
-    .Call('facilitation_Exponential', PACKAGE = 'facilitation', r)
-}
-
-RandomSign <- function() {
-    .Call('facilitation_RandomSign', PACKAGE = 'facilitation')
-}
-

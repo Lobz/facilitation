@@ -46,7 +46,8 @@ class Species {
 	Species *nextStage, *seedStage;
 
 	public:
-	Species(Arena *ar,int id,double *par);
+	Species(Arena *ar,int id, double *par);
+	Species(Arena *ar,int id, double D, double G, double R, double Rad,double dispersalRadius);
 	void setFacilitation(double f);
 
 	double getTotalRate();
