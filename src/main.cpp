@@ -19,8 +19,8 @@ status_list run_tests(bool print, int ntimes,double * times, int num_stages, dou
 	if(print) std::cout << "time,species,individual,x,y\n";
 
 	for(i=1;i < ntimes && test;i++) {
-		std::cout << "#Turn " << i << ",";
-		std::cout << "#Time: " << arena->getTotalTime() << "\n";
+		if(print) std::cout << "#Turn " << i << ",";
+		if(print) std::cout << "#Time: " << arena->getTotalTime() << "\n";
 		if(print) arena->print();
 		if(arena->getTotalTime() >= times[i]) std::cout << "Nothing happens\n";
 		else { 

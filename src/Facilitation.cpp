@@ -71,10 +71,6 @@ bool Arena::turn() {
 
 }
 
-bool Arena::findFacilitator(Position p){
-	return facilitator->isPresent(p);
-}
-
 void Arena::print(){
 	int i;
 	std::cout 	<< "\n#Current status:\n#Time: " << totalTime;
@@ -106,6 +102,13 @@ double* Arena::getAbundance(){
 	return ab;
 }
 
+bool Arena::findFacilitator(Position p){
+	return facilitator->isPresent(p);
+}
+
+std::list<Individual*> Arena::getFacilitators(Position p){
+	return facilitator->getPresent(p);
+}
 
 double Arena::getTotalTime(){
 	return totalTime;

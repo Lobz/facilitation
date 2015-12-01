@@ -28,6 +28,7 @@ class Arena {
 	bool populate(int *stagesinit);
 	bool turn();
 	bool findFacilitator(Position p);
+	std::list<Individual*> getFacilitators(Position p);
 	void print();
 
 	status_list getStatus();
@@ -55,11 +56,14 @@ class Species {
 	double getR();
 	double getD(Position p);
 	double getRad();
+	double getFac();
 	unsigned int getId();
 	Species* getNextStage();
 	Species* getSeedStage();
 
 	bool isPresent(Position p);
+	std::list<Individual*> getFacilitators(Position p);
+	std::list<Individual*> getPresent(Position p);
 	void addIndividual(double x, double y);
 	void addIndividual(Position p);	
 	void disperseIndividual(double x, double y);
@@ -85,10 +89,12 @@ class Individual {
 	static unsigned long id_MAX;
 	Position p;
 	const unsigned long id;
-	double R, D, G, Rad, SqRad;
+	double R, D, G, Rad, SqRad, facilitation;
 	double totalRate;
 	Species *species, *seedStage;
 	std::list<Individual*>::iterator ref;
+	std::list<Individual*> neighbours;
+	void initNeighbours();
 
 	public:
 	Individual(Species *sp, Position p);
@@ -97,6 +103,8 @@ class Individual {
 	bool isPresent(Position p);
 	void print();
 	void act();
+	void addNeighbour(Individual *i);
+	void removeNeighbour(Individual *i);
 	
 	status_line getStatus();
 

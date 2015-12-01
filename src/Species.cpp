@@ -59,8 +59,13 @@ double Species::getTotalRate(){
 	totalRate = 0;
 	std::list<Individual*>::iterator i;
 
-	for(i=population.begin();i!=population.end();i++){
-		totalRate += (*i)->getTotalRate();
+	if(facilitation>0){
+		for(i=population.begin();i!=population.end();i++){
+			totalRate += (*i)->getTotalRate();
+		}
+	}
+	else {
+		totalRate = (G+R+D)*getAbundance();
 	}
 
 	return totalRate;
@@ -74,6 +79,21 @@ bool Species::isPresent(Position p){
 	}
 
 	return false;
+}
+
+std::list<Individual*> Species::getFacilitators(Position p){
+	return arena->getFacilitators(p);
+}
+
+std::list<Individual*> Species::getPresent(Position p){
+	std::list<Individual*>::iterator i;
+	std::list<Individual*> list;
+
+	for(i=population.begin();i!=population.end();i++){
+		if((*i)->isPresent(p)) list.push_back(*i);
+	}
+
+	return list;
 }
 
 void Species::act(){
@@ -110,12 +130,10 @@ Species* Species::getNextStage() {return nextStage;}
 double Species::getG(){return G;}
 double Species::getR(){return R;}
 double Species::getRad(){return Rad;}
+double Species::getFac(){return facilitation;}
 unsigned int Species::getId(){return id;}
 double Species::getD(Position p){
-	if(facilitation != 0 && arena->findFacilitator(p)){
-		return (D>facilitation ? D-facilitation : 0);
-	}
-	else return D;
+	return D;
 }
 
 void Species::print(double time){

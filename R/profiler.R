@@ -1,6 +1,6 @@
 openRprof <- function(){Rprof(memory.profiling=TRUE)}
 
-cloaseRprof <- function(){
+closeRprof <- function(){
 Rprof(NULL)
 summaryRprof("Rprof.out", memory="both")
 }

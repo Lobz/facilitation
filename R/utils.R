@@ -27,7 +27,7 @@ abundance_matrix <- function(ret){
 
 fillTime  <- function(ab,times){
 	tm <- rownames(ab)
-	tmm <- sort(c(times,tm))
+	tmm <- sort(as.numeric(c(times,tm)))
 	m <- matrix(nrow=length(tmm),ncol=ncol(ab))
 	rownames(m) <- tmm
 	colnames(m) <- colnames(ab)
