@@ -27,7 +27,7 @@ initialpop <- c(10,10,10,10)  # initial pop. sizes for the 3 stages plus the fac
 facindex <- 1                 # this will be the value by which facilitator decreases seeds' deathrates
 radius <- 2                   # this is the distance up to which the facilitation affects the seed
 
-ret <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, R=reproductionrate, fac=facindex, init=initialpop, rad=radius)
+dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, R=reproductionrate, fac=facindex, init=initialpop, rad=radius)
 ```
 
 Another way to run the model, organizing the parameters by lifestage. The parameters in this example are the same as before, so we will reuse some of the variables. Obs.: this function is deprecated and may be removed in the future.
@@ -39,12 +39,12 @@ par.facilitator <- c(0,0,0,2)   # the facilitator also has parameters! the radiu
 par <- c(par.seeds,par.saps,par.adults,par.facilitator)   # mind the order
 
 ret <- test_parameter(times=times, num_stages=numstages, parameters=par, f=facindex, init=initialpop)
+dt <- list2dataframe(ret)
 ```
 
-Either way, the return value is a list of lists. Each line corresponds to one individual, at one time.
-You may convert this list to a dataframe and calculate the abundances through time:
+Either way, the return value of test_parameter is a list of lists. Each line corresponds to one individual, at one time.
+You may convert this list to a dataframe (FacByRates does this internally) and calculate the abundances through time:
 ```r
-dt <- list2dataframe(ret)
 ab <- abundance_matrix(dt)
 ```
 
