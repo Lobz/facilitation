@@ -26,7 +26,7 @@ Arena::Arena(int lifestages, double *parameters, double facilitation, double wid
 bool Arena::populate(int *stagesinit){
 	int i,j;
 
-	for(i=0;i<spnum;i++){
+	for(i=spnum-1;i>=0;i--){
 		for(j=0;j<stagesinit[i];j++){
 			try{
 				stages[i]->addIndividual(Random(width),Random(height));

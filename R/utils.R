@@ -16,7 +16,8 @@ facByRates <- function(times, n=3, Ds=c(2,rep(1,n-1)), Gs=rep(1,n-1), R=5, fac=0
 	M <- matrix(c(Gs, 0, rep(0, n-1),R,Ds, rep(0, n)), nrow = n)
 	M <- rbind(M,c(0,0,0,rad))
 	M <- as.vector(t(M))
-	test_parameter(times,num_stages=n,parameters=M,f=fac,init=init,h=height,w=width)
+	r <- test_parameter(times,num_stages=n,parameters=M,f=fac,init=init,h=height,w=width)
+	list2dataframe(r)
 }
 
 abundance_matrix <- function(ret){
