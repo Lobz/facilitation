@@ -4,17 +4,25 @@
 \alias{stackplot}
 \title{Plots}
 \usage{
-stackplot(mat, col, ...)
+stackplot(mat, col, legend, log.y = FALSE, ...)
 }
 \arguments{
 \item{mat}{A population matrix, as produced by \code{\link{abundance_matrix}}}
 
 \item{col}{Optional. A color vector}
 
-\item{\dots}{Further parameters to be passed to the lower leve plot}
+\item{legend}{Optional. An array of names}
+
+\item{log.y}{Logical. Should the y-axis be plotted in a logarithmic scale?}
+
+\item{\dots}{Further parameters to be passed to the lower level plot function}
 }
 \description{
+Plotting functions.
+}
+\details{
 The \code{stackplot} function produces a stacked plot of the population over time.
+Notice that the population should have at least two stages for this function to work.
 }
 \examples{
 obj <- test_standard(10, 10)
