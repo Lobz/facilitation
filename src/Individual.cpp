@@ -27,10 +27,15 @@ void	Individual::setSpecies(Species *sp) {
 
 }
 
+double Individual::actualD(){
+	if(facilitation > 0 && !neighbours.empty()) {
+		return D-facilitation;
+	} else return D;
+}
+
 double Individual::getTotalRate(){
 
-	if(facilitation > 0 && !neighbours.empty()) return G+R+D-facilitation;
-	else return G+R+D;
+	return G+R+actualD();
 }
 
 bool   Individual::isPresent(Position p2){
@@ -40,7 +45,7 @@ bool   Individual::isPresent(Position p2){
 }
 
 void   Individual::act(){
-	double r = Random(G+R+D);
+	double r = Random(getTotalRate());
 
 	//	std::cout << "sp=" << species->getId() << "\n";
 

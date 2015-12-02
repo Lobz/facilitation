@@ -90,6 +90,7 @@ class Individual {
 	Position p;
 	const unsigned long id;
 	double R, D, G, Rad, SqRad, facilitation;
+	double actualD();
 	double totalRate;
 	Species *species, *seedStage;
 	std::list<Individual*>::iterator ref;
