@@ -27,14 +27,14 @@ abundance_matrix <- function(ret){
 }
 
 fillTime  <- function(ab,times){
-	tm <- rownames(ab)
+	tm <- as.numeric(rownames(ab))
 	tmm <- sort(as.numeric(c(times,tm)))
 	m <- matrix(nrow=length(tmm),ncol=ncol(ab))
 	rownames(m) <- tmm
 	colnames(m) <- colnames(ab)
 	for(i in 1:length(tmm)){
 		for(j in length(tm):1){
-			if(rownames(m)[i] <= rownames(ab)[j]) m[i,]<-ab[j,]
+			if(tmm[i] <= tm[j]) m[i,]<-ab[j,]
 		}
 	}
 	m
