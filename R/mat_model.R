@@ -9,7 +9,7 @@
 #' @param R Reproduction rate. Default is rexp(1,1).
 #' @examples
 #'mat <- mat_model(5)
-#'mat2 <- model(3,c(1,2,3),c(10,10),100)
+#'mat2 <- mat_model(3,c(1,2,3),c(10,10),100)
 mat_model  <- function(n=3,Ds=rexp(n,1),Gs=rexp(n-1,1),R=rexp(1,1)){
 	Gs[n] <- 0
 	M <- diag(-Ds-Gs) + diag(Gs)[c(n,1:(n-1)),]

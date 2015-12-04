@@ -11,9 +11,9 @@
 #' @param log.y Logical. Should the y-axis be plotted in a logarithmic scale?
 #' @param \dots Further parameters to be passed to the lower level plot function
 #' @examples
-#'obj <- test_standard(10, 10)
-#'mat <- abundance_matrix(obj)
-#'stackplot(mat)
+#' obj <- facByRates(times=0:10)
+#' mat <- abundance_matrix(obj)
+#' stackplot(mat)
 stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
   if(missing(col))
     col <- terrain.colors(dim(mat)[2])
