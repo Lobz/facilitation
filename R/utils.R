@@ -32,11 +32,15 @@ fillTime  <- function(ab,times){
 	m <- matrix(nrow=length(tmm),ncol=ncol(ab))
 	rownames(m) <- tmm
 	colnames(m) <- colnames(ab)
-	for(i in 1:length(tmm)){
-		for(j in length(tm):1){
-			if(tmm[i] <= tm[j]) m[i,]<-ab[j,]
+	i <- 1
+	for(j in 2:length(tm)){
+		while(tmm[i] < tm[j]){
+			m[i,] <- ab[j-1,]
+			i <- i+1
 		}
+		m[i,] <- ab[j-1,]
 	}
+	m[i,] <- ab[j,]
 	m
 }
 
