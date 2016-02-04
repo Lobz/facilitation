@@ -21,6 +21,6 @@ population model where only the last life stage reproduces, to be applyed in a l
 }
 \examples{
 mat <- mat_model(5)
-mat2 <- model(3,c(1,2,3),c(10,10),100)
+mat2 <- mat_model(3,c(1,2,3),c(10,10),100)
 }
 
