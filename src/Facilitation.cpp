@@ -17,7 +17,7 @@ Arena::Arena(int lifestages, double *parameters, double facilitation, double wid
 	}
 	stages[i]->setSeedStage(stages[0]);
 
-	stages[0]->setFacilitation(facilitation);
+	stages[1]->setFacilitation(facilitation);
 
 	totalTime = 0.0;
 

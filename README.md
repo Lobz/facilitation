@@ -16,7 +16,7 @@ library(facilitation)
 
 ## Running and testing:
 
-The below code creates a simulation with 3 lifestages, runs it up to time 10, and stores the result in ret. In this case, the facilitator has no dynamics.
+The below code creates a simulation with 3 lifestages, with facilitation reducing the death rate of the second stage, runs it up to time 10, and stores the result in ret. In this case, the facilitator has no dynamics.
 ```r
 numstages <- 3
 deathrates <- c(2, 0.2, 0.2)  # death rates for seed, sapling and adult
@@ -69,7 +69,7 @@ stackplot(so)
 ```
 Note that this is the analitical solution to the ODE model that corresponds to the structured population in the *absence of facilitation*. One way to look at the effect of facilitation is changing the death rate as if it were under facilitation, and recalculating the solution.
 ```r
-deathrates[1] <- deathrates[1]-facindex
+deathrates[2] <- deathrates[2]-facindex
 mat <- mat_model(n=numstages,Ds=deathrates,Gs=growthrates,R=reproductionrate)
 sof <- solution.matrix(p0=initialpop[1:numstages], M=mat, times=times)
 sof <- t(rbind(t(sof),rep(0,nrow(sof))))   # adds a column of zeroes to the matrix
