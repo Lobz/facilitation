@@ -72,7 +72,6 @@ Note that this is the analitical solution to the ODE model that corresponds to t
 deathrates[2] <- deathrates[2]-facindex
 mat <- mat_model(n=numstages,Ds=deathrates,Gs=growthrates,R=reproductionrate)
 sof <- solution.matrix(p0=initialpop[1:numstages], M=mat, times=times)
-sof <- t(rbind(t(sof),rep(0,nrow(sof))))   # adds a column of zeroes to the matrix
 stackplot(sof)
 ```
 
