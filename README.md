@@ -69,7 +69,7 @@ stackplot(so)
 ```
 Note that this is the analitical solution to the ODE model that corresponds to the structured population in the *absence of facilitation*. One way to look at the effect of facilitation is changing the death rate as if it were under facilitation, and recalculating the solution.
 ```r
-alpha <- 0.1		# proportion of individuals that are affected by facilitation
+alpha <- c(0.2,0.2,0)		# first guess of proportions of individuals that are affected by facilitation 
 deathrates.f <- deathrates-alpha*c(facindex,0)
 mat <- mat_model(n=numstages,Ds=deathrates.f,Gs=growthrates,R=reproductionrate)
 sof <- solution.matrix(p0=initialpop[1:numstages], M=mat, times=times)
