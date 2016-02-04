@@ -76,6 +76,17 @@ sof <- solution.matrix(p0=initialpop[1:numstages], M=mat, times=times)
 stackplot(sof)
 ```
 
+I will add a comparison example using the simulation results and the theoretical results.
+```r
+stackplot(ab[,1:numstages])
+lines(so[,3]~rownames(so),pch=3)
+lines(so[,3]+so[,2]~rownames(so),pch=3)
+lines(so[,3]+so[,2]+so[,1]~rownames(so),pch=3)
+lines(sof[,3]~rownames(sof),pch=2)
+lines(sof[,3]+sof[,2]~rownames(so),pch=2)
+lines(sof[,3]+sof[,2]+sof[,1]~rownames(sof),pch=2)
+```
+
 ### Disclaimer
 
 I am an undergrad applied math student, my skill in R programming is limited and this project is in development. This guide was made to allow others (ie my advisors) to understand the current state of the project so that we can comunicate. It is likely that most of the functions used above will be changed as this project develops, so that they can better fulfill our needs.
