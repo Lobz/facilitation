@@ -1,7 +1,7 @@
 #include"Facilitation.hpp"
 #include"Random.hpp"
 
-Arena::Arena(int lifestages, double *parameters, double facilitation, double width, double height) :lifestages(lifestages),spnum(lifestages+1),width(width),height(height) {
+Arena::Arena(int lifestages, double *parameters, double *facilitation, double width, double height) :lifestages(lifestages),spnum(lifestages+1),width(width),height(height) {
 	int i;
 	stages = (Species**)malloc(spnum*(sizeof(Species*)));
 	ratesList = (double*)malloc(spnum*(sizeof(double)));
@@ -14,10 +14,10 @@ Arena::Arena(int lifestages, double *parameters, double facilitation, double wid
 	for(i=0;i<lifestages-1;i++){
 		stages[i]->setNextStage(stages[i+1]);
 		stages[i]->setSeedStage(stages[0]);
+		stages[i]->setFacilitation(facilitation[i]);
 	}
 	stages[i]->setSeedStage(stages[0]);
 
-	stages[1]->setFacilitation(facilitation);
 
 	totalTime = 0.0;
 

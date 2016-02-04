@@ -24,7 +24,7 @@ class Arena {
 	Species *facilitator;
 
 	public:
-	Arena(int lifestages, double * baserates, double facilitation, double width, double height);
+	Arena(int lifestages, double * baserates, double * facilitation, double width, double height);
 	bool populate(int *stagesinit);
 	bool turn();
 	bool findFacilitator(Position p);

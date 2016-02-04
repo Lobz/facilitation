@@ -24,7 +24,7 @@ growthrates <- c(1, 0.2)      # transition rates seed-->sapling and sapling-->ad
 reproductionrate <- 5         # reproduction rate (only adult)
 times <- seq(0,10,.2)         # array of times of interest
 initialpop <- c(10,10,10,10)  # initial pop. sizes for the 3 stages plus the facilitator species
-facindex <- 1                 # this will be the value by which facilitator decreases seeds' deathrates
+facindex <- c(0,1)            # this will be the values by which facilitator decreases seeds and seedlings deathrates
 radius <- 2                   # this is the distance up to which the facilitation affects the seed
 
 dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, R=reproductionrate, fac=facindex, init=initialpop, rad=radius)
