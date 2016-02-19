@@ -48,14 +48,18 @@ You may convert this list to a dataframe (FacByRates does this internally) and c
 ab <- abundance_matrix(dt)
 ```
 
-If your rates are low and/or your time interval is small, it may happen that the times in the abundance matrix are less than what you expected. If the length of rownames(ab) is less than length(times), it means that there were spans of time during which no events happened. To fill in these blanks, you may use the following (warning: might be a slow function):
+If your rates are low and/or your time interval is small, it may happen that the times in the abundance matrix are less than what you expected. If the length of rownames(ab) is less than length(times), it means that there were spans of time during which no events happened. To fill in these blanks, you may use the following (warning: might be a slow function. WARNING: this function will produce points of false data whenever something did happen between two points in time):
 ```r
 ab <- fillTime(ab,times)
 ```
 
-Having a reliable abundance matrix, you can plot your population in a stackplot. Obs.: the last column corresponds to the facilitator, so it must be removes from this plot .
+Having a reliable abundance matrix, you can plot your population in a stackplot. Obs.: the last column corresponds to the facilitator, so it must be removed from this plot.
 ```r
 stackplot(ab[,1:numstages])
+```
+You can also plot it in a logaritmic scale to better visualize the growthrate of the species:
+```r
+stackplot(ab[,1:numstages],log.y=T)
 ```
 
 The package also include functions to plot the expected abundances according to a linear differential model. To produce the matrix corresponding to the ODE and calculate the solution (that is, the matrix exponential), run the following: 
@@ -85,7 +89,17 @@ lines(so[,3]+so[,2]+so[,1]~rownames(so),lty=3)
 lines(sof[,3]~rownames(sof),lty=2)
 lines(sof[,3]+sof[,2]~rownames(so),lty=2)
 lines(sof[,3]+sof[,2]+sof[,1]~rownames(sof),lty=2)
-```
+``` 
+Also with log-scaled plots:
+```r
+stackplot(ab[,1:numstages], log.y=T)
+lines(so[,3]~rownames(so),lty=3)
+lines(so[,3]+so[,2]~rownames(so),lty=3)
+lines(so[,3]+so[,2]+so[,1]~rownames(so),lty=3)
+lines(sof[,3]~rownames(sof),lty=2)
+lines(sof[,3]+sof[,2]~rownames(so),lty=2)
+lines(sof[,3]+sof[,2]+sof[,1]~rownames(sof),lty=2)
+``` 
 
 ### Disclaimer
 
