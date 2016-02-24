@@ -105,8 +105,6 @@ I added some basic tools for comparing the results. Since the population grows e
 [1] 0.2625879
 > limiting.rate(mat.f)
 [1] 0.3466331
-> fitted.rate(ab
-ab.mat=           ab                abbreviate        ability.cov       abline            abs               abundance_matrix
 > fitted.rate(ab)
     slope
 0.3099619
