@@ -29,6 +29,7 @@ class Arena {
 	bool turn();
 	bool findFacilitator(Position p);
 	std::list<Individual*> getFacilitators(Position p);
+	std::list<Individual*> addFacilitated(Individual *ind,Position p, double radius);
 	void print();
 
 	status_list getStatus();
@@ -61,9 +62,11 @@ class Species {
 	Species* getNextStage();
 	Species* getSeedStage();
 
-	bool isPresent(Position p);
+	/* if radius is unspecified (=0), the radius used is the species own radius */
+	bool isPresent(Position p, double radius = 0);
 	std::list<Individual*> getFacilitators(Position p);
-	std::list<Individual*> getPresent(Position p);
+	/* if radius is unspecified (=0), the radius used is the species own radius */
+	std::list<Individual*> getPresent(Position p, double radius = 0);
 	void addIndividual(double x, double y);
 	void addIndividual(Position p);	
 	void disperseIndividual(double x, double y);
@@ -101,10 +104,14 @@ class Individual {
 	Individual(Species *sp, Position p);
 	Individual(Species *sp, double x, double y);
 	double getTotalRate();
-	bool isPresent(Position p);
+	bool isPresent(Position p, double radius = 0);
 	void print();
 	void act();
+	/** adds a neighbour list and cross-adds yourself to everyone in that list */
+	void addNeighbourList(std::list<Individual*> neighList);
+	/** adds a neighbour to the list. Don't forget to add cross-reference to neighbour's list! */
 	void addNeighbour(Individual *i);
+	/** removes neighbour from list. Doesn't remove cross-reference from neighbour's list */
 	void removeNeighbour(Individual *i);
 	
 	status_line getStatus();

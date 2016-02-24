@@ -26,6 +26,7 @@ Arena::Arena(int lifestages, double *parameters, double *facilitation, double wi
 bool Arena::populate(int *stagesinit){
 	int i,j;
 
+	/* The order is reversed merely to guarantee that the facilitator comes first. TODO: use addFacilitated to not need this anymore */
 	for(i=spnum-1;i>=0;i--){
 		for(j=0;j<stagesinit[i];j++){
 			try{
@@ -108,6 +109,15 @@ bool Arena::findFacilitator(Position p){
 
 std::list<Individual*> Arena::getFacilitators(Position p){
 	return facilitator->getPresent(p);
+}
+
+std::list<Individual*> Arena::addFacilitated(Individual *ind,Position p, double radius){
+	int j;
+	for(j=0;j<lifestages;j++){
+		if(stages[j]->getFac() != 0){
+			ind->addNeighbourList(stages[j]->getPresent(p,radius));
+		}
+	}
 }
 
 double Arena::getTotalTime(){

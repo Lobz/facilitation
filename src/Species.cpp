@@ -71,11 +71,11 @@ double Species::getTotalRate(){
 	return totalRate;
 }
 
-bool Species::isPresent(Position p){
+bool Species::isPresent(Position p, double radius) {
 	std::list<Individual*>::iterator i;
 
 	for(i=population.begin();i!=population.end();i++){
-		if((*i)->isPresent(p)) return true;
+		if((*i)->isPresent(p,radius*radius)) return true;
 	}
 
 	return false;
@@ -85,12 +85,12 @@ std::list<Individual*> Species::getFacilitators(Position p){
 	return arena->getFacilitators(p);
 }
 
-std::list<Individual*> Species::getPresent(Position p){
+std::list<Individual*> Species::getPresent(Position p, double radius){
 	std::list<Individual*>::iterator i;
 	std::list<Individual*> list;
 
 	for(i=population.begin();i!=population.end();i++){
-		if((*i)->isPresent(p)) list.push_back(*i);
+		if((*i)->isPresent(p,radius*radius)) list.push_back(*i);
 	}
 
 	return list;

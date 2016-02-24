@@ -28,7 +28,7 @@ void	Individual::setSpecies(Species *sp) {
 }
 
 double Individual::actualD(){
-	if(facilitation > 0 && !neighbours.empty()) {
+	if(facilitation != 0 && !neighbours.empty()) {
 		return D-facilitation;
 	} else return D;
 }
@@ -38,9 +38,10 @@ double Individual::getTotalRate(){
 	return G+R+actualD();
 }
 
-bool   Individual::isPresent(Position p2){
+bool   Individual::isPresent(Position p2, double sqRadius){
+	if(sqRadius == 0) sqRadius = SqRad;
 	p2 -= p;
-	if((p2.x)*(p2.x) + (p2.y)*(p2.y) < SqRad) return true;
+	if((p2.x)*(p2.x) + (p2.y)*(p2.y) < sqRadius) return true;
 	else return false;
 }
 
@@ -84,10 +85,15 @@ void 	Individual::die(){
 }
 
 void Individual::initNeighbours(){
-	std::list<Individual*>::iterator i;
-	neighbours = species->getFacilitators(p);
+	addNeighbourList(species->getFacilitators(p));
+}
 
-	for(i=neighbours.begin();i!=neighbours.end();i++){
+void Individual::addNeighbourList(std::list<Individual*> neighList){
+	std::list<Individual*>::iterator i;
+
+	for(i=neighList.begin();i!=neighList.end();i++){
+		addNeighbour(*i);
+		/* makes sure that your neighbours adds you too */
 		(*i)->addNeighbour(this);
 	}
 }
