@@ -75,7 +75,7 @@ Note that this is the analitical solution to the ODE model that corresponds to t
 alpha <- c(0.2,0.2,0)		# first guess of proportions of individuals that are affected by facilitation 
 deathrates.f <- deathrates-alpha*c(facindex,0)
 mat.f <- mat.model(n=numstages,Ds=deathrates.f,Gs=growthrates,R=reproductionrate)
-so.f <- solution.matrix(p0=initialpop[1:numstages], M=mat, times=times)
+so.f <- solution.matrix(p0=initialpop[1:numstages], M=mat.f, times=times)
 stackplot(so.f)
 ```
 
