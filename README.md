@@ -87,7 +87,7 @@ lines(so[,3]+so[,2]~rownames(so),lty=3)
 lines(so[,3]+so[,2]+so[,1]~rownames(so),lty=3)
 lines(so.f[,3]~rownames(so.f),lty=2)
 lines(so.f[,3]+so.f[,2]~rownames(so.f),lty=2)
-lines(so.f[,3]+so.f[,2]+so.f[,1]~rownames(so.ff),lty=2)
+lines(so.f[,3]+so.f[,2]+so.f[,1]~rownames(so.f),lty=2)
 ``` 
 Also with log-scaled plots:
 ```r
@@ -97,7 +97,7 @@ lines(so[,3]+so[,2]~rownames(so),lty=3)
 lines(so[,3]+so[,2]+so[,1]~rownames(so),lty=3)
 lines(so.f[,3]~rownames(so.f),lty=2)
 lines(so.f[,3]+so.f[,2]~rownames(so.f),lty=2)
-lines(so.f[,3]+so.f[,2]+so.f[,1]~rownames(so.ff),lty=2)
+lines(so.f[,3]+so.f[,2]+so.f[,1]~rownames(so.f),lty=2)
 ``` 
 I added some basic tools for comparing the results. Since the population grows exponentially, we will fit an exponential model to the population total using the nls function.
 ```r
