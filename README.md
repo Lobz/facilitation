@@ -63,7 +63,7 @@ stackplot(ab[,1:numstages],log.y=T)
 
 The package also include functions to plot the expected abundances according to a linear differential model. To produce the matrix corresponding to the ODE and calculate the solution (that is, the matrix exponential), run the following: 
 ```r
-mat <- mat_model(n=numstages,Ds=deathrates,Gs=growthrates,R=reproductionrate)
+mat <- mat.model(n=numstages,Ds=deathrates,Gs=growthrates,R=reproductionrate)
 so <- solution.matrix(p0=initialpop[1:numstages], M=mat, times=times)
 ```
 You can also plot the results (plot the whole matrix since there is no facilitator this time):
@@ -74,7 +74,7 @@ Note that this is the analitical solution to the ODE model that corresponds to t
 ```r
 alpha <- c(0.2,0.2,0)		# first guess of proportions of individuals that are affected by facilitation 
 deathrates.f <- deathrates-alpha*c(facindex,0)
-mat <- mat_model(n=numstages,Ds=deathrates.f,Gs=growthrates,R=reproductionrate)
+mat <- mat.model(n=numstages,Ds=deathrates.f,Gs=growthrates,R=reproductionrate)
 sof <- solution.matrix(p0=initialpop[1:numstages], M=mat, times=times)
 stackplot(sof)
 ```
