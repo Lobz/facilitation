@@ -74,9 +74,9 @@ Note that this is the analitical solution to the ODE model that corresponds to t
 ```r
 alpha <- c(0.2,0.2,0)		# first guess of proportions of individuals that are affected by facilitation 
 deathrates.f <- deathrates-alpha*c(facindex,0)
-mat <- mat.model(n=numstages,Ds=deathrates.f,Gs=growthrates,R=reproductionrate)
-sof <- solution.matrix(p0=initialpop[1:numstages], M=mat, times=times)
-stackplot(sof)
+mat.f <- mat.model(n=numstages,Ds=deathrates.f,Gs=growthrates,R=reproductionrate)
+so.f <- solution.matrix(p0=initialpop[1:numstages], M=mat, times=times)
+stackplot(so.f)
 ```
 
 I will add a comparison example using the simulation results and the theoretical results.
@@ -85,9 +85,9 @@ stackplot(ab[,1:numstages])
 lines(so[,3]~rownames(so),lty=3)
 lines(so[,3]+so[,2]~rownames(so),lty=3)
 lines(so[,3]+so[,2]+so[,1]~rownames(so),lty=3)
-lines(sof[,3]~rownames(sof),lty=2)
-lines(sof[,3]+sof[,2]~rownames(so),lty=2)
-lines(sof[,3]+sof[,2]+sof[,1]~rownames(sof),lty=2)
+lines(so.f[,3]~rownames(so.f),lty=2)
+lines(so.f[,3]+so.f[,2]~rownames(so.f),lty=2)
+lines(so.f[,3]+so.f[,2]+so.f[,1]~rownames(so.ff),lty=2)
 ``` 
 Also with log-scaled plots:
 ```r
@@ -95,11 +95,26 @@ stackplot(ab[,1:numstages], log.y=T)
 lines(so[,3]~rownames(so),lty=3)
 lines(so[,3]+so[,2]~rownames(so),lty=3)
 lines(so[,3]+so[,2]+so[,1]~rownames(so),lty=3)
-lines(sof[,3]~rownames(sof),lty=2)
-lines(sof[,3]+sof[,2]~rownames(so),lty=2)
-lines(sof[,3]+sof[,2]+sof[,1]~rownames(sof),lty=2)
+lines(so.f[,3]~rownames(so.f),lty=2)
+lines(so.f[,3]+so.f[,2]~rownames(so.f),lty=2)
+lines(so.f[,3]+so.f[,2]+so.f[,1]~rownames(so.ff),lty=2)
 ``` 
-
+I added some basic tools for comparing the results. Since the population grows exponentially, we will fit an exponential model to the population total using the nls function.
+```r
+> limiting.rate(mat)
+[1] 0.2625879
+> limiting.rate(mat.f)
+[1] 0.3466331
+> fitted.rate(ab)
+    slope
+0.3099619
+> fitted.rate(so)
+    slope
+0.2634011
+> fitted.rate(so.f)
+    slope
+0.3468665
+```
 ### Disclaimer
 
 I am an undergrad applied math student, my skill in R programming is limited and this project is in development. This guide was made to allow others (ie my advisors) to understand the current state of the project so that we can comunicate. It is likely that most of the functions used above will be changed as this project develops, so that they can better fulfill our needs.
