@@ -22,19 +22,26 @@ class Arena {
 	double totalRate, *ratesList, totalTime;
 	Species **stages;
 	Species *facilitator;
+	int bcond;
 
 	public:
-	Arena(int lifestages, double * baserates, double * facilitation, double width, double height);
+	Arena(int lifestages, double * baserates, double * facilitation, double width, double height, int bcond);
+
+	/* high level functions */
 	bool populate(int *stagesinit);
 	bool turn();
+
+	/* acessors for Species and Individuals */
 	bool findFacilitator(Position p);
 	std::list<Individual*> getFacilitators(Position p);
 	std::list<Individual*> addFacilitated(Individual *ind,Position p, double radius);
-	void print();
+	Position boundaryCondition(Position p);
 
+	/* output functions */
 	status_list getStatus();
 	double* getAbundance();
 	double getTotalTime();
+	void print();
 };
 
 class Species {

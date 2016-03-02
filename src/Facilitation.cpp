@@ -1,7 +1,7 @@
 #include"Facilitation.hpp"
 #include"Random.hpp"
 
-Arena::Arena(int lifestages, double *parameters, double *facilitation, double width, double height) :lifestages(lifestages),spnum(lifestages+1),width(width),height(height) {
+Arena::Arena(int lifestages, double *parameters, double *facilitation, double width, double height, int bcond) :lifestages(lifestages),spnum(lifestages+1),width(width),height(height),bcond(bcond) {
 	int i;
 	stages = (Species**)malloc(spnum*(sizeof(Species*)));
 	ratesList = (double*)malloc(spnum*(sizeof(double)));
@@ -122,4 +122,32 @@ std::list<Individual*> Arena::addFacilitated(Individual *ind,Position p, double 
 
 double Arena::getTotalTime(){
 	return totalTime;
+}
+
+Position Arena::boundaryCondition(Position p){
+	switch(bcond){
+
+		case(1):
+			/* REFLEXIVE */
+			if(p.x < 0) p.x = -p.x;
+			else if(p.x > width) p.x = width - (p.x - width);
+			if(p.y < 0) p.y = -p.y;
+			else if(p.y > height) p.y = height - (p.y - height);
+			break;
+
+		case(2):
+			/* CICLIC */
+			if(p.x < 0) p.x = width - p.x;
+			else if(p.x > width) p.x = p.x - width;;
+			if(p.y < 0) p.y = height - p.y;
+			else if(p.y > height) p.y = p.y - height;
+			break;
+
+		case(3):
+			/* destructive */
+			if(p.x < 0 || p.x > width || p.y < 0 || p.y > height) p.x = -100;
+			break;
+	}
+
+	return p;
 }

@@ -5,14 +5,14 @@
 #include<string>
 #include<Rcpp.h>
 
-status_list run_tests(bool print, int ntimes,double * times, int num_stages, double * par, double * fac, double w, double h, int *init){
+status_list run_tests(bool print, int ntimes,double * times, int num_stages, double * par, double * fac, double w, double h, int *init, int bcond){
 	int i;
 	double nextTime, timeInterval;
 	bool test=true;
 	Arena *arena;
 	status_list ret = {};
 
-	arena = new Arena(num_stages,par,fac,w,h);
+	arena = new Arena(num_stages,par,fac,w,h,bcond);
 	if(! arena->populate(init)) return ret;;
 
 	if(print) std::cout << "#arena populated!\n";
@@ -40,12 +40,12 @@ status_list run_tests(bool print, int ntimes,double * times, int num_stages, dou
 }
 
 // [[Rcpp::export]]
-Rcpp::List test_parameter(Rcpp::NumericVector times, int num_stages,Rcpp::NumericVector parameters, Rcpp::NumericVector fac, Rcpp::IntegerVector init, double w=10, double h=10){
+Rcpp::List test_parameter(Rcpp::NumericVector times, int num_stages,Rcpp::NumericVector parameters, Rcpp::NumericVector fac, Rcpp::IntegerVector init, double w=100, double h=100, int bcond=1){
 	int *in;
 	Rcpp::List ret;
 	in = init.begin();
 
-	ret = run_tests(false,times.length(),times.begin(), num_stages,parameters.begin(),fac.begin(),w,h,in);
+	ret = run_tests(false,times.length(),times.begin(), num_stages,parameters.begin(),fac.begin(),w,h,in,bcond);
 
 	return ret;
 }
