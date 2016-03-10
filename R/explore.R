@@ -17,6 +17,19 @@ eigen.profile <- function(mat){
 	}
 }
 
+facilitation.class <- function(d1,d2,d3,g1,g2,R,f){
+	lim.wo <- mat.model.wrapper1.3stages(d1,d2,d3,g1,g2,R) 
+	lim.wi <- mat.model.wrapper1.3stages(d1,d2*(1-f),d3,g1,g2,R) 
+
+	if(lim.wo > 0) {return(3)} # both positive
+	else if(lim.wi > 0) {return(2)} # mixed
+	else{return(1)} # both negative
+}
+
+facilitation.class.wrapper <- function(data){
+	mapply(facilitation.class,data[,1],data[,2],data[,3],data[,4],data[,5],data[,6],data[,7])
+}
+
 fitted.rate <- function(ab.mat){
 	total <- data.frame(rowSums(ab.mat))
 	total$times <- as.numeric(rownames(ab.mat))

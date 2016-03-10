@@ -20,7 +20,7 @@ class Arena {
 	int lifestages,spnum;
 	double width, height;
 	double totalRate, *ratesList, totalTime;
-	Species **stages;
+	Species **species;
 	Species *facilitator;
 	int bcond;
 
@@ -32,13 +32,15 @@ class Arena {
 	bool turn();
 
 	/* acessors for Species and Individuals */
-	bool findFacilitator(Position p);
-	std::list<Individual*> getFacilitators(Position p);
-	std::list<Individual*> addFacilitated(Individual *ind,Position p, double radius);
+	bool findPresent(unsigned int species_id, Position p);
+	std::list<Individual*> getPresent(unsigned int species_id, Position p);
+	void addAffected(Individual *ind);
+
 	Position boundaryCondition(Position p);
 
 	/* output functions */
 	status_list getStatus();
+	unsigned int getSpNum();
 	double* getAbundance();
 	double getTotalTime();
 	void print();
@@ -47,50 +49,60 @@ class Arena {
 class Species {
 	private:
 	unsigned int id;
-	double G, R, D, Rad, facilitation, dispersalRadius;
+	unsigned int spnum;
+	double G, R, D, Rad, dispersalRadius;
 	double totalRate;
 
 	Arena *arena;
 	std::list<Individual*> population;
 	Species *nextStage, *seedStage;
+	/* array of interaction coeficients (affecting deathrate) */
+	double *interactions;
 
 	public:
 	Species(Arena *ar,int id, double *par);
 	Species(Arena *ar,int id, double D, double G, double R, double Rad,double dispersalRadius);
-	void setFacilitation(double f);
+	/* BASIC RUN ACTION */
+	void act();
 
-	double getTotalRate();
-	double getG();
-	double getR();
-	double getD(Position p);
-	double getRad();
-	double getFac();
-	unsigned int getId();
-	Species* getNextStage();
-	Species* getSeedStage();
-
-	/* if radius is unspecified (=0), the radius used is the species own radius */
+	/* INTERACTIONS */
+	/* note: for the following functions, if radius is unspecified (=0), the radius used is the species own radius */
 	bool isPresent(Position p, double radius = 0);
-	std::list<Individual*> getFacilitators(Position p);
-	/* if radius is unspecified (=0), the radius used is the species own radius */
 	std::list<Individual*> getPresent(Position p, double radius = 0);
+
+	/* REPRODUCTION AND DEATH */
+	std::list<Individual*>::iterator add(Individual *i);
+	void remove(std::list<Individual*>::iterator i);
 	void addIndividual(double x, double y);
 	void addIndividual(Position p);	
 	void disperseIndividual(double x, double y);
 	void disperseIndividual(Position p);	
 	Position dispersalKernel();
-	void act();
 
+
+	/* SETS */
 	void setNextStage(Species *st);
 	void setSeedStage(Species *st);
+	void setFacilitation(double f);
+	void setInteraction(unsigned int s, double effect);
+	void setAutoInteraction(double effect);
 
-	void remove(std::list<Individual*>::iterator i);
-	std::list<Individual*>::iterator add(Individual *i);
 
-	void print(double time);
+
+	/* GETS */
+	double getTotalRate();
+	double getG();
+	double getR();
+	double getD(Position p);
+	double getRad();
+	double getInteraction(unsigned int species_id);
+	unsigned int getId();
+	Species* getNextStage();
+	Species* getSeedStage();
 
 	status_list getStatus(double time);
 	double getAbundance();
+	void print(double time);
 };
 
 
@@ -99,29 +111,51 @@ class Individual {
 	static unsigned long id_MAX;
 	Position p;
 	const unsigned long id;
+	unsigned int spnum;
 	double R, D, G, Rad, SqRad, facilitation;
 	double actualD();
 	double totalRate;
 	Species *species, *seedStage;
+	Arena *arena;
 	std::list<Individual*>::iterator ref;
-	std::list<Individual*> neighbours;
+	/* array of lists of neighbours by species */
+	std::list<Individual*> *affectingNeighbours;
+	std::list<Individual*> *affectedNeighbours;
 	void initNeighbours();
 
 	public:
-	Individual(Species *sp, Position p);
-	Individual(Species *sp, double x, double y);
+	Individual(Arena *ar, Species *sp, Position p);
+	Individual(Arena *ar, Species *sp, double x, double y);
+	/* general action function */
+	void act();
+
+	/* GETS */
 	double getTotalRate();
+	int getSpeciesId();
+	Position getPosition();
+	double getRadius();
 	bool isPresent(Position p, double radius = 0);
 	void print();
-	void act();
-	/** adds a neighbour list and cross-adds yourself to everyone in that list */
-	void addNeighbourList(std::list<Individual*> neighList);
-	/** adds a neighbour to the list. Don't forget to add cross-reference to neighbour's list! */
-	void addNeighbour(Individual *i);
-	/** removes neighbour from list. Doesn't remove cross-reference from neighbour's list */
-	void removeNeighbour(Individual *i);
-	
 	status_line getStatus();
+
+
+
+	/* INTERACTIONS */
+	/** adds a neighbour list and cross-adds yourself to everyone in that list */
+	void addAffectingNeighbourList(std::list<Individual*> neighList);
+	/** adds a neighbour to the list. Don't forget to add cross-reference to neighbour's list! */
+	void addAffectingNeighbour(Individual *i);
+	/** removes neighbour from list. Doesn't remove cross-reference from neighbour's list */
+	void removeAffectingNeighbour(Individual *i);
+	/** adds a neighbour list and cross-adds yourself to everyone in that list */
+	void addAffectedNeighbourList(std::list<Individual*> neighList);
+	/** adds a neighbour to the list. Don't forget to add cross-reference to neighbour's list! */
+	void addAffectedNeighbour(Individual *i);
+	/** removes neighbour from list. Doesn't remove cross-reference from neighbour's list */
+	void removeAffectedNeighbour(Individual *i);
+	/** removes all neighbours */
+	void clearNeighbours();
+	
 
 	private:
 	void setSpecies(Species *sp);

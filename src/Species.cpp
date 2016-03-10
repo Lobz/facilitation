@@ -7,22 +7,32 @@
 Species::Species(Arena *ar,int id, double *par) : Species(ar,id,par[2],par[0],par[1],par[3],0.5){}
 
 Species::Species(Arena *ar,int id, double D, double G, double R=0, double Rad=0,double dispersalRadius=0)
-:id(id),G(G),D(D),R(R),Rad(Rad),dispersalRadius(dispersalRadius){
-	facilitation = 0;
+		:id(id),G(G),D(D),R(R),Rad(Rad),dispersalRadius(dispersalRadius){
+	unsigned int i;
 	nextStage = NULL;
 	seedStage = NULL;
 	dispersalRadius = 0.5;
 
 	arena = ar;
+	spnum = ar->getSpNum();
+
+	interactions = (double*)malloc(spnum*(sizeof(double)));
+	for(i=0;i<spnum;i++){
+		interactions[i]=0;
+	}
 
 	std::cout << id << ": G=" << G << " , R=" << R << " , D=" << D << "\n";
 }
 
-void Species::setFacilitation(double f){
-	if(facilitation > D){
-		printf("WARNING: facilitation parameter set to be bigger than deathrate. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f\n,facilitation=%d", id,G,R,D,Rad,facilitation);
+void Species::setFacilitation(double f){setInteraction(spnum-1,f);}
+void Species::setAutoInteraction(double effect){setInteraction(id,effect);}
+
+void Species::setInteraction(unsigned int s, double effect){
+	if(effect > D){
+		printf("WARNING: interaction parameter set to be bigger than deathrate. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f,effect=%f\n", id,G,R,D,Rad,effect);
 	}
-	facilitation = f;
+	interactions[s] = effect;
+	printf("effect=%f for sp=%d on sp=%d\n",effect,s,id);
 }
 
 void Species::addIndividual(double x, double y){
@@ -34,7 +44,7 @@ void Species::addIndividual(double x, double y){
 		printf("WARNING: Seed stage set to NULL but R > 0. Check input data. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f\n", id,G,R,D,Rad);
 		throw id;
 	}
-	/*Individual *i =*/ new Individual(this,x,y);
+	/*Individual *i =*/ new Individual(arena,this,x,y);
 }
 
 void Species::addIndividual(Position p){
@@ -43,9 +53,9 @@ void Species::addIndividual(Position p){
 
 void Species::disperseIndividual(double x, double y){
 	Position p(x,y);
-	 disperseIndividual(p);
+	disperseIndividual(p);
 }
-	
+
 void Species::disperseIndividual(Position p){
 	addIndividual(p + dispersalKernel());
 }
@@ -59,13 +69,8 @@ double Species::getTotalRate(){
 	totalRate = 0;
 	std::list<Individual*>::iterator i;
 
-	if(facilitation>0){
-		for(i=population.begin();i!=population.end();i++){
-			totalRate += (*i)->getTotalRate();
-		}
-	}
-	else {
-		totalRate = (G+R+D)*getAbundance();
+	for(i=population.begin();i!=population.end();i++){
+		totalRate += (*i)->getTotalRate();
 	}
 
 	return totalRate;
@@ -79,10 +84,6 @@ bool Species::isPresent(Position p, double radius) {
 	}
 
 	return false;
-}
-
-std::list<Individual*> Species::getFacilitators(Position p){
-	return arena->getFacilitators(p);
 }
 
 std::list<Individual*> Species::getPresent(Position p, double radius){
@@ -130,7 +131,7 @@ Species* Species::getNextStage() {return nextStage;}
 double Species::getG(){return G;}
 double Species::getR(){return R;}
 double Species::getRad(){return Rad;}
-double Species::getFac(){return facilitation;}
+double Species::getInteraction(unsigned int species_id){return interactions[species_id];}
 unsigned int Species::getId(){return id;}
 double Species::getD(Position p){
 	return D;
@@ -159,7 +160,7 @@ status_list Species::getStatus(double time){
 	}
 	return status;
 }
-	
+
 double Species::getAbundance(){
 	return population.size();
 }

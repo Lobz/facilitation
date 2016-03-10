@@ -13,7 +13,7 @@ status_list run_tests(bool print, int ntimes,double * times, int num_stages, dou
 	status_list ret = {};
 
 	arena = new Arena(num_stages,par,fac,w,h,bcond);
-	if(! arena->populate(init)) return ret;;
+	if(! arena->populate(init)) return ret;
 
 	if(print) std::cout << "#arena populated!\n";
 	if(print) std::cout << "time,species,individual,x,y\n";

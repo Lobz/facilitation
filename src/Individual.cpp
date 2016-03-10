@@ -4,11 +4,28 @@
 
 unsigned long Individual::id_MAX = 0;
 
-Individual::Individual(Species *sp, double x, double y) : p(x,y), id(id_MAX++){
-	setSpecies(sp);
+Individual::Individual(Arena *ar, Species *sp, double x, double y) : arena(ar), p(x,y), id(id_MAX++) {
+	unsigned int i;
+	spnum = arena->getSpNum();
+	affectingNeighbours = (std::list<Individual*>*) malloc(spnum*sizeof(std::list<Individual*> ));
+	affectedNeighbours = (std::list<Individual*>*) malloc(spnum*sizeof(std::list<Individual*> ));
+/*	for(i=0;i<spnum;i++){
+		affectingNeighbours[i] = {};
+		affectedNeighbours[i] = {};
+	}
+*/	setSpecies(sp);
 }
-Individual::Individual(Species *sp, Position p) : p(p), id(id_MAX++){
-	setSpecies(sp);
+/*TODO: this function is a copy from the above.  there has to be a way to just call one constructor from the other >.< */
+Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(p), id(id_MAX++){
+	unsigned int i;
+	spnum = arena->getSpNum();
+	affectingNeighbours = (std::list<Individual*>*) malloc(spnum*sizeof(std::list<Individual*> ));
+	affectedNeighbours = (std::list<Individual*>*) malloc(spnum*sizeof(std::list<Individual*> ));
+/*	for(i=0;i<spnum;i++){
+		affectingNeighbours[i] = {};
+		affectedNeighbours[i] = {};
+	}
+*/	setSpecies(sp);
 }
 
 void	Individual::setSpecies(Species *sp) {
@@ -16,21 +33,30 @@ void	Individual::setSpecies(Species *sp) {
 	G = species->getG();
 	R = species->getR();
 	D = species->getD(p);
-	facilitation = species->getFac();
 	Rad = species->getRad();
 	SqRad = Rad*Rad;
 	seedStage = species->getSeedStage();
 	ref = species->add(this);
 
-	if(facilitation > D) facilitation = D;
-	if(facilitation > 0) initNeighbours();
+	initNeighbours();
 
 }
 
+
+int 		Individual::getSpeciesId(){return species->getId();}
+Position 	Individual::getPosition(){return p;}
+double 		Individual::getRadius(){return Rad;}
+
 double Individual::actualD(){
-	if(facilitation != 0 && !neighbours.empty()) {
-		return D-facilitation;
-	} else return D;
+	unsigned int sp;
+	double actuald=D,effect;
+	for(sp = 0; sp < spnum; sp++){
+		if((effect = species->getInteraction(sp)) != 0 && affectingNeighbours[sp].empty()){
+			actuald -= effect;
+		}
+	}
+	if(actuald < 0) return 0;
+	return actuald;
 }
 
 double Individual::getTotalRate(){
@@ -75,34 +101,77 @@ void	Individual::reproduce(){
 }
 
 void 	Individual::die(){
-	std::list<Individual*>::iterator i;
 	species->remove(this->ref);
-
-	for(i=neighbours.begin();i!=neighbours.end();i++){
-		(*i)->removeNeighbour(this);
-	}
+	clearNeighbours();
 	delete(this);
 }
 
-void Individual::initNeighbours(){
-	addNeighbourList(species->getFacilitators(p));
-}
-
-void Individual::addNeighbourList(std::list<Individual*> neighList){
+void 	Individual::clearNeighbours(){
+	unsigned int sp;
 	std::list<Individual*>::iterator i;
+	for(sp = 0; sp < spnum; sp++){
+		if(!affectingNeighbours[sp].empty()){
+			for(i=affectingNeighbours[sp].begin();i!=affectingNeighbours[sp].end();i = affectingNeighbours[sp].erase(i)){
+				(*i)->removeAffectedNeighbour(this);
+			}
+		}
 
-	for(i=neighList.begin();i!=neighList.end();i++){
-		addNeighbour(*i);
-		/* makes sure that your neighbours adds you too */
-		(*i)->addNeighbour(this);
+		if(!affectedNeighbours[sp].empty()){
+			for(i=affectedNeighbours[sp].begin();i!=affectedNeighbours[sp].end();i = affectedNeighbours[sp].erase(i)){
+				(*i)->removeAffectingNeighbour(this);
+			}
+		}
 	}
 }
 
-void 	Individual::addNeighbour(Individual *i){
-	neighbours.push_back(i);
+void Individual::initNeighbours(){
+	unsigned int s;
+	clearNeighbours();
+	for(s=0;s<spnum;s++){
+		if(species->getInteraction(s) != 0){
+			addAffectingNeighbourList(arena->getPresent(s,p));
+		}
+	}
+
+	arena->addAffected(this);
 }
 
-void 	Individual::removeNeighbour(Individual *i){
-	neighbours.remove(i);
+void Individual::addAffectedNeighbourList(std::list<Individual*> neighList){
+	std::list<Individual*>::iterator i;
+
+	for(i=neighList.begin();i!=neighList.end();i++){
+		addAffectedNeighbour(*i);
+		/* makes sure that your neighbours adds you too */
+		(*i)->addAffectingNeighbour(this);
+	}
 }
 
+void Individual::addAffectingNeighbourList(std::list<Individual*> neighList){
+	std::list<Individual*>::iterator i;
+
+	for(i=neighList.begin();i!=neighList.end();i++){
+		addAffectingNeighbour(*i);
+		/* makes sure that your neighbours adds you too */
+		(*i)->addAffectedNeighbour(this);
+	}
+}
+
+void 	Individual::addAffectedNeighbour(Individual *i){
+	int s = i->getSpeciesId();
+	affectedNeighbours[s].push_back(i);
+}
+
+void 	Individual::addAffectingNeighbour(Individual *i){
+	int s = i->getSpeciesId();
+	affectingNeighbours[s].push_back(i);
+}
+
+void 	Individual::removeAffectedNeighbour(Individual *i){
+	int s = i->getSpeciesId();
+	affectedNeighbours[s].remove(i);
+}
+
+void 	Individual::removeAffectingNeighbour(Individual *i){
+	int s = i->getSpeciesId();
+	affectingNeighbours[s].remove(i);
+}
