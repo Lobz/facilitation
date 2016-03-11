@@ -54,7 +54,7 @@ bool Arena::turn() {
 		totalRate += ratesList[i];
 	}
 
-	std::cout << "TotalRate calculated at time=" << totalTime << "\n";
+	//std::cout << "TotalRate calculated at time=" << totalTime << "\n";
 
 	if(totalRate < 0) {
 		std::cout << "#This simulation has reached an impossible state (totalRate < 0).\n";
@@ -72,7 +72,7 @@ bool Arena::turn() {
 	time = Exponential(totalRate);
 	totalTime += time;
 
-	std::cout << "TotalTime calculated at time=" << totalTime << "\n";
+	//std::cout << "TotalTime calculated at time=" << totalTime << "\n";
 
 	/* select stage to act */
 	r = Random(totalRate);
@@ -84,7 +84,7 @@ bool Arena::turn() {
 	}
 	species[i]->act();
 		
-	std::cout << "Species " << i << "acted at time=" << totalTime << "\n";
+	//std::cout << "Species " << i << "acted at time=" << totalTime << "\n";
 
 	return true;
 

@@ -4,31 +4,21 @@
 
 unsigned long Individual::id_MAX = 0;
 
-Individual::Individual(Arena *ar, Species *sp, double x, double y) : arena(ar), p(x,y), id(id_MAX++) {
+Individual::Individual(Arena *ar, Species *sp, double x, double y) : arena(ar), p(x,y), id(id_MAX++), affectedNeighbours(ar->getSpNum()), affectingNeighbours(ar->getSpNum()) {
 	unsigned int i;
 	spnum = arena->getSpNum();
-	affectingNeighbours = (std::list<Individual*>*) malloc(spnum*sizeof(std::list<Individual*> ));
-	affectedNeighbours = (std::list<Individual*>*) malloc(spnum*sizeof(std::list<Individual*> ));
-	for(i=0;i<spnum;i++){
-		affectingNeighbours[i] = {};
-		affectedNeighbours[i] = {};
-	}
 	setSpecies(sp);
 }
 /*TODO: this function is a copy from the above.  there has to be a way to just call one constructor from the other >.< */
-Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(p), id(id_MAX++){
+Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(p), id(id_MAX++), affectingNeighbours(ar->getSpNum()), affectedNeighbours(ar->getSpNum()) {
 	unsigned int i;
 	spnum = arena->getSpNum();
-	affectingNeighbours = (std::list<Individual*>*) malloc(spnum*sizeof(std::list<Individual*> ));
-	affectedNeighbours = (std::list<Individual*>*) malloc(spnum*sizeof(std::list<Individual*> ));
-	for(i=0;i<spnum;i++){
-		affectingNeighbours[i] = {};
-		affectedNeighbours[i] = {};
-	}
 	setSpecies(sp);
 }
 
 void	Individual::setSpecies(Species *sp) {
+	clearNeighbours();
+
 	species = sp;
 	G = species->getG();
 	R = species->getR();
@@ -86,14 +76,21 @@ void Individual::print(){
 }
 
 status_line Individual::getStatus(){
-	/* NOTE: on changing this type please change the typedef on Facilitation.hpp */
+	int i;
+	/* NOTE: on changing this please change the typedef on Facilitation.hpp and the names on R/utils.R */
 	status_line ret  = {species->getId(),id,p.x,p.y};
+	for(i=0;i<spnum;i++){
+		ret.push_back(affectingNeighbours[i].size());
+	}
+	for(i=0;i<spnum;i++){
+		ret.push_back(affectedNeighbours[i].size());
+	}
 	return ret;
 }
 
 void 	Individual::grow(){
 	species->remove(this->ref);
-	setSpecies(species->getNextStage());
+	setSpecies(species->getNextStage()); /* note: setSpecies clears and re-inits the neighbours */
 }
 
 void	Individual::reproduce(){
@@ -110,23 +107,18 @@ void 	Individual::clearNeighbours(){
 	unsigned int sp;
 	std::list<Individual*>::iterator i;
 	for(sp = 0; sp < spnum; sp++){
-		if(!affectingNeighbours[sp].empty()){
-			for(i=affectingNeighbours[sp].begin();i!=affectingNeighbours[sp].end();i = affectingNeighbours[sp].erase(i)){
-				(*i)->removeAffectedNeighbour(this);
-			}
+		for(i=affectingNeighbours[sp].begin();i!=affectingNeighbours[sp].end();i = affectingNeighbours[sp].erase(i)){
+			(*i)->removeAffectedNeighbour(this);
 		}
 
-		if(!affectedNeighbours[sp].empty()){
-			for(i=affectedNeighbours[sp].begin();i!=affectedNeighbours[sp].end();i = affectedNeighbours[sp].erase(i)){
-				(*i)->removeAffectingNeighbour(this);
-			}
+		for(i=affectedNeighbours[sp].begin();i!=affectedNeighbours[sp].end();i = affectedNeighbours[sp].erase(i)){
+			(*i)->removeAffectingNeighbour(this);
 		}
 	}
 }
 
 void Individual::initNeighbours(){
 	unsigned int s;
-	clearNeighbours();
 	for(s=0;s<spnum;s++){
 		if(species->getInteraction(s) != 0){
 			addAffectingNeighbourList(arena->getPresent(s,p));

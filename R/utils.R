@@ -1,6 +1,7 @@
 list2dataframe <- function(x) {
 	ret<-data.frame(matrix(unlist(x),length(x),byrow=TRUE))
-	names(ret)<- c("t", "sp", "id", "x", "y")
+	n <- (length(ret)-5)/2-1
+	names(ret)<- c(c("t", "sp", "id", "x", "y"),paste0("a",0:n),paste0("s",0:n))
 	return(ret)
 }
 
