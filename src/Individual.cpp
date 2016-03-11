@@ -9,11 +9,11 @@ Individual::Individual(Arena *ar, Species *sp, double x, double y) : arena(ar), 
 	spnum = arena->getSpNum();
 	affectingNeighbours = (std::list<Individual*>*) malloc(spnum*sizeof(std::list<Individual*> ));
 	affectedNeighbours = (std::list<Individual*>*) malloc(spnum*sizeof(std::list<Individual*> ));
-/*	for(i=0;i<spnum;i++){
+	for(i=0;i<spnum;i++){
 		affectingNeighbours[i] = {};
 		affectedNeighbours[i] = {};
 	}
-*/	setSpecies(sp);
+	setSpecies(sp);
 }
 /*TODO: this function is a copy from the above.  there has to be a way to just call one constructor from the other >.< */
 Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(p), id(id_MAX++){
@@ -21,11 +21,11 @@ Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(p), id
 	spnum = arena->getSpNum();
 	affectingNeighbours = (std::list<Individual*>*) malloc(spnum*sizeof(std::list<Individual*> ));
 	affectedNeighbours = (std::list<Individual*>*) malloc(spnum*sizeof(std::list<Individual*> ));
-/*	for(i=0;i<spnum;i++){
+	for(i=0;i<spnum;i++){
 		affectingNeighbours[i] = {};
 		affectedNeighbours[i] = {};
 	}
-*/	setSpecies(sp);
+	setSpecies(sp);
 }
 
 void	Individual::setSpecies(Species *sp) {
@@ -174,4 +174,8 @@ void 	Individual::removeAffectedNeighbour(Individual *i){
 void 	Individual::removeAffectingNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	affectingNeighbours[s].remove(i);
+}
+
+bool 	Individual::noAffectingNeighbours(int i){
+	return affectingNeighbours[i].empty();
 }

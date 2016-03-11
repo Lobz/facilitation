@@ -155,6 +155,7 @@ class Individual {
 	void removeAffectedNeighbour(Individual *i);
 	/** removes all neighbours */
 	void clearNeighbours();
+	bool noAffectingNeighbours(int i);
 	
 
 	private:
