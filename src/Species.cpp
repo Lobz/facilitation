@@ -21,7 +21,7 @@ Species::Species(Arena *ar,int id, double D, double G, double R=0, double Rad=0,
 		interactions[i]=0;
 	}
 
-	std::cout << id << ": G=" << G << " , R=" << R << " , D=" << D << "\n";
+	std::cout << id << ": G=" << G << " , R=" << R << " , D=" << D << ", Rad=" << Rad << "\n";
 }
 
 void Species::setFacilitation(double f){setInteraction(spnum-1,f);}

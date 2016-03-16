@@ -13,11 +13,11 @@ plot_all <- function(dt) {
 	}
 }
 
-facByRates <- function(times, n, Ds, Gs, R, interactions=rep(0,n*n), fac=rep(0,n-2), init=rep(10,n+1), rad=2, height=100, width=100, boundary=1){
+facByRates <- function(times, n, Ds, Gs, R, interactions=rep(0,n*n), fac=rep(0,n-2), init=rep(10,n+1), rad=rep(2,n+1), height=100, width=100, boundary=1){
 
-	M <- matrix(c(Gs, 0, rep(0, n-1),R,Ds, rep(0, n)), nrow = n)
-	M <- rbind(M,c(0,0,0,rad))
-	M <- as.vector(t(M))
+	if(length(rad)==1) rad <- c(rep(0,n),rad)
+	M <- matrix(c(Gs, 0, 0,rep(0, n-1),R,0,Ds,0, rad), nrow = n+1)
+	M <- c(t(M))
 	N <- matrix(interactions,nrow=n)
 	N <- rbind(N,c(fac,0))
 	N <- c(N,rep(0,n+1))
