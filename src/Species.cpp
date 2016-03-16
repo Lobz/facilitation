@@ -8,7 +8,7 @@ Species::Species(Arena *ar,int id, double *par) : Species(ar,id,par[2],par[0],pa
 
 Species::Species(Arena *ar,int id, double D, double G, double R=0, double Rad=0,double dispersalRadius=0)
 		:id(id),G(G),D(D),R(R),Rad(Rad),dispersalRadius(dispersalRadius){
-	unsigned int i;
+	int i;
 	nextStage = NULL;
 	seedStage = NULL;
 	dispersalRadius = 0.5;
@@ -27,7 +27,7 @@ Species::Species(Arena *ar,int id, double D, double G, double R=0, double Rad=0,
 void Species::setFacilitation(double f){setInteraction(spnum-1,f);}
 void Species::setAutoInteraction(double effect){setInteraction(id,effect);}
 
-void Species::setInteraction(unsigned int s, double effect){
+void Species::setInteraction(int s, double effect){
 	if(effect > D){
 		printf("WARNING: interaction parameter set to be bigger than deathrate. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f,effect=%f\n", id,G,R,D,Rad,effect);
 	}
@@ -131,8 +131,8 @@ Species* Species::getNextStage() {return nextStage;}
 double Species::getG(){return G;}
 double Species::getR(){return R;}
 double Species::getRad(){return Rad;}
-double Species::getInteraction(unsigned int species_id){return interactions[species_id];}
-unsigned int Species::getId(){return id;}
+double Species::getInteraction(int species_id){return interactions[species_id];}
+int Species::getId(){return id;}
 double Species::getD(Position p){
 	return D;
 }

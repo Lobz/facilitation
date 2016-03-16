@@ -1,7 +1,7 @@
 #include"Facilitation.hpp"
 #include"Random.hpp"
 
-Arena::Arena(int lifestages, double *parameters, double *facilitation, double width, double height, int bcond) :lifestages(lifestages),spnum(lifestages+1),width(width),height(height),bcond(bcond) {
+Arena::Arena(int lifestages, double *parameters, double width, double height, int bcond) :lifestages(lifestages),spnum(lifestages+1),width(width),height(height),bcond(bcond) {
 	int i;
 	species = (Species**)malloc(spnum*(sizeof(Species*)));
 	ratesList = (double*)malloc(spnum*(sizeof(double)));
@@ -14,7 +14,6 @@ Arena::Arena(int lifestages, double *parameters, double *facilitation, double wi
 	for(i=0;i<lifestages-1;i++){
 		species[i]->setNextStage(species[i+1]);
 		species[i]->setSeedStage(species[0]);
-		species[i]->setFacilitation(facilitation[i]);
 	}
 	species[i]->setSeedStage(species[0]);
 
@@ -23,6 +22,15 @@ Arena::Arena(int lifestages, double *parameters, double *facilitation, double wi
 
 	std::cout << "Arena initialized\n";
 
+}
+
+void Arena::setInteractions(double *interactions){
+	int i,j;
+	for(i=0;i<spnum;i++){
+		for(j=0;j<spnum;j++){
+			species[i]->setInteraction(j,interactions[spnum*i+j]);
+		}
+	}
 }
 
 bool Arena::populate(int *speciesinit){
@@ -121,11 +129,11 @@ double* Arena::getAbundance(){
 	return ab;
 }
 
-bool Arena::findPresent(unsigned int species_id, Position p){
+bool Arena::findPresent(int species_id, Position p){
 	return species[species_id]->isPresent(p);
 }
 
-std::list<Individual*> Arena::getPresent(unsigned int species_id,Position p){
+std::list<Individual*> Arena::getPresent(int species_id,Position p){
 	return species[species_id]->getPresent(p);
 }
 
@@ -146,7 +154,7 @@ double Arena::getTotalTime(){
 	return totalTime;
 }
 
-unsigned int Arena::getSpNum(){
+int Arena::getSpNum(){
 	return spnum;
 }
 

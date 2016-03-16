@@ -5,13 +5,11 @@
 unsigned long Individual::id_MAX = 0;
 
 Individual::Individual(Arena *ar, Species *sp, double x, double y) : arena(ar), p(x,y), id(id_MAX++), affectedNeighbours(ar->getSpNum()), affectingNeighbours(ar->getSpNum()) {
-	unsigned int i;
 	spnum = arena->getSpNum();
 	setSpecies(sp);
 }
 /*TODO: this function is a copy from the above.  there has to be a way to just call one constructor from the other >.< */
 Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(p), id(id_MAX++), affectingNeighbours(ar->getSpNum()), affectedNeighbours(ar->getSpNum()) {
-	unsigned int i;
 	spnum = arena->getSpNum();
 	setSpecies(sp);
 }
@@ -38,10 +36,10 @@ Position 	Individual::getPosition(){return p;}
 double 		Individual::getRadius(){return Rad;}
 
 double Individual::actualD(){
-	unsigned int sp;
+	int sp;
 	double actuald=D,effect;
 	for(sp = 0; sp < spnum; sp++){
-		if((effect = species->getInteraction(sp)) != 0 && affectingNeighbours[sp].empty()){
+		if((effect = species->getInteraction(sp)) != 0 && !affectingNeighbours[sp].empty()){
 			actuald -= effect;
 		}
 	}
@@ -104,7 +102,7 @@ void 	Individual::die(){
 }
 
 void 	Individual::clearNeighbours(){
-	unsigned int sp;
+	int sp;
 	std::list<Individual*>::iterator i;
 	for(sp = 0; sp < spnum; sp++){
 		for(i=affectingNeighbours[sp].begin();i!=affectingNeighbours[sp].end();i = affectingNeighbours[sp].erase(i)){
@@ -118,7 +116,7 @@ void 	Individual::clearNeighbours(){
 }
 
 void Individual::initNeighbours(){
-	unsigned int s;
+	int s;
 	for(s=0;s<spnum;s++){
 		if(species->getInteraction(s) != 0){
 			addAffectingNeighbourList(arena->getPresent(s,p));

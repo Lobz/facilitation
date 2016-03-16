@@ -25,22 +25,23 @@ class Arena {
 	int bcond;
 
 	public:
-	Arena(int lifestages, double * baserates, double * facilitation, double width, double height, int bcond);
+	Arena(int lifestages, double * baserates, double width, double height, int bcond);
 
 	/* high level functions */
 	bool populate(int *stagesinit);
 	bool turn();
+	void setInteractions(double *interactions);
 
 	/* acessors for Species and Individuals */
-	bool findPresent(unsigned int species_id, Position p);
-	std::list<Individual*> getPresent(unsigned int species_id, Position p);
+	bool findPresent(int species_id, Position p);
+	std::list<Individual*> getPresent(int species_id, Position p);
 	void addAffected(Individual *ind);
 
 	Position boundaryCondition(Position p);
 
 	/* output functions */
 	status_list getStatus();
-	unsigned int getSpNum();
+	int getSpNum();
 	double* getAbundance();
 	double getTotalTime();
 	void print();
@@ -48,8 +49,8 @@ class Arena {
 
 class Species {
 	private:
-	unsigned int id;
-	unsigned int spnum;
+	int id;
+	int spnum;
 	double G, R, D, Rad, dispersalRadius;
 	double totalRate;
 
@@ -84,7 +85,7 @@ class Species {
 	void setNextStage(Species *st);
 	void setSeedStage(Species *st);
 	void setFacilitation(double f);
-	void setInteraction(unsigned int s, double effect);
+	void setInteraction(int s, double effect);
 	void setAutoInteraction(double effect);
 
 
@@ -95,8 +96,8 @@ class Species {
 	double getR();
 	double getD(Position p);
 	double getRad();
-	double getInteraction(unsigned int species_id);
-	unsigned int getId();
+	double getInteraction(int species_id);
+	int getId();
 	Species* getNextStage();
 	Species* getSeedStage();
 
@@ -111,7 +112,7 @@ class Individual {
 	static unsigned long id_MAX;
 	Position p;
 	const unsigned long id;
-	unsigned int spnum;
+	int spnum;
 	double R, D, G, Rad, SqRad, facilitation;
 	double actualD();
 	double totalRate;
