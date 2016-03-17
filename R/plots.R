@@ -50,3 +50,39 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
   legend("topleft", legend=legend, fill=col)
 }
 
+##############################################################
+# function for ploting simulation frames for facilita package
+# Alexandre Adalardo de Oliveira - 16/03/2016
+##############################################################
+spatialplot = function(data,radius, xdim=c(min(dt$x)-radius,max(dt$x)+radius), ydim=c(min(dt$y)-radius,max(dt$y)+radius), cor=c("lightgreen","blue","pink", "red"),tframe=0.15)
+{
+    #library(grid)# precisa incluir esse pacote no import do NAMESPACE grid.newpage()
+    seqt <- unique(dt$t)
+    dt0=data[data$t==seqt[1],]
+    vp <- viewport(width = 0.8, height = 0.8, xscale=xdim, yscale=ydim)
+    pushViewport(vp)
+    grid.rect(gp = gpar(col = "gray"))
+    grid.xaxis(at=round(seq(xdim[1],xdim[2], len=5)))
+    grid.yaxis(at=round(seq(ydim[1],ydim[2], len=5)))
+    raiofacilita<-grid.circle(x=dt0$x[dt0$sp==3],y=dt0$y[dt0$sp==3], r=radius ,default.units="native", gp=gpar(fill=cor[1], col="gray"))
+    grid.points(x = dt0$x[dt0$sp==2], y=dt0$y[dt0$sp==2], pch=16, gp=gpar(cex=1, col=cor[2]),vp=vp)
+    grid.points(x = dt0$x[dt0$sp==1], y=dt0$y[dt0$sp==1], pch=16, gp=gpar(cex=0.75, col=cor[3]),vp=vp)
+grid.points(x = dt0$x[dt0$sp==0], y=dt0$y[dt0$sp==0], pch=16, gp=gpar(cex=0.5, col=cor[4]),vp=vp)
+for (i in seqt[-1])
+{
+    dt0=dt[dt$t==i,]
+    grid.newpage()
+    pushViewport(vp)
+    grid.rect(gp = gpar(col = "gray"))
+    grid.xaxis(at=round(seq(xdim[1],xdim[2], len=5)))
+    grid.yaxis(at=round(seq(ydim[1],ydim[2], len=5)))
+#    grid.circle(x=dt0$x[dt0$sp==3],y=dt0$y[dt0$sp==3], r=radius ,default.units="native", gp=gpar(fill="lightgreen", col="gray"))
+    grid.draw(raiofacilita)
+    grid.points(x = dt0$x[dt0$sp==2], y=dt0$y[dt0$sp==2], pch=16, gp=gpar(cex=1, col=cor[2]),vp=vp)
+    grid.points(x = dt0$x[dt0$sp==1], y=dt0$y[dt0$sp==1], pch=16, gp=gpar(cex=0.75, col=cor[3]),vp=vp)
+grid.points(x = dt0$x[dt0$sp==0], y=dt0$y[dt0$sp==0], pch=16, gp=gpar(cex=0.5, col=cor[4]),vp=vp)
+    Sys.sleep(tframe)    
+}
+}
+#####################
+#spatialplot(data=dt,radius=2,dim=c(-5,15), ydim=c(-5,15))

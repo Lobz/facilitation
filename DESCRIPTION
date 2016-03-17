@@ -5,7 +5,7 @@ Authors@R: c(person("Mali", "Salles", email = "marinacs@gmail.com", role = c("au
              person("Andre", "Chalom", email="andrechalom@gmail.com", role=c("aut")))
 Description: A C++ framework for species interaction IBMs.
 LinkingTo: Rcpp
-Imports: Rcpp
+Imports: Rcpp,grid
 Depends: R (>= 3.2.1)
 License: GPL-2
 LazyData: true
