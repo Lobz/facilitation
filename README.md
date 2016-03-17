@@ -22,13 +22,13 @@ numstages <- 3
 deathrates <- c(2, 0.2, 0.2)  # death rates for seed, sapling and adult
 growthrates <- c(1, 0.2)      # transition rates seed-->sapling and sapling-->adult
 reproductionrate <- 5         # reproduction rate (only adult)
-times <- seq(0,10,.2)         # array of times of interest
-initialpop <- c(10,10,10,10)  # initial pop. sizes for the 3 stages plus the facilitator species
+times <- seq(0,15,.2)         # array of times of interest
+initialpop <- c(1,1,10,20)    # initial pop. sizes for the 3 stages plus the facilitator species
 facindex <- c(0,1)            # this will be the values by which facilitator decreases seeds and seedlings deathrates
-effects <- c(0,0,0, 0,-0.5,0, 0,0,0.2)
+effects <- c(0,0,0, 0,-0.5,0, 0,0,-0.2)
 radius <- c(0,0.5,2,2)        # this are the distances up to which the individuals can have effect on others, by stage + facilitator
-h <- 100                      # arena height
-w <- 100                      # arena width
+h <- 50                       # arena height
+w <- 50                       # arena width
 
 dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
 ```
