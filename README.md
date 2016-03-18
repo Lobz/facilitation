@@ -33,6 +33,16 @@ w <- 50                       # arena width
 
 dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
 ```
+You can plot the actual individuals in space in an animation with:
+```r
+spatialplot(dt,radius,tframe=0.1)
+```
+You can use the package `animation` to save the animation into a gif (set tframe to 0 unless you want to waste a lot of time!).
+```r
+library(animation)
+saveGIF(spatialplot(dt,radius,tframe=0),interval=0.1,movie.name="fac.gif") 
+```
+
 You may calculate the abundances through time:
 ```r
 ab <- abundance_matrix(dt)
