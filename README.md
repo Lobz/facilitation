@@ -21,48 +21,19 @@ The below code creates a simulation with 3 lifestages, with facilitation reducin
 numstages <- 3
 deathrates <- c(2, 0.2, 0.2)  # death rates for seed, sapling and adult
 growthrates <- c(1, 0.2)      # transition rates seed-->sapling and sapling-->adult
-reproductionrate <- 5         # reproduction rate (only adult)
+reproductionrate <- 10        # reproduction rate (only adult)
+dispersalradius <- 2	      # average distance a seed falls from the parent (distance is gaussian)
 times <- seq(0,15,.2)         # array of times of interest
 initialpop <- c(1,1,10,20)    # initial pop. sizes for the 3 stages plus the facilitator species
 facindex <- c(0,1)            # this will be the values by which facilitator decreases seeds and seedlings deathrates
-effects <- c(0,0,0, 0,-0.5,0, 0,0,-0.2)
+effects <- c(0,0,0, 0,-0.5,0, 0,0,-0.2) # the effects reducing deathrate (negative values increase deathrates)
 radius <- c(0,0.5,2,2)        # this are the distances up to which the individuals can have effect on others, by stage + facilitator
 h <- 50                       # arena height
 w <- 50                       # arena width
 
-dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
+dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
 ```
-
-The below code creates a simulation with 3 lifestages, with facilitation reducing the death rate of the second stage, runs it up to time 10, and stores the result in ret. In this case, the facilitator has no dynamics.
-```r
-numstages <- 3
-deathrates <- c(2, 0.2, 0.2)  # death rates for seed, sapling and adult
-growthrates <- c(1, 0.2)      # transition rates seed-->sapling and sapling-->adult
-reproductionrate <- 5         # reproduction rate (only adult)
-times <- seq(0,10,.2)         # array of times of interest
-initialpop <- c(10,10,10,10)  # initial pop. sizes for the 3 stages plus the facilitator species
-facindex <- c(0,1)            # this will be the values by which facilitator decreases seeds and seedlings deathrates
-radius <- 2                   # this is the distance up to which the facilitation affects the seed
-h <- 100                      # arena height
-w <- 100                      # arena width
-
-dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, R=reproductionrate, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
-```
-
-Another way to run the model, organizing the parameters by lifestage. The parameters in this example are the same as before, so we will reuse some of the variables. Obs.: this function is deprecated and may be removed in the future.
-```r
-par.seeds <- c(1, 0, 2, 0)      # parameters are (growthrate, reproductionrate, deathrate, radius). 
-par.saps <- c(.2, 0, .2, 0)     # in our example reproduction rates for the first two stages is 0, but you can change 
-par.adults <- c(0, 5, .2, 0)    # the last(adult) stage is not allowed to have positive growthrate
-par.facilitator <- c(0,0,0,2)   # the facilitator also has parameters! the radius is the radius of facilitating effect
-par <- c(par.seeds,par.saps,par.adults,par.facilitator)   # mind the order
-
-ret <- test_parameter(times=times, num_stages=numstages, parameters=par, f=facindex, init=initialpop)
-dt <- list2dataframe(ret)
-```
-
-Either way, the return value of test_parameter is a list of lists. Each line corresponds to one individual, at one time.
-You may convert this list to a dataframe (FacByRates does this internally) and calculate the abundances through time:
+You may calculate the abundances through time:
 ```r
 ab <- abundance_matrix(dt)
 ```

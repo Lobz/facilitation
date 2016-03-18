@@ -4,10 +4,10 @@
 
 unsigned long Individual::id_MAX = 0;
 
-Individual::Individual(Arena *ar, Species *sp, double x, double y) : arena(ar), p(x,y), id(id_MAX++), affectedNeighbours(ar->getSpNum()), affectingNeighbours(ar->getSpNum()) {
-	spnum = arena->getSpNum();
-	setSpecies(sp);
-}
+Individual::Individual(Arena *ar, Species *sp, double x, double y):Individual(ar,sp,Position(x,y)){} 
+
+
+
 /*TODO: this function is a copy from the above.  there has to be a way to just call one constructor from the other >.< */
 Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(p), id(id_MAX++), affectingNeighbours(ar->getSpNum()), affectedNeighbours(ar->getSpNum()) {
 	spnum = arena->getSpNum();

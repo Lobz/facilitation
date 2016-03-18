@@ -4,14 +4,14 @@
 
 
 
-Species::Species(Arena *ar,int id, double *par) : Species(ar,id,par[2],par[0],par[1],par[3],0.5){}
+Species::Species(Arena *ar,int id, double *par) : Species(ar,id,par[2],par[0],par[1],par[3]){}
 
-Species::Species(Arena *ar,int id, double D, double G, double R=0, double Rad=0,double dispersalRadius=0)
-		:id(id),G(G),D(D),R(R),Rad(Rad),dispersalRadius(dispersalRadius){
+Species::Species(Arena *ar,int id, double D, double G, double R=0, double Rad=0)
+		:id(id),G(G),D(D),R(R),Rad(Rad){
 	int i;
 	nextStage = NULL;
 	seedStage = NULL;
-	dispersalRadius = 0.5;
+	dispersalRadius = 0;
 
 	arena = ar;
 	spnum = ar->getSpNum();
@@ -114,7 +114,7 @@ void Species::act(){
 }
 
 void Species::setNextStage(Species *st) {nextStage = st;}
-void Species::setSeedStage(Species *st) {seedStage = st;}
+void Species::setSeedStage(Species *st, double dispersal) {seedStage = st;dispersalRadius = dispersal;}
 
 
 void Species::remove(std::list<Individual*>::iterator i){

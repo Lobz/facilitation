@@ -25,7 +25,7 @@ class Arena {
 	int bcond;
 
 	public:
-	Arena(int lifestages, double * baserates, double width, double height, int bcond);
+	Arena(int lifestages, double * baserates, double dispersal, double width, double height, int bcond);
 
 	/* high level functions */
 	bool populate(int *stagesinit);
@@ -62,7 +62,7 @@ class Species {
 
 	public:
 	Species(Arena *ar,int id, double *par);
-	Species(Arena *ar,int id, double D, double G, double R, double Rad,double dispersalRadius);
+	Species(Arena *ar,int id, double D, double G, double R, double Rad);
 	/* BASIC RUN ACTION */
 	void act();
 
@@ -83,7 +83,7 @@ class Species {
 
 	/* SETS */
 	void setNextStage(Species *st);
-	void setSeedStage(Species *st);
+	void setSeedStage(Species *st, double dispersal);
 	void setFacilitation(double f);
 	void setInteraction(int s, double effect);
 	void setAutoInteraction(double effect);
