@@ -9,7 +9,7 @@ Individual::Individual(Arena *ar, Species *sp, double x, double y):Individual(ar
 
 
 /*TODO: this function is a copy from the above.  there has to be a way to just call one constructor from the other >.< */
-Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(p), id(id_MAX++), affectingNeighbours(ar->getSpNum()), affectedNeighbours(ar->getSpNum()) {
+Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(ar->boundaryCondition(p)), id(id_MAX++), affectingNeighbours(ar->getSpNum()), affectedNeighbours(ar->getSpNum()) {
 	spnum = arena->getSpNum();
 	setSpecies(sp);
 }
