@@ -54,9 +54,9 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 # function for ploting simulation frames for facilita package
 # Alexandre Adalardo de Oliveira - 16/03/2016
 ##############################################################
-spatialplot = function(data,radius, xlim=c(min(dt$x),max(dt$x)), ylim=c(min(dt$y),max(dt$y)), cor=c("lightgreen","blue", "red","pink"),tframe=0.15)
+spatialplot = function(data,radius, xlim=c(min(dt$x),max(dt$x)), ylim=c(min(dt$y),max(dt$y)), cor=c("lightgreen","blue", "red","pink"),tframe=0)
 {
-	#library(grid)# precisa incluir esse pacote no import do NAMESPACE grid.newpage()
+	#library(grid)
 	seqt <- unique(dt$t)
 	numst <- max(data$sp)
 	for(i in 1:length(radius)) if(radius[i] == 0) radius[i] = 0.05
@@ -66,9 +66,14 @@ spatialplot = function(data,radius, xlim=c(min(dt$x),max(dt$x)), ylim=c(min(dt$y
 	grid.rect(gp = gpar(col = "gray"))
 	grid.xaxis(at=round(seq(xlim[1],xlim[2], len=5)))
 	grid.yaxis(at=round(seq(ylim[1],ylim[2], len=5)))
-	raiofacilita<-grid.circle(x=dt0$x[dt0$sp==3],y=dt0$y[dt0$sp==3], r=radius[4] ,default.units="native", gp=gpar(fill=cor[1], col="gray"))
+	if(length(dt0$sp[dt0$sp==3])>0) {
+		plotfac <- T
+		raiofacilita<-grid.circle(x=dt0$x[dt0$sp==3],y=dt0$y[dt0$sp==3], r=radius[4] ,default.units="native", gp=gpar(fill=cor[1], col="gray"))
+	}
 	for (j in numst:1){
-		grid.circle(x = dt0$x[dt0$sp==j-1], y=dt0$y[dt0$sp==j-1], r=radius[j],default.units="native", gp=gpar(fill=cor[j+1],col=cor[j+1]))
+		if(length(dt0$sp[dt0$sp==j-1])>0){
+			grid.circle(x = dt0$x[dt0$sp==j-1], y=dt0$y[dt0$sp==j-1], r=radius[j],default.units="native", gp=gpar(fill=cor[j+1],col=cor[j+1]))
+		}
 	}
 	for (i in seqt[-1])
 	{
@@ -78,10 +83,11 @@ spatialplot = function(data,radius, xlim=c(min(dt$x),max(dt$x)), ylim=c(min(dt$y
 		grid.rect(gp = gpar(col = "gray"))
 		grid.xaxis(at=round(seq(xlim[1],xlim[2], len=5)))
 		grid.yaxis(at=round(seq(ylim[1],ylim[2], len=5)))
-		#    grid.circle(x=dt0$x[dt0$sp==3],y=dt0$y[dt0$sp==3], r=radius ,default.units="native", gp=gpar(fill="lightgreen", col="gray"))
-		grid.draw(raiofacilita)
+		if(plotfac) grid.draw(raiofacilita)
 		for (j in numst:1){
-			grid.circle(x = dt0$x[dt0$sp==j-1], y=dt0$y[dt0$sp==j-1], r=radius[j],default.units="native", gp=gpar(fill=cor[j+1],col=cor[j+1]))
+			if(length(dt0$sp[dt0$sp==j-1])>0){
+				grid.circle(x = dt0$x[dt0$sp==j-1], y=dt0$y[dt0$sp==j-1], r=radius[j],default.units="native", gp=gpar(fill=cor[j+1],col=cor[j+1]))
+			}
 		}
 		Sys.sleep(tframe)    
 	}
