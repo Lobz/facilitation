@@ -80,6 +80,7 @@ spatialplot = function(data,radius, xlim=c(min(dt$x),max(dt$x)), ylim=c(min(dt$y
 		dt0=dt[dt$t==i,]
 		grid.newpage()
 		pushViewport(vp)
+		grid.text(paste("t =",round(i,digits=4)), y=1.06)
 		grid.rect(gp = gpar(col = "gray"))
 		grid.xaxis(at=round(seq(xlim[1],xlim[2], len=5)))
 		grid.yaxis(at=round(seq(ylim[1],ylim[2], len=5)))
