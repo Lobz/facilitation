@@ -17,17 +17,17 @@ eigen.profile <- function(mat){
 	}
 }
 
-facilitation.class <- function(d1,d2,d3,g1,g2,R,f){
-	lim.wo <- mat.model.wrapper1.3stages(d1,d2,d3,g1,g2,R) 
-	lim.wi <- mat.model.wrapper1.3stages(d1,d2*(1-f),d3,g1,g2,R) 
-
-	if(lim.wo > 0) {return(3)} # both positive
-	else if(lim.wi > 0) {return(2)} # mixed
-	else{return(1)} # both negative
+facilitation.class <- function(lim.wo,lim.wi){
+	if(lim.wo > 0) {return("positive")} # both positive
+	if(lim.wi > 0) {return("mixed")} # mixed
+	else{return("negative")} # both negative
 }
 
 facilitation.class.wrapper <- function(data){
-	mapply(facilitation.class,data[,1],data[,2],data[,3],data[,4],data[,5],data[,6],data[,7])
+	lim <- mat.model.wrapper(data)
+	lim.wo <- lim[1,]
+	lim.wi <- lim[2,]
+	mapply(facilitation.class,lim.wo,lim.wi)
 }
 
 fitted.rate <- function(ab.mat){
@@ -43,19 +43,13 @@ solveandfit.rate <- function(mat){
 	fitted.rate(so)
 }
 
-explore.pse.3stages <- function(){
-	factors <- c("d1","d2","d3","g1","g2","R")
-	q <- c(rep("qunif",6))
-	# prioris for the six parameters
-	q.arg <- list(list(min=0.00001,max=2),list(min=0.00001,max=2),list(min=0,max=0.0002),list(min=0.01,max=0.1),list(min=1.0/600,max=1.0/200),list(min=0.0001,max=10))
-
-	LHS(mat.model.wrapper,factors,200,q,q.arg,nboot=100)
-}
-
-mat.model.wrapper1.3stages <- function(d1,d2,d3,g1,g2,r) {
-	limiting.rate(mat.model(n=3,Ds=c(d1,d2,d3),Gs=c(g1,g2),R=r))
+mat.model.wrapper1.3stages <- function(d1,d2,d3,g1,g2,r.add,f) {
+	re <- array()
+	re[1] <- limiting.rate(mat.model(n=3,Ds=c(d1,d2,d3),Gs=c(g1,g2),R=r.add+d3))
+	re[2] <- limiting.rate(mat.model(n=3,Ds=c(d1-f,d2,d3),Gs=c(g1,g2),R=r.add+d3))
+	return(re)
 }
 
 mat.model.wrapper <- function(data){
-	mapply(mat.model.wrapper1.3stages,data[,1],data[,2],data[,3],data[,4],data[,5],data[,6])
+	mapply(mat.model.wrapper1.3stages,data[,1],data[,2],data[,3],data[,4],data[,5],data[,6],data[,7])
 }
