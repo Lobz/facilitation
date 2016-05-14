@@ -54,13 +54,15 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 # function for ploting simulation frames for facilita package
 # Alexandre Adalardo de Oliveira - 16/03/2016
 ##############################################################
-spatialplot = function(data,radius, xlim=c(min(dt$x),max(dt$x)), ylim=c(min(dt$y),max(dt$y)), cor=c("lightgreen","blue", "red","pink"),tframe=0)
+spatialplot = function(data, xlim=c(min(data$data$x),max(data$data$x)), ylim=c(min(data$data$y),max(data$data$y)), cor=c("lightgreen","blue", "red","pink"),tframe=0)
 {
 	#library(grid)
+	dt <- data$data
+	radius <- data$radius
 	seqt <- unique(dt$t)
-	numst <- max(data$sp)
+	numst <- max(dt$sp)
 	for(i in 1:length(radius)) if(radius[i] == 0) radius[i] = 0.05
-	dt0=data[data$t==seqt[1],]
+	dt0=dt[dt$t==seqt[1],]
 	vp <- viewport(width = 0.8, height = 0.8, xscale=xlim, yscale=ylim)
 	pushViewport(vp)
 	grid.rect(gp = gpar(col = "gray"))

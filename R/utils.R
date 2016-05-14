@@ -26,15 +26,13 @@ facByRates <- function(times, n, Ds, Gs, R, dispersal=1, interactions=rep(0,n*n)
 	r <- test_parameter(times,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary)
 	
 	# prepare output
-	rownames(M) <- c("G","R","D","Rad")
-	colnames(M) <- 0:n
 	N <- matrix(N,nrow=n+1)
 	rownames(N) <- 0:n
 	colnames(N) <- 0:n
 	dt <- list2dataframe(r)
 
 
-	list(data = dt, times = times, stages=n,parameters=M,dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary)
+	list(data = dt, times = times, stages=n,D=Ds,G=Gs,R=R,radius=rad,dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary)
 }
 #dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
 

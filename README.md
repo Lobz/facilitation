@@ -38,12 +38,12 @@ dt <- result$data
 ```
 You can plot the actual individuals in space in an animation with:
 ```r
-spatialplot(dt,radius,tframe=0.1)
+spatialplot(results,tframe=0.1)
 ```
 You can use the package `animation` to save the animation into a gif (set tframe to 0 (default) unless you want to waste a lot of time!).
 ```r
 library(animation)
-saveGIF(spatialplot(dt,radius),interval=0.1,movie.name="fac.gif") 
+saveGIF(spatialplot(results),interval=0.1,movie.name="fac.gif") 
 ```
 
 You may calculate the abundances through time:
