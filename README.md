@@ -16,7 +16,9 @@ library(facilitation)
 
 ## Running and testing:
 
-The below code creates a simulation with 3 lifestages, with facilitation reducing the death rate of the second stage, and competition between saplings and between adults, runs it up to time 10, and stores the result in ret. In this case, the facilitator has no dynamics.
+The below code creates a simulation with 3 lifestages, with facilitation reducing the death rate of the second stage, and competition between saplings and between adults, runs it up to time 10, and stores the result in result. In this case, the facilitator has no dynamics.
+
+The return value of facByRates is a list contaning all the parameters used.
 ```r
 numstages <- 3
 deathrates <- c(2, 0.2, 0.2)  # death rates for seed, sapling and adult
@@ -31,7 +33,8 @@ radius <- c(0,0.5,2,2)        # this are the distances up to which the individua
 h <- 50                       # arena height
 w <- 50                       # arena width
 
-dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
+result <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
+dt <- result$data
 ```
 You can plot the actual individuals in space in an animation with:
 ```r
