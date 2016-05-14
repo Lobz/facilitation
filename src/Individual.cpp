@@ -7,8 +7,6 @@ unsigned long Individual::id_MAX = 0;
 Individual::Individual(Arena *ar, Species *sp, double x, double y):Individual(ar,sp,Position(x,y)){} 
 
 
-
-/*TODO: this function is a copy from the above.  there has to be a way to just call one constructor from the other >.< */
 Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(ar->boundaryCondition(p)), id(id_MAX++), affectingNeighbours(ar->getSpNum()), affectedNeighbours(ar->getSpNum()) {
 	spnum = arena->getSpNum();
 	setSpecies(sp);
@@ -40,7 +38,7 @@ double Individual::actualD(){
 	double actuald=D,effect;
 	for(sp = 0; sp < spnum; sp++){
 		if((effect = species->getInteraction(sp)) != 0 && !affectingNeighbours[sp].empty()){
-			actuald -= effect;
+			actuald -= effect*affectingNeighbours[sp].size(); /* note that effect is LINEAR on number of affecting neighbours */
 		}
 	}
 	if(actuald < 0) return 0;
