@@ -36,7 +36,6 @@ void Arena::setInteractions(double *interactions){
 bool Arena::populate(int *speciesinit){
 	int i,j;
 
-	/* The order is reversed merely to guarantee that the facilitator comes first. TODO: use addFacilitated to not need this anymore */
 	for(i=0;i<spnum;i++){
 		std::cout << "Starting to populate species " << i << "\n";
 		for(j=0;j<speciesinit[i];j++){
