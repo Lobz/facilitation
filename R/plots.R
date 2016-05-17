@@ -38,7 +38,7 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 	maxp <-max(mat[,1])
 
 	if (! "ylim" %in% names(dots)) dots$ylim = c(minp, maxp)
-	if (! "xlim" %in% names(dots)) dots$xlim = c(0,max(time))
+	if (! "xlim" %in% names(dots)) dots$xlim = c(min(time),max(time))
 	if (! "main" %in% names(dots)) dots$main = "Facilitation dynamics"
 	if (! "ylab" %in% names(dots)) dots$ylab = "Population"
 	if (! "xlab" %in% names(dots)) dots$xlab = "Time"
@@ -69,20 +69,8 @@ spatialplot = function(data, xlim=c(min(data$data$x),max(data$data$x)), ylim=c(m
 	seqt <- unique(dt$t)
 	maxst <- max(dt$sp)
 	for(i in 1:length(radius)) if(radius[i] == 0) radius[i] = 0.05
-	dt0=dt[dt$t==seqt[1],]
 	vp <- viewport(width = 0.8, height = 0.8, xscale=xlim, yscale=ylim)
-	pushViewport(vp)
-	grid.rect(gp = gpar(col = "gray"))
-	for (j in maxst:0){
-		dtsp <- dt0[dt0$sp==j,]
-		if(dim(dtsp)[1] > 0){
-			grid.circle(x = dtsp$x, y=dtsp$y, r=radius[j+1],default.units="native", gp=gpar(fill=cor[j+1],col=cor[j+1]))
-		}
-	}
-	grid.text(paste("t =",round(i,digits=4)), y=1.06)
-	grid.xaxis(at=round(seq(xlim[1],xlim[2], len=5)))
-	grid.yaxis(at=round(seq(ylim[1],ylim[2], len=5)))
-	for (i in seqt[-1])
+	for (i in seqt)
 	{
 		dt0=dt[dt$t==i,]
 		grid.newpage()
@@ -101,4 +89,4 @@ spatialplot = function(data, xlim=c(min(data$data$x),max(data$data$x)), ylim=c(m
 	}
 }
 #####################
-#spatialplot(data=dt,radius=c(0,0,1,2))
+#spatialplot(data=dt)
