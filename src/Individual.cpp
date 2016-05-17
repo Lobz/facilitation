@@ -32,6 +32,7 @@ void	Individual::setSpecies(Species *sp) {
 int 		Individual::getSpeciesId(){return species->getId();}
 Position 	Individual::getPosition(){return p;}
 double 		Individual::getRadius(){return Rad;}
+const unsigned long Individual::getId(){return id;}
 
 double Individual::actualD(){
 	int sp;
@@ -146,11 +147,13 @@ void Individual::addAffectingNeighbourList(std::list<Individual*> neighList){
 
 void 	Individual::addAffectedNeighbour(Individual *i){
 	int s = i->getSpeciesId();
+	if(i==this){return;}
 	affectedNeighbours[s].push_back(i);
 }
 
 void 	Individual::addAffectingNeighbour(Individual *i){
 	int s = i->getSpeciesId();
+	if(i==this){return;}
 	affectingNeighbours[s].push_back(i);
 }
 
@@ -167,3 +170,4 @@ void 	Individual::removeAffectingNeighbour(Individual *i){
 bool 	Individual::noAffectingNeighbours(int i){
 	return affectingNeighbours[i].empty();
 }
+
