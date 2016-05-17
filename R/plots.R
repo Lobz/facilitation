@@ -15,6 +15,7 @@
 #' mat <- abundance_matrix(obj)
 #' stackplot(mat)
 stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
+	dots <- list(...)
 	if(missing(col))
 		col <- terrain.colors(dim(mat)[2])
 	if (log.y) {
@@ -36,7 +37,13 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 	# maximo da escala do grafico
 	maxp <-max(mat[,1])
 
-	plot(1, type='n', ylim=c(minp, maxp), xlim=c(0, max(time)), ylab="Population", xlab="Time", main="Facilitation dynamics", log=log, ...)
+	if (! "ylim" %in% names(dots)) dots$ylim = c(minp, maxp)
+	if (! "xlim" %in% names(dots)) dots$xlim = c(0,max(time))
+	if (! "main" %in% names(dots)) dots$main = "Facilitation dynamics"
+	if (! "ylab" %in% names(dots)) dots$ylab = "Population"
+	if (! "xlab" %in% names(dots)) dots$xlab = "Time"
+
+	do.call(plot, c(list(1, type='n', log=log), dots))
 	x <- c(time, rev(time))
 	for (i in 1:(N)) {
 		y <- c(mat[,i], rev(mat[,i+1]))
@@ -66,29 +73,30 @@ spatialplot = function(data, xlim=c(min(data$data$x),max(data$data$x)), ylim=c(m
 	vp <- viewport(width = 0.8, height = 0.8, xscale=xlim, yscale=ylim)
 	pushViewport(vp)
 	grid.rect(gp = gpar(col = "gray"))
-	grid.xaxis(at=round(seq(xlim[1],xlim[2], len=5)))
-	grid.yaxis(at=round(seq(ylim[1],ylim[2], len=5)))
 	for (j in maxst:0){
 		dtsp <- dt0[dt0$sp==j,]
 		if(dim(dtsp)[1] > 0){
 			grid.circle(x = dtsp$x, y=dtsp$y, r=radius[j+1],default.units="native", gp=gpar(fill=cor[j+1],col=cor[j+1]))
 		}
 	}
+	grid.text(paste("t =",round(i,digits=4)), y=1.06)
+	grid.xaxis(at=round(seq(xlim[1],xlim[2], len=5)))
+	grid.yaxis(at=round(seq(ylim[1],ylim[2], len=5)))
 	for (i in seqt[-1])
 	{
 		dt0=dt[dt$t==i,]
 		grid.newpage()
 		pushViewport(vp)
-		grid.text(paste("t =",round(i,digits=4)), y=1.06)
 		grid.rect(gp = gpar(col = "gray"))
-		grid.xaxis(at=round(seq(xlim[1],xlim[2], len=5)))
-		grid.yaxis(at=round(seq(ylim[1],ylim[2], len=5)))
 		for (j in maxst:0){
 			dtsp <- dt0[dt0$sp==j,]
 			if(dim(dtsp)[1] > 0){
 				grid.circle(x = dtsp$x, y=dtsp$y, r=radius[j+1],default.units="native", gp=gpar(fill=cor[j+1],col=cor[j+1]))
 			}
 		}
+		grid.text(paste("t =",round(i,digits=4)), y=1.06)
+		grid.xaxis(at=round(seq(xlim[1],xlim[2], len=5)))
+		grid.yaxis(at=round(seq(ylim[1],ylim[2], len=5)))
 		Sys.sleep(tframe)    
 	}
 }
