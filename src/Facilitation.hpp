@@ -133,6 +133,7 @@ class Individual {
 	/* GETS */
 	double getTotalRate();
 	int getSpeciesId();
+	const unsigned long getId();
 	Position getPosition();
 	double getRadius();
 	bool isPresent(Position p, double radius = 0);
