@@ -16,6 +16,7 @@ Arena::Arena(int lifestages, double *parameters, double dispersal, double width,
 		species[i]->setSeedStage(species[0], dispersal);
 	}
 	species[i]->setSeedStage(species[0], dispersal);
+	species[i+1]->setSeedStage(species[i+1], dispersal);
 
 
 	totalTime = 0.0;
