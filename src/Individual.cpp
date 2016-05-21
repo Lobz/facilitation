@@ -10,6 +10,7 @@ Individual::Individual(Arena *ar, Species *sp, double x, double y):Individual(ar
 Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(ar->boundaryCondition(p)), id(id_MAX++), affectingNeighbours(ar->getSpNum()), affectedNeighbours(ar->getSpNum()) {
 	spnum = arena->getSpNum();
 	setSpecies(sp);
+	if(p.x<0) die();
 }
 
 void	Individual::setSpecies(Species *sp) {

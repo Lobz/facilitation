@@ -163,22 +163,26 @@ Position Arena::boundaryCondition(Position p){
 
 		case(1):
 			/* REFLEXIVE */
-			if(p.x < 0) p.x = -p.x;
-			else if(p.x > width) p.x = width - (p.x - width);
-			if(p.y < 0) p.y = -p.y;
-			else if(p.y > height) p.y = height - (p.y - height);
+			while(p.x <0 || p.x > width){
+				if(p.x < 0) p.x = -p.x;
+				if(p.x > width) p.x = width - (p.x - width);
+			}
+			while(p.y <0 || p.y > height){
+				if(p.y < 0) p.y = -p.y;
+				if(p.y > height) p.y = height - (p.y - height);
+			}
 			break;
 
 		case(2):
-			/* CICLIC */
-			if(p.x < 0) p.x = width - p.x;
-			else if(p.x > width) p.x = p.x - width;;
-			if(p.y < 0) p.y = height - p.y;
-			else if(p.y > height) p.y = p.y - height;
+			/* PERIODIC */
+			while(p.x < 0) p.x += width;
+			while(p.x > width) p.x -= width;;
+			while(p.y < 0) p.y += height;
+			while(p.y > height) p.y -= height;;
 			break;
 
 		case(3):
-			/* destructive */
+			/* ABSORTIVE */
 			if(p.x < 0 || p.x > width || p.y < 0 || p.y > height) p.x = -100;
 			break;
 	}
