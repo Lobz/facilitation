@@ -3,7 +3,6 @@
 #include<cstdio>
 
 
-
 Species::Species(Arena *ar,int id, double *par) : Species(ar,id,par[2],par[0],par[1],par[3]){}
 
 Species::Species(Arena *ar,int id, double D, double G, double R=0, double Rad=0)
@@ -61,8 +60,10 @@ void Species::disperseIndividual(Position p){
 }
 
 Position Species::dispersalKernel(){
-	Position p(Normal(0,dispersalRadius),Normal(0,dispersalRadius));
-	return p;
+	Position p;
+	if(dispersalRadius <= 0) return Position(0,0);
+	p = RandomDirection();
+	return Exponential(1.0/dispersalRadius)*p;
 }
 
 double Species::getTotalRate(){

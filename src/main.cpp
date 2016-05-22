@@ -7,7 +7,6 @@
 
 status_list run_tests(bool print, int ntimes,double * times, int num_stages, double * par, double dispersal, double * interactions, double w, double h, int *init, int bcond){
 	int i;
-	double nextTime, timeInterval;
 	bool test=true;
 	Arena *arena;
 	status_list ret = {};

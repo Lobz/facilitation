@@ -12,8 +12,10 @@ class Position {
 
 	Position& operator+=(const Position& rhs);
 	Position& operator-=(const Position& rhs);
+	Position& operator*=(const double rhs);
 };
 
 Position operator+(Position lhs, const Position& rhs);
 Position operator-(Position lhs, const Position& rhs);
+Position operator*(const double lhs, Position& rhs);
 #endif
