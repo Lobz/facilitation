@@ -1,7 +1,7 @@
 #include"Facilitation.hpp"
 #include"Random.hpp"
 
-Arena::Arena(int lifestages, double *parameters, double dispersal, double width, double height, int bcond) :lifestages(lifestages),spnum(lifestages+1),width(width),height(height),bcond(bcond) {
+Arena::Arena(int lifestages, double *parameters, double dispersal, double width, double height, int bcond, int dkernel) :lifestages(lifestages),spnum(lifestages+1),width(width),height(height),bcond(bcond) {
 	int i;
 	species = (Species**)malloc(spnum*(sizeof(Species*)));
 	ratesList = (double*)malloc(spnum*(sizeof(double)));
@@ -13,7 +13,7 @@ Arena::Arena(int lifestages, double *parameters, double dispersal, double width,
 
 	for(i=0;i<lifestages-1;i++){
 		species[i]->setNextStage(species[i+1]);
-		species[i]->setSeedStage(species[0], dispersal);
+		species[i]->setSeedStage(species[0], dispersal, dkernel);
 	}
 	species[i]->setSeedStage(species[0], dispersal);
 	species[i+1]->setSeedStage(species[i+1], dispersal);
@@ -152,6 +152,12 @@ void Arena::addAffected(Individual *ind){
 
 double Arena::getTotalTime(){
 	return totalTime;
+}
+double Arena::getWidth(){
+	return width;
+}
+double Arena::getHeight(){
+	return height;
 }
 
 int Arena::getSpNum(){

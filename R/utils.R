@@ -13,7 +13,7 @@ plot_all <- function(dt) {
 	}
 }
 
-facByRates <- function(times, n, Ds, Gs, R, dispersal=1, interactions=rep(0,n*n), fac=rep(0,n-2), init=rep(10,n+1), rad=rep(2,n+1), height=100, width=100, boundary=1, facilitatorD=0,facilitatorR=0,facilitatorC=0){
+facByRates <- function(times, n, Ds, Gs, R, dispersal=1, interactions=rep(0,n*n), fac=rep(0,n-2), init=rep(10,n+1), rad=rep(2,n+1), height=100, width=100, boundary=1, facilitatorD=0,facilitatorR=0,facilitatorC=0, dispKernel="exponential"){
 
 	# generate parameters for test_parameters
 	if(length(rad)==1) rad <- c(rep(0,n),rad)
@@ -22,8 +22,13 @@ facByRates <- function(times, n, Ds, Gs, R, dispersal=1, interactions=rep(0,n*n)
 	N <- rbind(N,c(fac,0))
 	N <- c(N,rep(0,n),-facilitatorC)
 
+	if(dispKernel=="random") disp=0
+	else if(dispKernel=="exponential") disp=1
+	else disp=1
+	
+
 	# run simultation
-	r <- test_parameter(times,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary)
+	r <- test_parameter(times,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary,dkernel=disp)
 	
 	# prepare output
 	N <- matrix(N,nrow=n+1)
@@ -32,14 +37,28 @@ facByRates <- function(times, n, Ds, Gs, R, dispersal=1, interactions=rep(0,n*n)
 	dt <- list2dataframe(r)
 
 
-	list(data = dt,n=n+1, expected.times = times, actual.times = unique(dt$t), stages=n,D=Ds,G=Gs,R=R,radius=rad,dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary)
+	list(data = dt,n=n+1, expected.times = times, actual.times = unique(dt$t), stages=n,D=Ds,G=Gs,R=R,radius=rad,dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary,dkernel=dispKernel)
 }
 #dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
 
-abundance_matrix <- function(ret){
+abundance_matrix <- function(data){
+	n <- data$n
+	ret <- data$data
 	m <- (tapply(ret$id, list(ret$t, ret$sp), length))
 	m[is.na(m)]<-0
-	m
+	if(dim(m)[2] == n){
+		ab <- m
+	}
+	else {
+		ab <- matrix(rep(0,length(data$actual.times)*n),ncol=n,dimnames=list(data$actual.times,0:(n-1)))
+		for(i in 0:(n-1)){
+			if(i %in% colnames(m)){
+				c <- which(colnames(m)==i)
+				ab[,i+1] <- m[,c]
+			}
+		}		
+	}
+	ab
 }
 
 fillTime  <- function(ab,times){

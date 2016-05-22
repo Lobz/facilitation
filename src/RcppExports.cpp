@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // test_parameter
-Rcpp::List test_parameter(Rcpp::NumericVector times, int num_stages, Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, Rcpp::IntegerVector init, double w, double h, int bcond);
-RcppExport SEXP facilitation_test_parameter(SEXP timesSEXP, SEXP num_stagesSEXP, SEXP parametersSEXP, SEXP dispersalSEXP, SEXP interactionsSEXP, SEXP initSEXP, SEXP wSEXP, SEXP hSEXP, SEXP bcondSEXP) {
+Rcpp::List test_parameter(Rcpp::NumericVector times, int num_stages, Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, Rcpp::IntegerVector init, double w, double h, int bcond, int dkernel);
+RcppExport SEXP facilitation_test_parameter(SEXP timesSEXP, SEXP num_stagesSEXP, SEXP parametersSEXP, SEXP dispersalSEXP, SEXP interactionsSEXP, SEXP initSEXP, SEXP wSEXP, SEXP hSEXP, SEXP bcondSEXP, SEXP dkernelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -20,7 +20,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type w(wSEXP);
     Rcpp::traits::input_parameter< double >::type h(hSEXP);
     Rcpp::traits::input_parameter< int >::type bcond(bcondSEXP);
-    __result = Rcpp::wrap(test_parameter(times, num_stages, parameters, dispersal, interactions, init, w, h, bcond));
+    Rcpp::traits::input_parameter< int >::type dkernel(dkernelSEXP);
+    __result = Rcpp::wrap(test_parameter(times, num_stages, parameters, dispersal, interactions, init, w, h, bcond, dkernel));
     return __result;
 END_RCPP
 }

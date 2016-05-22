@@ -61,9 +61,15 @@ void Species::disperseIndividual(Position p){
 
 Position Species::dispersalKernel(){
 	Position p;
-	if(dispersalRadius <= 0) return Position(0,0);
-	p = RandomDirection();
-	return Exponential(1.0/dispersalRadius)*p;
+	switch(kernelType){
+		case 0: /* Fully random on the arena */
+			return Position(Random(arena->getWidth()),Random(arena->getHeight()));
+		case 1: /* EXPONENTIAL */
+		default:
+			if(dispersalRadius <= 0) return Position(0,0);
+			p = RandomDirection();
+			return Exponential(1.0/dispersalRadius)*p;
+	}
 }
 
 double Species::getTotalRate(){
@@ -115,8 +121,11 @@ void Species::act(){
 }
 
 void Species::setNextStage(Species *st) {nextStage = st;}
-void Species::setSeedStage(Species *st, double dispersal) {seedStage = st;dispersalRadius = dispersal;}
-
+void Species::setSeedStage(Species *st, double dispersal, int kernel) {
+	seedStage = st;
+	dispersalRadius = dispersal;
+	kernelType=kernel;
+}
 
 void Species::remove(std::list<Individual*>::iterator i){
 	population.erase(i);
