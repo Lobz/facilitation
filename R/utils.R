@@ -13,7 +13,7 @@ plot_all <- function(dt) {
 	}
 }
 
-facByRates <- function(times, n, Ds, Gs, R, dispersal=1, interactions=rep(0,n*n), fac=rep(0,n-2), init=rep(10,n+1), rad=rep(2,n+1), height=100, width=100, boundary=1, facilitatorD=0,facilitatorR=0,facilitatorC=0, dispKernel="exponential"){
+facByRates <- function(times, n, Ds, Gs, R, dispersal=1, interactions=rep(0,n*n), fac=rep(0,n-1), init=rep(10,n+1), rad=rep(2,n+1), height=100, width=100, boundary=1, facilitatorD=0,facilitatorR=0,facilitatorC=0, dispKernel="exponential"){
 
 	# generate parameters for test_parameters
 	if(length(rad)==1) rad <- c(rep(0,n),rad)
