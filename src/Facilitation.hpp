@@ -35,7 +35,7 @@ class Arena {
 	/* acessors for Species and Individuals */
 	bool findPresent(int species_id, Position p);
 	std::list<Individual*> getPresent(int species_id, Position p);
-	void addAffected(Individual *ind);
+	void addAffectedByMe(Individual *ind);
 
 	Position boundaryCondition(Position p);
 
@@ -146,20 +146,20 @@ class Individual {
 
 	/* INTERACTIONS */
 	/** adds a neighbour list and cross-adds yourself to everyone in that list */
-	void addAffectingNeighbourList(std::list<Individual*> neighList);
+	void addAffectingMeNeighbourList(std::list<Individual*> neighList);
 	/** adds a neighbour to the list. Don't forget to add cross-reference to neighbour's list! */
-	void addAffectingNeighbour(Individual *i);
+	void addAffectingMeNeighbour(Individual *i);
 	/** removes neighbour from list. Doesn't remove cross-reference from neighbour's list */
-	void removeAffectingNeighbour(Individual *i);
+	void removeAffectingMeNeighbour(Individual *i);
 	/** adds a neighbour list and cross-adds yourself to everyone in that list */
-	void addAffectedNeighbourList(std::list<Individual*> neighList);
+	void addAffectedByMeNeighbourList(std::list<Individual*> neighList);
 	/** adds a neighbour to the list. Don't forget to add cross-reference to neighbour's list! */
-	void addAffectedNeighbour(Individual *i);
+	void addAffectedByMeNeighbour(Individual *i);
 	/** removes neighbour from list. Doesn't remove cross-reference from neighbour's list */
-	void removeAffectedNeighbour(Individual *i);
+	void removeAffectedByMeNeighbour(Individual *i);
 	/** removes all neighbours */
 	void clearNeighbours();
-	bool noAffectingNeighbours(int i);
+	bool noAffectingMeNeighbours(int i);
 	
 
 	private:

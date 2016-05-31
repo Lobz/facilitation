@@ -106,11 +106,11 @@ void 	Individual::clearNeighbours(){
 	std::list<Individual*>::iterator i;
 	for(sp = 0; sp < spnum; sp++){
 		for(i=affectingNeighbours[sp].begin();i!=affectingNeighbours[sp].end();i = affectingNeighbours[sp].erase(i)){
-			(*i)->removeAffectedNeighbour(this);
+			(*i)->removeAffectedByMeNeighbour(this);
 		}
 
 		for(i=affectedNeighbours[sp].begin();i!=affectedNeighbours[sp].end();i = affectedNeighbours[sp].erase(i)){
-			(*i)->removeAffectingNeighbour(this);
+			(*i)->removeAffectingMeNeighbour(this);
 		}
 	}
 }
@@ -119,56 +119,59 @@ void Individual::initNeighbours(){
 	int s;
 	for(s=0;s<spnum;s++){
 		if(species->getInteraction(s) != 0){
-			addAffectingNeighbourList(arena->getPresent(s,p));
+			/* do not use radius in looking for affecting neighbours, 
+			 * effect radius is the affecting neighbour's radius */
+			addAffectingMeNeighbourList(arena->getPresent(s,p));
 		}
 	}
 
-	arena->addAffected(this);
+	/* this function automatically uses my radius */
+	arena->addAffectedByMe(this);
 }
 
-void Individual::addAffectedNeighbourList(std::list<Individual*> neighList){
+void Individual::addAffectedByMeNeighbourList(std::list<Individual*> neighList){
 	std::list<Individual*>::iterator i;
 
 	for(i=neighList.begin();i!=neighList.end();i++){
-		addAffectedNeighbour(*i);
+		addAffectedByMeNeighbour(*i);
 		/* makes sure that your neighbours adds you too */
-		(*i)->addAffectingNeighbour(this);
+		(*i)->addAffectingMeNeighbour(this);
 	}
 }
 
-void Individual::addAffectingNeighbourList(std::list<Individual*> neighList){
+void Individual::addAffectingMeNeighbourList(std::list<Individual*> neighList){
 	std::list<Individual*>::iterator i;
 
 	for(i=neighList.begin();i!=neighList.end();i++){
-		addAffectingNeighbour(*i);
+		addAffectingMeNeighbour(*i);
 		/* makes sure that your neighbours adds you too */
-		(*i)->addAffectedNeighbour(this);
+		(*i)->addAffectedByMeNeighbour(this);
 	}
 }
 
-void 	Individual::addAffectedNeighbour(Individual *i){
+void 	Individual::addAffectedByMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	if(i==this){return;}
 	affectedNeighbours[s].push_back(i);
 }
 
-void 	Individual::addAffectingNeighbour(Individual *i){
+void 	Individual::addAffectingMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	if(i==this){return;}
 	affectingNeighbours[s].push_back(i);
 }
 
-void 	Individual::removeAffectedNeighbour(Individual *i){
+void 	Individual::removeAffectedByMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	affectedNeighbours[s].remove(i);
 }
 
-void 	Individual::removeAffectingNeighbour(Individual *i){
+void 	Individual::removeAffectingMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	affectingNeighbours[s].remove(i);
 }
 
-bool 	Individual::noAffectingNeighbours(int i){
+bool 	Individual::noAffectingMeNeighbours(int i){
 	return affectingNeighbours[i].empty();
 }
 

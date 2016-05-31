@@ -137,15 +137,15 @@ std::list<Individual*> Arena::getPresent(int species_id,Position p){
 	return species[species_id]->getPresent(p);
 }
 
-void Arena::addAffected(Individual *ind){
+void Arena::addAffectedByMe(Individual *ind){
 	int j;
 	int sp = ind->getSpeciesId();
 	Position p = ind->getPosition();
-	double radius = ind->getRadius();
+	double radius = ind->getRadius(); /* will look for inds within this radius of me */
 
 	for(j=0;j<spnum;j++){
 		if(species[j]->getInteraction(sp) != 0){
-			ind->addAffectedNeighbourList(species[j]->getPresent(p,radius));
+			ind->addAffectedByMeNeighbourList(species[j]->getPresent(p,radius));
 		}
 	}
 }
