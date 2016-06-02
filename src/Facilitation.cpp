@@ -38,7 +38,7 @@ bool Arena::populate(int *speciesinit){
 	int i,j;
 
 	for(i=0;i<spnum;i++){
-		std::cout << "Starting to populate species " << i << "\n";
+		std::cout << "Starting to populate species " << i << " with " << speciesinit[i] << " individuals.\n";
 		for(j=0;j<speciesinit[i];j++){
 			try{
 				species[i]->addIndividual(Random(width),Random(height));
