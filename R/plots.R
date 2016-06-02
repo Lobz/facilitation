@@ -54,7 +54,7 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 		if(N == 3) legend <- c("Seeds", "Juveniles", "Adults")
 		if(N > 3) legend <- c(1:N)
 	}
-	legend("topleft", legend=legend, fill=col)
+	legend("topleft", legend=legend, fill=col, bg="white")
 }
 
 ##############################################################
