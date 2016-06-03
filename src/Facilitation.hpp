@@ -122,8 +122,8 @@ class Individual {
 	Arena *arena;
 	std::list<Individual*>::iterator ref;
 	/* array of lists of neighbours by species */
-	std::vector<std::list<Individual*>> affectingNeighbours;
-	std::vector<std::list<Individual*>> affectedNeighbours;
+	std::vector<std::list<Individual*>> affectingMeNeighbours;
+	std::vector<std::list<Individual*>> affectedByMeNeighbours;
 	void initNeighbours();
 
 	public:

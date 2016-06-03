@@ -7,7 +7,7 @@ unsigned long Individual::id_MAX = 0;
 Individual::Individual(Arena *ar, Species *sp, double x, double y):Individual(ar,sp,Position(x,y)){} 
 
 
-Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(ar->boundaryCondition(p)), id(id_MAX++), affectingNeighbours(ar->getSpNum()), affectedNeighbours(ar->getSpNum()) {
+Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(ar->boundaryCondition(p)), id(id_MAX++), affectingMeNeighbours(ar->getSpNum()), affectedByMeNeighbours(ar->getSpNum()) {
 	spnum = arena->getSpNum();
 	setSpecies(sp);
 	if(p.x<0) die();
@@ -39,8 +39,8 @@ double Individual::actualD(){
 	int sp;
 	double actuald=D,effect;
 	for(sp = 0; sp < spnum; sp++){
-		if((effect = species->getInteraction(sp)) != 0 && !affectingNeighbours[sp].empty()){
-			actuald -= effect*affectingNeighbours[sp].size(); /* note that effect is LINEAR on number of affecting neighbours */
+		if((effect = species->getInteraction(sp)) != 0 && !affectingMeNeighbours[sp].empty()){
+			actuald -= effect*affectingMeNeighbours[sp].size(); /* note that effect is LINEAR on number of affecting neighbours */
 		}
 	}
 	if(actuald < 0) return 0;
@@ -78,10 +78,10 @@ status_line Individual::getStatus(){
 	/* NOTE: on changing this please change the typedef on Facilitation.hpp and the names on R/utils.R */
 	status_line ret  = {species->getId(),id,p.x,p.y};
 	for(i=0;i<spnum;i++){
-		ret.push_back(affectingNeighbours[i].size());
+		ret.push_back(affectingMeNeighbours[i].size());
 	}
 	for(i=0;i<spnum;i++){
-		ret.push_back(affectedNeighbours[i].size());
+		ret.push_back(affectedByMeNeighbours[i].size());
 	}
 	return ret;
 }
@@ -105,11 +105,11 @@ void 	Individual::clearNeighbours(){
 	int sp;
 	std::list<Individual*>::iterator i;
 	for(sp = 0; sp < spnum; sp++){
-		for(i=affectingNeighbours[sp].begin();i!=affectingNeighbours[sp].end();i = affectingNeighbours[sp].erase(i)){
+		for(i=affectingMeNeighbours[sp].begin();i!=affectingMeNeighbours[sp].end();i = affectingMeNeighbours[sp].erase(i)){
 			(*i)->removeAffectedByMeNeighbour(this);
 		}
 
-		for(i=affectedNeighbours[sp].begin();i!=affectedNeighbours[sp].end();i = affectedNeighbours[sp].erase(i)){
+		for(i=affectedByMeNeighbours[sp].begin();i!=affectedByMeNeighbours[sp].end();i = affectedByMeNeighbours[sp].erase(i)){
 			(*i)->removeAffectingMeNeighbour(this);
 		}
 	}
@@ -152,26 +152,26 @@ void Individual::addAffectingMeNeighbourList(std::list<Individual*> neighList){
 void 	Individual::addAffectedByMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	if(i==this){return;}
-	affectedNeighbours[s].push_back(i);
+	affectedByMeNeighbours[s].push_back(i);
 }
 
 void 	Individual::addAffectingMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	if(i==this){return;}
-	affectingNeighbours[s].push_back(i);
+	affectingMeNeighbours[s].push_back(i);
 }
 
 void 	Individual::removeAffectedByMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
-	affectedNeighbours[s].remove(i);
+	affectedByMeNeighbours[s].remove(i);
 }
 
 void 	Individual::removeAffectingMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
-	affectingNeighbours[s].remove(i);
+	affectingMeNeighbours[s].remove(i);
 }
 
 bool 	Individual::noAffectingMeNeighbours(int i){
-	return affectingNeighbours[i].empty();
+	return affectingMeNeighbours[i].empty();
 }
 
