@@ -10,6 +10,7 @@ status_list run_tests(bool print, int ntimes,double * times, int num_stages, dou
 	bool test=true;
 	Arena *arena;
 	status_list ret = {};
+	int numturns=0;
 
 	arena = new Arena(num_stages,par,dispersal,w,h,bcond,dkernel);
 	arena->setInteractions(interactions);
@@ -27,6 +28,7 @@ status_list run_tests(bool print, int ntimes,double * times, int num_stages, dou
 		else { 
 			while(arena->getTotalTime() < times[i] && test){
 				test = arena->turn();
+				numturns++;
 //				std::cout << "#Turn " << i << ",";
 //				std::cout << "#Time: " << arena->getTotalTime() << "\n";
 			}
@@ -35,6 +37,7 @@ status_list run_tests(bool print, int ntimes,double * times, int num_stages, dou
 		}
 	}
 
+	std::cout << "#Total number os turns: " << numturns << "\n";
 
 	return ret;
 }
