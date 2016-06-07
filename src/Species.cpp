@@ -23,6 +23,17 @@ Species::Species(Arena *ar,int id, double D, double G, double R=0, double Rad=0)
 	std::cout << id << ": G=" << G << " , R=" << R << " , D=" << D << ", Rad=" << Rad << "\n";
 }
 
+Species::~Species(){
+	/* clear population */
+	std::list<Individual*>::iterator i;
+
+	for(i=population.begin();i!=population.end();i++){
+		delete(*i);
+	}
+
+	free(interactions);
+}
+
 void Species::setFacilitation(double f){setInteraction(spnum-1,f);}
 void Species::setAutoInteraction(double effect){setInteraction(id,effect);}
 

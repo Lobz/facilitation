@@ -23,9 +23,11 @@ class Arena {
 	Species **species;
 	Species *facilitator;
 	int bcond;
+	status_list history;
 
 	public:
 	Arena(int lifestages, double * baserates, double dispersal, double width, double height, int bcond, int dkernel);
+	~Arena();
 
 	/* high level functions */
 	bool populate(int *stagesinit);
@@ -39,7 +41,9 @@ class Arena {
 
 	Position boundaryCondition(Position p);
 
+	void addToHistory(status_line l);
 	/* output functions */
+	status_list finalStatus();
 	status_list getStatus();
 	int getSpNum();
 	double* getAbundance();
@@ -65,6 +69,7 @@ class Species {
 	public:
 	Species(Arena *ar,int id, double *par);
 	Species(Arena *ar,int id, double D, double G, double R, double Rad);
+	~Species();
 	/* BASIC RUN ACTION */
 	void act();
 
@@ -108,6 +113,25 @@ class Species {
 	void print(double time);
 };
 
+/* INDIVIDUAL */
+
+class IndividualStatus {
+	public:
+	int initialSp;
+	unsigned long id;
+	double x, y;
+	
+	double creationTime, deathTime;
+	std::list<double> growthTimes;
+
+	IndividualStatus(int sp, unsigned long id, double x, double y, double ctime);
+	
+	void setGrowth(double time);
+	void setDeath(double time);
+
+	status_line getStatus();
+};
+
 
 class Individual {
 	private:
@@ -121,6 +145,7 @@ class Individual {
 	Species *species, *seedStage;
 	Arena *arena;
 	std::list<Individual*>::iterator ref;
+	IndividualStatus *info;
 	/* array of lists of neighbours by species */
 	std::vector<std::list<Individual*>> affectingMeNeighbours;
 	std::vector<std::list<Individual*>> affectedByMeNeighbours;
@@ -161,6 +186,7 @@ class Individual {
 	void clearNeighbours();
 	bool noAffectingMeNeighbours(int i);
 	
+	~Individual();
 
 	private:
 	void setSpecies(Species *sp);

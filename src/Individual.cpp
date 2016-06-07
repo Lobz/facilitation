@@ -10,6 +10,7 @@ Individual::Individual(Arena *ar, Species *sp, double x, double y):Individual(ar
 Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(ar->boundaryCondition(p)), id(id_MAX++), affectingMeNeighbours(ar->getSpNum()), affectedByMeNeighbours(ar->getSpNum()) {
 	spnum = arena->getSpNum();
 	setSpecies(sp);
+	info  = new IndividualStatus(sp->getId(),id,p.x,p.y,arena->getTotalTime());
 	if(p.x<0) die();
 }
 
@@ -27,6 +28,12 @@ void	Individual::setSpecies(Species *sp) {
 
 	initNeighbours();
 
+}
+
+Individual::~Individual(){
+	arena->addToHistory(info->getStatus());
+	clearNeighbours();
+	delete(info);
 }
 
 
@@ -73,22 +80,10 @@ void Individual::print(){
 	std::cout << id <<  "," << p.x << "," << p.y << "\n";
 }
 
-status_line Individual::getStatus(){
-	int i;
-	/* NOTE: on changing this please change the typedef on Facilitation.hpp and the names on R/utils.R */
-	status_line ret  = {species->getId(),id,p.x,p.y};
-	for(i=0;i<spnum;i++){
-		ret.push_back(affectingMeNeighbours[i].size());
-	}
-	for(i=0;i<spnum;i++){
-		ret.push_back(affectedByMeNeighbours[i].size());
-	}
-	return ret;
-}
-
 void 	Individual::grow(){
 	species->remove(this->ref);
 	setSpecies(species->getNextStage()); /* note: setSpecies clears and re-inits the neighbours */
+	info->setGrowth(arena->getTotalTime());
 }
 
 void	Individual::reproduce(){
@@ -97,6 +92,7 @@ void	Individual::reproduce(){
 
 void 	Individual::die(){
 	species->remove(this->ref);
+	info->setDeath(arena->getTotalTime());
 	clearNeighbours();
 	delete(this);
 }
@@ -175,3 +171,21 @@ bool 	Individual::noAffectingMeNeighbours(int i){
 	return affectingMeNeighbours[i].empty();
 }
 
+/* NOTE: on changing this please change the typedef on Facilitation.hpp and the names on R/utils.R */
+status_line Individual::getStatus(){
+	status_line ret  = {species->getId(),id,p.x,p.y};
+	return ret;
+}
+
+IndividualStatus::IndividualStatus(int sp, unsigned long id, double x, double y, double ctime):initialSp(sp),id(id),x(x),y(y),creationTime(ctime),deathTime(-1){growthTimes = {};}
+void IndividualStatus::setGrowth(double time){ growthTimes.push_back(time); }
+void IndividualStatus::setDeath(double time){ deathTime=time; }
+
+status_line IndividualStatus::getStatus(){
+	std::list<double>::iterator i;
+	status_line l = {initialSp,id,x,y,creationTime,deathTime};
+	for(i = growthTimes.begin(); i!=growthTimes.end();i++){
+		l.push_back(*i);
+	}
+	return l;
+}

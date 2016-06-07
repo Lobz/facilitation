@@ -25,6 +25,18 @@ Arena::Arena(int lifestages, double *parameters, double dispersal, double width,
 
 }
 
+Arena::~Arena(){
+}
+
+status_list Arena::finalStatus(){
+	int i;
+	for(i=0;i<spnum;i++){
+		delete(species[i]);
+	}
+	return history;
+}
+	
+
 void Arena::setInteractions(double *interactions){
 	int i,j;
 	for(i=0;i<spnum;i++){
@@ -195,3 +207,8 @@ Position Arena::boundaryCondition(Position p){
 
 	return p;
 }
+
+void Arena::addToHistory(status_line l){
+	history.push_front(l);
+}
+
