@@ -19,7 +19,7 @@ status_list run_tests(bool print, int ntimes,double * times, int num_stages, dou
 	if(print) std::cout << "#arena populated!\n";
 	if(print) std::cout << "time,species,individual,x,y\n";
 
-	ret.splice(ret.end(),arena->getStatus());
+	//ret.splice(ret.end(),arena->getStatus());
 	for(i=1;i < ntimes && test;i++) {
 		if(print) std::cout << "#Turn " << i << ",";
 		if(print) std::cout << "#Time: " << arena->getTotalTime() << "\n";
@@ -33,13 +33,13 @@ status_list run_tests(bool print, int ntimes,double * times, int num_stages, dou
 //				std::cout << "#Time: " << arena->getTotalTime() << "\n";
 			}
 
-			ret.splice(ret.end(),arena->getStatus());
+			//ret.splice(ret.end(),arena->getStatus());
 		}
 	}
 
 	std::cout << "#Finished. Total number os turns: " << numturns << "\n";
 
-	//ret= arena->finalStatus();
+	ret= arena->finalStatus();
 
 	delete(arena);
 

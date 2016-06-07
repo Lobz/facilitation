@@ -65,8 +65,8 @@ facByRates <- function(times, n, Ds, Gs, R, dispersal=1, interactions=rep(0,n*n)
 	N <- matrix(N,nrow=n+1)
 	rownames(N) <- 0:n
 	colnames(N) <- 0:n
-	#dt <- list2dataframe.new(dt)
-	dt <- list2dataframe(dt)
+	dt <- list2dataframe.new(dt)
+	#dt <- list2dataframe(dt)
 
 
 	list(data = dt,n=n+1, expected.times = times, #actual.times = unique(dt$t), 
