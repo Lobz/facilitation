@@ -37,7 +37,7 @@ status_list run_tests(bool print, int ntimes,double * times, int num_stages, dou
 		}
 	}
 
-	std::cout << "#Total number os turns: " << numturns << "\n";
+	std::cout << "#Total number of turns: " << numturns << "\n";
 
 	return ret;
 }
