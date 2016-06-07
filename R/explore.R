@@ -33,7 +33,6 @@ facilitation.class.wrapper <- function(data){
 fit.data <- function(ab.mat){
 	y <- log(rowSums(ab.mat))
 	x <- as.numeric(rownames(ab.mat))
-	names(total) <- c("y","x")
 	regression <- lm(y~x)
 	regression
 }

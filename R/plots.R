@@ -17,7 +17,8 @@
 stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 	dots <- list(...)
 	if(missing(col))
-		col <- terrain.colors(dim(mat)[2])
+		#col <- terrain.colors(dim(mat)[2])
+		col <- colorRampPalette(c("darkred","pink"))(dim(mat)[2])
 	if (log.y) {
 		minp <- 1
 		log <- "y"
@@ -61,7 +62,7 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 # function for ploting simulation frames for facilita package
 # Alexandre Adalardo de Oliveira - 16/03/2016
 ##############################################################
-spatialplot = function(data, xlim=c(min(data$data$x),max(data$data$x)), ylim=c(min(data$data$y),max(data$data$y)), cor=c(terrain.colors(data$stages ),"pink"),tframe=0)
+spatialplot = function(data, xlim=c(min(data$data$x),max(data$data$x)), ylim=c(min(data$data$y),max(data$data$y)), cor=c(colorRampPalette(c("darkred","pink"))(data$n-1),"lightgreen"),tframe=0)
 {
 	#library(grid)
 	dt <- data$data
