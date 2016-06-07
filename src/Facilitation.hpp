@@ -12,7 +12,7 @@
 class Species;
 class Individual;
 
-typedef std::list<double> status_line;
+typedef Rcpp::List status_line;
 typedef std::list<status_line> status_list;
 
 class Arena {
@@ -41,7 +41,7 @@ class Arena {
 
 	Position boundaryCondition(Position p);
 
-	void addToHistory(status_line l);
+	void addToHistory(status_list l);
 	/* output functions */
 	status_list finalStatus();
 	status_list getStatus();
@@ -129,7 +129,7 @@ class IndividualStatus {
 	void setGrowth(double time);
 	void setDeath(double time);
 
-	status_line getStatus();
+	status_list getStatus();
 };
 
 

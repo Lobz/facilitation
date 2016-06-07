@@ -9,7 +9,7 @@ status_list run_tests(bool print, int ntimes,double * times, int num_stages, dou
 	int i;
 	bool test=true;
 	Arena *arena;
-	status_list ret = {};
+	status_list ret;
 	int numturns=0;
 
 	arena = new Arena(num_stages,par,dispersal,w,h,bcond,dkernel);
@@ -37,7 +37,11 @@ status_list run_tests(bool print, int ntimes,double * times, int num_stages, dou
 		}
 	}
 
-	std::cout << "#Total number os turns: " << numturns << "\n";
+	std::cout << "#Finished. Total number os turns: " << numturns << "\n";
+
+	//ret= arena->finalStatus();
+
+	delete(arena);
 
 	return ret;
 }

@@ -7,11 +7,12 @@ unsigned long Individual::id_MAX = 0;
 Individual::Individual(Arena *ar, Species *sp, double x, double y):Individual(ar,sp,Position(x,y)){} 
 
 
-Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), p(ar->boundaryCondition(p)), id(id_MAX++), affectingMeNeighbours(ar->getSpNum()), affectedByMeNeighbours(ar->getSpNum()) {
+Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), id(id_MAX++), affectingMeNeighbours(ar->getSpNum()), affectedByMeNeighbours(ar->getSpNum()) {
+	p = ar->boundaryCondition(p), 
 	spnum = arena->getSpNum();
 	setSpecies(sp);
 	info  = new IndividualStatus(sp->getId(),id,p.x,p.y,arena->getTotalTime());
-	if(p.x<0) die();
+	if(p.x==-1) die();
 }
 
 void	Individual::setSpecies(Species *sp) {
@@ -173,7 +174,7 @@ bool 	Individual::noAffectingMeNeighbours(int i){
 
 /* NOTE: on changing this please change the typedef on Facilitation.hpp and the names on R/utils.R */
 status_line Individual::getStatus(){
-	status_line ret  = {species->getId(),id,p.x,p.y};
+	status_line ret  = Rcpp::List::create(species->getId(),id,p.x,p.y);
 	return ret;
 }
 
@@ -181,11 +182,18 @@ IndividualStatus::IndividualStatus(int sp, unsigned long id, double x, double y,
 void IndividualStatus::setGrowth(double time){ growthTimes.push_back(time); }
 void IndividualStatus::setDeath(double time){ deathTime=time; }
 
-status_line IndividualStatus::getStatus(){
+status_list IndividualStatus::getStatus(){
 	std::list<double>::iterator i;
-	status_line l = {initialSp,id,x,y,creationTime,deathTime};
+	status_list l = {};
+	double time1=creationTime,time2;
+	int sp = initialSp;
 	for(i = growthTimes.begin(); i!=growthTimes.end();i++){
-		l.push_back(*i);
+		time2 = *i;
+		l.push_front(Rcpp::List::create(sp,id,x,y,time1,time2));
+		time1 = time2;
+		sp++;
 	}
+	l.push_front(Rcpp::List::create(sp,id,x,y,time1,deathTime));
+	
 	return l;
 }

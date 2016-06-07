@@ -177,6 +177,11 @@ int Arena::getSpNum(){
 }
 
 Position Arena::boundaryCondition(Position p){
+	bool flag = false;
+	if(p.x <0 || p.x > width || p.y <0 || p.y > height){
+		flag = true;
+		std::cout << "Applying boundary condition: P-original = (" << p.x << "," << p.y << "), ";
+	}
 	switch(bcond){
 
 		case(1):
@@ -199,16 +204,20 @@ Position Arena::boundaryCondition(Position p){
 			while(p.y > height) p.y -= height;;
 			break;
 
-		case(3):
+		case(0):
 			/* ABSORTIVE */
-			if(p.x < 0 || p.x > width || p.y < 0 || p.y > height) p.x = -100;
+			if(p.x < 0 || p.x > width || p.y < 0 || p.y > height) p.x = -1;
 			break;
+		default:
+			std::cout << "Unsuported boundary condition\n";
+			exit(1);
 	}
+	if(flag)std::cout << "P-final = (" << p.x << "," << p.y << ")\n";
 
 	return p;
 }
 
-void Arena::addToHistory(status_line l){
-	history.push_front(l);
+void Arena::addToHistory(status_list l){
+	history.splice(history.end(),l);
 }
 
