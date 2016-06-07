@@ -48,7 +48,7 @@ saveGIF(spatialplot(results),interval=0.1,movie.name="fac.gif")
 
 You may calculate the abundances through time:
 ```r
-ab <- abundance_matrix(result)
+ab <- abundance_matrix(results)
 ```
 Sometimes, the simulation may output the message "Nothing happens", and the times in the abundance matrix may be less than what you expected (the length of rownames(ab) is less than length(times)). This means that there were spans of time longer than your time interval during which no events happened, because your rates are low and/or your time interval is small. Because the simulator only records times in which events happen, the abundance matrix will have missing information. The following function will fill in blanks, setting the abundance in the time points listed in times to be equal to the last abundance value listed, which is the actual value if no events happened (warning: might be a slow function. WARNING: this function will produce points of false data whenever something did happen between a time point recorded in ab and a time point listed in times).
 ```r
