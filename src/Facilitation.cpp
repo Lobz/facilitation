@@ -131,12 +131,21 @@ status_list Arena::getStatus(){
 }
 
 /*TODO: should this array be dynamically allocated? */
-double* Arena::getAbundance(){
+int* Arena::getAbundance(){
 	int i;
-	double *ab;
-	ab = (double*)malloc(spnum*sizeof(double));
+	int *ab;
+	ab = (int*)malloc(spnum*sizeof(int));
 	for(i=0;i<spnum;i++){
 		ab[i] = species[i]->getAbundance();
+	}
+	return ab;
+}
+
+int Arena::getTotalAbundance(){
+	int i;
+	int ab=0;
+	for(i=0;i<spnum;i++){
+		ab += species[i]->getAbundance();
 	}
 	return ab;
 }

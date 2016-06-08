@@ -17,23 +17,21 @@ snapshotdataframe <- function(x,times) {
 	lapply(times,function(t){subset(x,begintime <= t & (endtime >= t | is.na(endtime)))}) -> res
 	t <- times[1]
 	snap <- cbind(t,res[[1]])
-	for(i in 2:length(times)){
-		t <- times[i]
-		snap <- rbind(snap,cbind(t,res[[i]]))
+	if(length(times)>1){
+		for(i in 2:length(times)){
+			t <- times[i]
+			snap <- rbind(snap,cbind(t,res[[i]]))
+		}
 	}
 
 	snap
 }
 
-plot_all <- function(dt) {
-	plot(dt$x~dt$y, type='n',xlab="x",ylab="y");
-	for(i in unique(dt$sp)){
-		dts<- subset(dt,dt$sp==i);
-		points(dts$x,dts$y,pch=i,col=2*i);
-	}
+plotsnapshot <- function(data,t) {
+	spatialplot(data,c(t))
 }
 
-facByRates <- function(times, n, Ds, Gs, R, dispersal=1, interactions=rep(0,n*n), fac=rep(0,n-1), init=rep(10,n+1), rad=rep(2,n+1), height=100, width=100, boundary="reflexive", facilitatorD=0,facilitatorR=0,facilitatorC=0, dispKernel="exponential"){
+facByRates <- function(maxtime, n, Ds, Gs, R, dispersal=1, interactions=rep(0,n*n), fac=rep(0,n-1), init=rep(10,n+1), rad=rep(2,n+1), height=100, width=100, boundary="reflexive", facilitatorD=0,facilitatorR=0,facilitatorC=0, dispKernel="exponential", maxpop=30000){
 
 	# generate parameters for test_parameters
 	if(length(rad)==1) rad <- c(rep(0,n),rad)
@@ -59,26 +57,29 @@ facByRates <- function(times, n, Ds, Gs, R, dispersal=1, interactions=rep(0,n*n)
 	
 
 	# run simultation
-	dt <- test_parameter(times,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary,dkernel=disp)
+	r <- test_parameter(maxtime,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary,dkernel=disp,maxpop=maxpop)
 	
 	# prepare output
 	N <- matrix(N,nrow=n+1)
 	rownames(N) <- 0:n
 	colnames(N) <- 0:n
-	dt <- list2dataframe.new(dt)
+	dt <- list2dataframe.new(r)
 	#dt <- list2dataframe(dt)
 
 
-	list(data = dt,n=n+1, expected.times = times, #actual.times = unique(dt$t), 
+	list(data = dt,n=n+1, maxtime=maxtime, 
 	     stages=n,D=Ds,G=Gs,R=R,radius=rad,dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary,dkernel=dispKernel)
 }
 #dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
 
-abundance_matrix <- function(data,times=data$expected.times){
-	n <- data$n
-	ret <- snapshotdataframe(data$data,times)
-	m <- (tapply(ret$id, list(ret$t, ret$sp), length))
+abundance_matrix <- function(data,times=seq(0,data$maxtime,length.ou=20)){
+	subs <- lapply(times,function(t){subset(data$data,begintime <= t & (endtime >= t | is.na(endtime)),select=c(1,2))})
+	m <- t(sapply(subs,function(x){tapply(x$id,x$sp,length)}))
 	m[is.na(m)]<-0
+	rownames(m) <- times
+
+	# complete the rows that are missing
+	n <- data$n
 	if(dim(m)[2] == n){
 		ab <- m
 	}

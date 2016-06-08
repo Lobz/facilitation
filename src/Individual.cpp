@@ -7,8 +7,8 @@ unsigned long Individual::id_MAX = 0;
 Individual::Individual(Arena *ar, Species *sp, double x, double y):Individual(ar,sp,Position(x,y)){} 
 
 
-Individual::Individual(Arena *ar, Species *sp, Position p) : arena(ar), id(id_MAX++), affectingMeNeighbours(ar->getSpNum()), affectedByMeNeighbours(ar->getSpNum()) {
-	p = ar->boundaryCondition(p), 
+Individual::Individual(Arena *ar, Species *sp, Position pos) : arena(ar), id(id_MAX++), affectingMeNeighbours(ar->getSpNum()), affectedByMeNeighbours(ar->getSpNum()) {
+	p = ar->boundaryCondition(pos), 
 	spnum = arena->getSpNum();
 	setSpecies(sp);
 	info  = new IndividualStatus(sp->getId(),id,p.x,p.y,arena->getTotalTime());
@@ -88,6 +88,7 @@ void 	Individual::grow(){
 }
 
 void	Individual::reproduce(){
+	//std::cout << "disperseIndividual called with p=(" << p.x <<","<<p.y<<")\n";
 	seedStage->disperseIndividual(p);
 }
 
@@ -178,7 +179,9 @@ status_line Individual::getStatus(){
 	return ret;
 }
 
-IndividualStatus::IndividualStatus(int sp, unsigned long id, double x, double y, double ctime):initialSp(sp),id(id),x(x),y(y),creationTime(ctime),deathTime(-1){growthTimes = {};}
+IndividualStatus::IndividualStatus(int sp, unsigned long pid, double px, double py, double ctime):initialSp(sp),id(pid),x(px),y(py),creationTime(ctime),deathTime(-1){
+	growthTimes = {};
+}
 void IndividualStatus::setGrowth(double time){ growthTimes.push_back(time); }
 void IndividualStatus::setDeath(double time){ deathTime=time; }
 

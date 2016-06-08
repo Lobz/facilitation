@@ -46,7 +46,8 @@ class Arena {
 	status_list finalStatus();
 	status_list getStatus();
 	int getSpNum();
-	double* getAbundance();
+	int* getAbundance();
+	int getTotalAbundance();
 	double getTotalTime();
 	double getWidth();
 	double getHeight();
@@ -109,7 +110,7 @@ class Species {
 	Species* getSeedStage();
 
 	status_list getStatus(double time);
-	double getAbundance();
+	int getAbundance();
 	void print(double time);
 };
 
