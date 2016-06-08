@@ -25,43 +25,50 @@ deathrates <- c(2, 0.2, 0.2)  # death rates for seed, sapling and adult
 growthrates <- c(1, 0.2)      # transition rates seed-->sapling and sapling-->adult
 reproductionrate <- 10        # reproduction rate (only adult)
 dispersalradius <- 2	      # average distance a seed falls from the parent (distance is gaussian)
-times <- seq(0,15,.2)         # array of times of interest
 initialpop <- c(1,1,10,20)    # initial pop. sizes for the 3 stages plus the facilitator species
 facindex <- c(0,1)            # this will be the values by which facilitator decreases seeds and seedlings deathrates
 effects <- c(0,0,0, 0,-0.5,0, 0,0,-0.2) # the effects reducing deathrate (negative values increase deathrates)
 radius <- c(0,0.5,2,2)        # this are the distances up to which the individuals can have effect on others, by stage + facilitator
+maxt <- 10                    # time up to which the simulation shall run
 h <- 50                       # arena height
 w <- 50                       # arena width
 
-result <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
-dt <- result$data
+results <- facByRates(maxtime=maxt, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
+dt <- results$data
 ```
 You can plot the actual individuals in space in an animation with:
 ```r
-spatialplot(results,tframe=0.1)
+times <- seq(0,maxt,.2)         # array of times of interest
+spatialplot(results,times,tframe=0.1)
 ```
 You can use the package `animation` to save the animation into a gif (set tframe to 0 (default) unless you want to waste a lot of time!).
 ```r
 library(animation)
-saveGIF(spatialplot(results),interval=0.1,movie.name="fac.gif") 
+saveGIF(spatialplot(results,times),interval=0.1,movie.name="fac.gif") 
+```
+This is a shorthand if you want a snapshot of a given point in time:
+```r
+plotsnapshot(results,t=6.25)
 ```
 
 You may calculate the abundances through time:
 ```r
-ab <- abundance_matrix(result)
+times <- seq(0,maxt,.2)         # array of times of interest
+ab <- abundance_matrix(results,times)
 ```
-Sometimes, the simulation may output the message "Nothing happens", and the times in the abundance matrix may be less than what you expected (the length of rownames(ab) is less than length(times)). This means that there were spans of time longer than your time interval during which no events happened, because your rates are low and/or your time interval is small. Because the simulator only records times in which events happen, the abundance matrix will have missing information. The following function will fill in blanks, setting the abundance in the time points listed in times to be equal to the last abundance value listed, which is the actual value if no events happened (warning: might be a slow function. WARNING: this function will produce points of false data whenever something did happen between a time point recorded in ab and a time point listed in times).
-```r
-ab <- fillTime(ab,times)
-```
-
-Having a reliable abundance matrix, you can plot your population in a stackplot. Obs.: the last column corresponds to the facilitator, so it must be removed from this plot.
+Having an abundance matrix, you can plot your population in a stackplot. Obs.: the last column corresponds to the facilitator, so it must be removed from this plot.
 ```r
 stackplot(ab[,1:numstages])
 ```
 You can also plot it in a logaritmic scale to better visualize the growthrate of the species:
 ```r
 stackplot(ab[,1:numstages],log.y=T)
+```
+
+Note that you can choose as much detail in your abundance matrix as you'd like, changin the `times` parameter. Compare:
+```r
+stackplot(abundance_matrix(results,seq(0,maxt,length.out=20))[,1:numstages])
+stackplot(abundance_matrix(results,seq(0,maxt,length.out=200))[,1:numstages])
 ```
 
 The package also include functions to plot the expected abundances according to a linear differential model. To produce the matrix corresponding to the ODE and calculate the solution (that is, the matrix exponential), run the following: 
@@ -73,7 +80,7 @@ You can also plot the results (plot the whole matrix since there is no facilitat
 ```r
 stackplot(so)
 ```
-Note that this is the analitical solution to the ODE model that corresponds to the structured population in the *absence of facilitation*. One way to look at the effect of facilitation is changing the death rate as if it were under facilitation, and recalculating the solution.
+Note that this is the analitical solution to the ODE model that corresponds to the structured population in the *absence of interactions*. One way to look at the effect of facilitation is changing the death rate as if it were under facilitation, and recalculating the solution.
 ```r
 alpha <- c(0.2,0.2,0)		# first guess of proportions of individuals that are affected by facilitation 
 deathrates.f <- deathrates-alpha*c(facindex,0)
