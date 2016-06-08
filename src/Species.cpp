@@ -182,6 +182,6 @@ status_list Species::getStatus(double time){
 	return status;
 }
 
-double Species::getAbundance(){
+int Species::getAbundance(){
 	return population.size();
 }

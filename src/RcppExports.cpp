@@ -6,12 +6,12 @@
 using namespace Rcpp;
 
 // test_parameter
-Rcpp::List test_parameter(Rcpp::NumericVector times, int num_stages, Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, Rcpp::IntegerVector init, double w, double h, int bcond, int dkernel);
-RcppExport SEXP facilitation_test_parameter(SEXP timesSEXP, SEXP num_stagesSEXP, SEXP parametersSEXP, SEXP dispersalSEXP, SEXP interactionsSEXP, SEXP initSEXP, SEXP wSEXP, SEXP hSEXP, SEXP bcondSEXP, SEXP dkernelSEXP) {
+Rcpp::List test_parameter(double maxtime, int num_stages, Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, Rcpp::IntegerVector init, double w, double h, int bcond, int dkernel, int maxpop);
+RcppExport SEXP facilitation_test_parameter(SEXP maxtimeSEXP, SEXP num_stagesSEXP, SEXP parametersSEXP, SEXP dispersalSEXP, SEXP interactionsSEXP, SEXP initSEXP, SEXP wSEXP, SEXP hSEXP, SEXP bcondSEXP, SEXP dkernelSEXP, SEXP maxpopSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type times(timesSEXP);
+    Rcpp::traits::input_parameter< double >::type maxtime(maxtimeSEXP);
     Rcpp::traits::input_parameter< int >::type num_stages(num_stagesSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type parameters(parametersSEXP);
     Rcpp::traits::input_parameter< double >::type dispersal(dispersalSEXP);
@@ -21,7 +21,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type h(hSEXP);
     Rcpp::traits::input_parameter< int >::type bcond(bcondSEXP);
     Rcpp::traits::input_parameter< int >::type dkernel(dkernelSEXP);
-    __result = Rcpp::wrap(test_parameter(times, num_stages, parameters, dispersal, interactions, init, w, h, bcond, dkernel));
+    Rcpp::traits::input_parameter< int >::type maxpop(maxpopSEXP);
+    __result = Rcpp::wrap(test_parameter(maxtime, num_stages, parameters, dispersal, interactions, init, w, h, bcond, dkernel, maxpop));
     return __result;
 END_RCPP
 }
