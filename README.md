@@ -111,19 +111,11 @@ lines(so.f[,3]+so.f[,2]+so.f[,1]~rownames(so.f),lty=2)
 ``` 
 I added some basic tools for comparing the results. Since the population grows exponentially, we will fit an exponential model to the population total using the nls function.
 ```r
-> limiting.rate(mat)
-[1] 0.2625879
-> limiting.rate(mat.f)
-[1] 0.3466331
-> fitted.rate(ab)
-    slope
-0.3099619
-> fitted.rate(so)
-    slope
-0.2634011
-> fitted.rate(so.f)
-    slope
-0.3468665
+limiting.rate(mat)
+limiting.rate(mat.f)
+fitted.rate(ab)
+fitted.rate(so)
+fitted.rate(so.f)
 ```
 ### Disclaimer
 
