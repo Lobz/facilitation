@@ -64,54 +64,6 @@ fitted.rate <-function(ab.mat){
 	coef(regression)[2]
 }
 
-mat.model.wrapper1.3stages <- function(d1,d3,g1,g2,r.add) {
-	re <- array()
-	re[1] <- limiting.rate(mat.model(n=3,Ds=c(d1,1,d3),Gs=c(g1,g2),R=r.add+d3))
-	re[2] <- limiting.rate(mat.model(n=3,Ds=c(d1,0,d3),Gs=c(g1,g2),R=r.add+d3))
-	re[3] <- facilitation.class(re[1],re[2])
-	if(re[3]=="mixed") { # facilitation on d2 actually could have an efect!
-		d2 <- .5
-		sup <- 1
-		inf <- 0
-		limr <- limiting.rate(mat.model(n=3,Ds=c(d1,d2,d3),Gs=c(g1,g2),R=r.add+d3))
-		while(abs(limr) > .0001){
-			if(limr>0){
-				inf <- d2
-			}
-			else {
-				sup <- d2
-			}
-			d2 <- (sup+inf)/2
-			limr <- limiting.rate(mat.model(n=3,Ds=c(d1,d2,d3),Gs=c(g1,g2),R=r.add+d3))
-		}
-		re[4] <- d2
-	}
-	else if(re[3] == "positive"){ #let's go crazy with that deathrate
-		d2 <- 2
-		limr <- limiting.rate(mat.model(n=3,Ds=c(d1,d2,d3),Gs=c(g1,g2),R=r.add+d3))
-		while(limr >0){
-			d2 <- d2*2
-			limr <- limiting.rate(mat.model(n=3,Ds=c(d1,d2,d3),Gs=c(g1,g2),R=r.add+d3))
-		}
-		sup <- d2
-		inf <- d2/2
-		d2 <- (sup+inf)/2
-		limr <- limiting.rate(mat.model(n=3,Ds=c(d1,d2,d3),Gs=c(g1,g2),R=r.add+d3))
-		while(abs(limr) > .0001){
-			if(limr>0){
-				inf <- d2
-			}
-			else {
-				sup <- d2
-			}
-			d2 <- (sup+inf)/2
-			limr <- limiting.rate(mat.model(n=3,Ds=c(d1,d2,d3),Gs=c(g1,g2),R=r.add+d3))
-		}
-		re[4] <- d2
-	}
-	else{ re[4] <- NA }
-	return(re)
-}
 
 expgrowthtime <- function(d,g){
 	integ <- integrate(f=function(x,d,g){(d*x*exp(-d*x)/(1-exp(-g*x)))},upper=Inf,lower=0,g=g,d=d)
@@ -121,9 +73,6 @@ expgrowthtime <- function(d,g){
 
 egt <- function(d,g){expgrowthtime(d,g)[1]}
 egtVec <- function(d,g){mapply(egt,d,g)}
-mat.model.wrapper <- function(data){
-	mapply(mat.model.wrapper1.3stages,data[,1],data[,2],data[,3],data[,4],data[,5])
-}
 
 expgrowthrate <- function(d3,alphaR,tildet){W(alphaR*tildet*exp(-d3*tildet))/tildet - d3}
 alphaRcalc <- function(d1,d2,g1,g2,R){ (g1/(g1+d1))*(g2/(g2+d2))*R }
