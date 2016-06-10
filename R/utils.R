@@ -73,25 +73,29 @@ facByRates <- function(maxtime, n, Ds, Gs, R, dispersal=1, interactions=rep(0,n*
 #dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
 
 abundance_matrix <- function(data,times=seq(0,data$maxtime,length.ou=20)){
-	subs <- lapply(times,function(t){subset(data$data,begintime <= t & (endtime >= t | is.na(endtime)),select=c(1,2))})
-	m <- t(sapply(subs,function(x){tapply(x$id,x$sp,length)}))
-	m[is.na(m)]<-0
-	rownames(m) <- times
-
-	# complete the rows that are missing
 	n <- data$n
-	if(dim(m)[2] == n){
-		ab <- m
+	subs <- lapply(times,function(t){subset(data$data,begintime <= t & (endtime >= t | is.na(endtime)),select=c(1,2))})
+	abmatline <- function(x){
+		l <- tapply(x$id,x$sp,length)
+		# complete the rows that are missing
+		if(length(l) == n){
+			abl = l
+		}
+		else {
+			abl <- rep(0,n)
+			names(abl) <- 0:(n-1)
+			for(i in 0:(n-1)){
+				if(i %in% names(l)){
+					c <- which(names(l)==i)
+					abl[i+1] <- l[c]
+				}
+			}		
+		}
+		abl
 	}
-	else {
-		ab <- matrix(rep(0,length(times)*n),ncol=n,dimnames=list(times,0:(n-1)))
-		for(i in 0:(n-1)){
-			if(i %in% colnames(m)){
-				c <- which(colnames(m)==i)
-				ab[,i+1] <- m[,c]
-			}
-		}		
-	}
+	ab <- t(sapply(subs,abmatline))
+	rownames(ab) <- times
+
 	ab
 }
 
