@@ -1,21 +1,27 @@
 numstages <- 3
-#"",   "d1",	"d2",	"d3",	"g1",	"g2", "R.add", "f",	"R", "lim.wo",		"lim.wi",	"class"
-#"103",0.14575,0.15125,0.65325,0.15625,0.22875,0.66325,0.74375,1.3165,-0.057310590316608,0.489141110411504,"mixed"
-deathrates <- c(0.24575,0.01,0.05325)  # death rates for seed, sapling and adult
-growthrates <- c(0.15625,0.22875)      # transition rates seed-->sapling and sapling-->adult
-reproductionrate <-  1.8165       # reproduction rate (only adult)
+#.5/(.5+1)=1/3
+#.05/(.5+.05)=1/11
+#s=1/33
+#Rs=.06
+#.05/(.3+.05)=1/7
+#s=1/21
+#Rs=.1
+deathrates <- c(1,0.5,0.1)  # death rates for seed, sapling and adult
+growthrates <- c(0.1,0.05)      # transition rates seed-->sapling and sapling-->adult
+reproductionrate <-  2       # reproduction rate (only adult)
 dispersalradius <- 0.2          # average distance a seed falls from the parent (distance is gaussian)
-times <- seq(0,60,length.out=80)         # array of times of interest
 initialpop <- c(0,0,20,0)	# initial pop. sizes for the 3 stages plus the facilitator species
-facindex <- c(0,0.8)            # this will be the values by which facilitator decreases seeds and seedlings deathrates
+facindex <- c(0,0.2)            # this will be the values by which facilitator decreases seeds and seedlings deathrates
 effects <- c(0,0,0, 0,-0.5,0, 0,0,-1.5) # the effects reducing deathrate (negative values increase deathrates)
 radius <- c(0,0.2,2,3)        # this are the distances up to which the individuals can have effect on others, by stage + facilitator
 h <- 40                       # arena height
 w <- 40                       # arena width
+maxtime <- 100
 
 dt1 <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, 
 		 interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
 
+times <- seq(0,60,length.out=80)         # array of times of interest
 dt1$data <- subset(dt1$data,t>0)
 ab1 <- abundance_matrix(dt1$data)
 stackplot(ab1[,1:3])
