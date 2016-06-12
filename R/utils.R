@@ -27,8 +27,8 @@ snapshotdataframe <- function(x,times) {
 	snap
 }
 
-plotsnapshot <- function(data,t) {
-	spatialplot(data,c(t))
+plotsnapshot <- function(data,t,...) {
+	spatialplot(data,c(t),...)
 }
 
 facByRates <- function(maxtime, n, Ds, Gs, R, dispersal=1, interactions=rep(0,n*n), fac=rep(0,n-1), init=rep(10,n+1), rad=rep(2,n+1), height=100, width=100, boundary="reflexive", facilitatorD=0,facilitatorR=0,facilitatorC=0, dispKernel="exponential", maxpop=30000){
