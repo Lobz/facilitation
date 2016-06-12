@@ -25,9 +25,6 @@ Arena::Arena(int lifestages, double *parameters, double dispersal, double width,
 
 }
 
-Arena::~Arena(){
-}
-
 status_list Arena::finalStatus(){
 	int i;
 	for(i=0;i<spnum;i++){

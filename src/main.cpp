@@ -34,7 +34,7 @@ status_list run_tests(bool print, double maxtime, int num_stages, double * par, 
 	std::cout << "#Finished. Total number os turns: " << numturns << "\n";
 
 	ret= arena->finalStatus();
-	delete(arena);
+//	delete(arena); // this line is causing weird trouble
 	return ret;
 }
 

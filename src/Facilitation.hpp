@@ -27,7 +27,6 @@ class Arena {
 
 	public:
 	Arena(int lifestages, double * baserates, double dispersal, double width, double height, int bcond, int dkernel);
-	~Arena();
 
 	/* high level functions */
 	bool populate(int *stagesinit);
