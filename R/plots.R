@@ -62,31 +62,37 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 # function for ploting simulation frames for facilita package
 # Alexandre Adalardo de Oliveira - 16/03/2016
 ##############################################################
-spatialplot = function(data, times=seq(0,data$maxtime,length.out=20), xlim=c(min(data$data$x),max(data$data$x)), ylim=c(min(data$data$y),max(data$data$y)), cor=c(colorRampPalette(c("darkred","pink"))(data$n-1),"lightgreen"),tframe=0)
+spatialplot = function(data, times=seq(0,data$maxtime,length.out=20), xlim=c(0,data$w), ylim=c(0,data$h), 
+		       col=c(colorRampPalette(c("darkred","pink"))(data$n-1),"lightgreen"),tframe=0)
 {
-	#library(grid)
-	dt <- snapshotdataframe(data$data,times)
 	radius <- data$radius
-	seqt <- unique(dt$t)
-	maxst <- max(dt$sp)
+	# creates list of dataframes, one for each time
+	dtlist <- lapply(times,function(t){subset(data$data,begintime <= t & (endtime >= t | is.na(endtime)))})
+	maxst <- data$n-1
+	# set minimum radius for stages with rad=0
 	for(i in 1:length(radius)) if(radius[i] == 0) radius[i] = 0.05
+	# init viewport
 	vp <- viewport(width = 0.8, height = 0.8, xscale=xlim, yscale=ylim)
-	for (i in seqt)
+	# loop through times
+	for (i in 1:length(times))
 	{
-		dt0=dt[dt$t==i,]
-		grid.newpage()
-		pushViewport(vp)
-		grid.rect(gp = gpar(col = "gray"))
-		for (j in maxst:0){
-			dtsp <- dt0[dt0$sp==j,]
-			if(dim(dtsp)[1] > 0){
-				grid.circle(x = dtsp$x, y=dtsp$y, r=radius[j+1],default.units="native", gp=gpar(fill=cor[j+1],col=cor[j+1]))
+		dt = dtlist[[i]]
+		if(dim(dt)[1] > 0) {# interrupt if population is zero
+
+			grid.newpage()
+			pushViewport(vp)
+			grid.rect(gp = gpar(col = "gray"))
+			for (j in maxst:0){
+				dtsp <- dt[dt$sp==j,]
+				if(dim(dtsp)[1] > 0){
+					grid.circle(x = dtsp$x, y=dtsp$y, r=radius[j+1],default.units="native", gp=gpar(fill=col[j+1],col=col[j+1]))
+				}
 			}
+			grid.text(paste("t =",round(times[i],digits=4)), y=1.06)
+			grid.xaxis(at=round(seq(xlim[1],xlim[2], len=5)))
+			grid.yaxis(at=round(seq(ylim[1],ylim[2], len=5)))
+			Sys.sleep(tframe)
 		}
-		grid.text(paste("t =",round(i,digits=4)), y=1.06)
-		grid.xaxis(at=round(seq(xlim[1],xlim[2], len=5)))
-		grid.yaxis(at=round(seq(ylim[1],ylim[2], len=5)))
-		Sys.sleep(tframe)    
 	}
 }
 #####################
