@@ -48,17 +48,6 @@ fit.data2 <- function(ab.mat,mat){
 	regression
 }
 
-distance <- function(ab,so){
-	zeroes <- unique(c(which(ab==0,arr.ind=T)[,1],which(so==0,arr.ind=T)[,1]))
-	if(length(zeroes)>0){
-		ab <- ab[-zeroes,]
-		so <- so[-zeroes,]
-	}
-	d <- log(ab/so)
-	SSQ <- sum(d*d)
-	SSQ	
-}
-
 fitted.rate <-function(ab.mat){
 	regression <- fit.data(ab.mat)
 	coef(regression)[2]
@@ -74,9 +63,11 @@ expgrowthtime <- function(d,g){
 egt <- function(d,g){expgrowthtime(d,g)[1]}
 egtVec <- function(d,g){mapply(egt,d,g)}
 
-expgrowthrate <- function(d3,alphaR,tildet){W(alphaR*tildet*exp(-d3*tildet))/tildet - d3}
+expgrowthrate <- function(d3,alphaR,tildet){
+	library(LambertW)
+	W(alphaR*tildet*exp(-d3*tildet))/tildet - d3
+}
 alphaRcalc <- function(d1,d2,g1,g2,R){ (g1/(g1+d1))*(g2/(g2+d2))*R }
 tiltetcalc <- function(d1,d2,g1,g2) { egtVec(d1,g1)+egtVec(d2,g2) }
 expgrowthrate.full <- function(d1,d2,d3,g1,g2,R){ expgrowthrate(d3,(g1/(g1+d1))*(g2/(g2+d2))*R, egt(d1,g1)+egt(d2,g2)) }
 
-egr.wrapper <- function(dt,d2){mapply(expgrowthrate.full,dt[,1],d2,dt[,2],dt[,3],dt[,4],dt[,5]+dt[,2])}

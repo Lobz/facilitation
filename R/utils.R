@@ -1,17 +1,10 @@
 list2dataframe <- function(x) {
-	ret<-data.frame(matrix(unlist(x),length(x),byrow=TRUE))
-#	n <- (length(ret)-5)/2-1
-	names(ret)<- c("t", "sp", "id", "x", "y")#,paste0("a",0:n),paste0("s",0:n))
-	return(ret)
-}
-
-list2dataframe.new <- function(x) {
-	lapply(x,function(d){d[1:6]}) -> base
-	dt <- list2dataframe(base) 
-	names(dt)<- c("sp", "id", "x", "y","begintime","endtime")
+	dt<-data.frame(t(matrix(unlist(x),6)))
+	colnames(dt)<- c("sp", "id", "x", "y","begintime","endtime")
 	dt[dt==-1]=NA
 	dt
 }
+
 
 snapshotdataframe <- function(x,times) {
 	lapply(times,function(t){subset(x,begintime <= t & (endtime >= t | is.na(endtime)))}) -> res
@@ -63,11 +56,10 @@ facByRates <- function(maxtime, n, Ds, Gs, R, dispersal=1, interactions=rep(0,n*
 	N <- matrix(N,nrow=n+1)
 	rownames(N) <- 0:n
 	colnames(N) <- 0:n
-	dt <- list2dataframe.new(r)
-	#dt <- list2dataframe(dt)
+	dt <- list2dataframe(r)
 
 
-	list(data = dt,n=n+1, maxtime=maxtime, 
+	list(data = dt,n=n+1, maxtime=maxtime, rawdata = r,
 	     stages=n,D=Ds,G=Gs,R=R,radius=rad,dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary,dkernel=dispKernel)
 }
 #dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
