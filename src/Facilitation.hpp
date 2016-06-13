@@ -12,8 +12,7 @@
 class Species;
 class Individual;
 
-typedef Rcpp::List status_line;
-typedef std::list<status_line> status_list;
+typedef Rcpp::List status_list;
 
 class Arena {
 	private:
@@ -23,7 +22,7 @@ class Arena {
 	Species **species;
 	Species *facilitator;
 	int bcond;
-	status_list history;
+	status_list * history;
 
 	public:
 	Arena(int lifestages, double * baserates, double dispersal, double width, double height, int bcond, int dkernel);
@@ -40,10 +39,9 @@ class Arena {
 
 	Position boundaryCondition(Position p);
 
-	void addToHistory(status_list l);
+	void addToHistory(int sp, unsigned long id, double x, double y, double beginT, double endT);
 	/* output functions */
-	status_list finalStatus();
-	status_list getStatus();
+	status_list * finalStatus();
 	int getSpNum();
 	int* getAbundance();
 	int getTotalAbundance();
@@ -108,7 +106,6 @@ class Species {
 	Species* getNextStage();
 	Species* getSeedStage();
 
-	status_list getStatus(double time);
 	int getAbundance();
 	void print(double time);
 };
@@ -129,7 +126,7 @@ class IndividualStatus {
 	void setGrowth(double time);
 	void setDeath(double time);
 
-	status_list getStatus();
+	void addToHistory(Arena *ar);
 };
 
 
@@ -165,7 +162,6 @@ class Individual {
 	double getRadius();
 	bool isPresent(Position p, double radius = 0);
 	void print();
-	status_line getStatus();
 
 
 

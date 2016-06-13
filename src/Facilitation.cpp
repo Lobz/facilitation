@@ -23,9 +23,10 @@ Arena::Arena(int lifestages, double *parameters, double dispersal, double width,
 
 	std::cout << "Arena initialized\n";
 
+	history = new Rcpp::List();
 }
 
-status_list Arena::finalStatus(){
+status_list * Arena::finalStatus(){
 	int i;
 	for(i=0;i<spnum;i++){
 		delete(species[i]);
@@ -118,14 +119,6 @@ void Arena::print(){
 	facilitator->print(totalTime);
 }
 
-status_list Arena::getStatus(){
-	int i;
-	status_list status;
-	for(i=0;i<spnum;i++){
-		status.splice(status.end(),species[i]->getStatus(totalTime));
-	}
-	return status;
-}
 
 /*TODO: should this array be dynamically allocated? */
 int* Arena::getAbundance(){
@@ -223,7 +216,12 @@ Position Arena::boundaryCondition(Position p){
 	return p;
 }
 
-void Arena::addToHistory(status_list l){
-	history.splice(history.end(),l);
+void Arena::addToHistory(int sp, unsigned long id, double x, double y, double beginT, double endT){
+	history->push_back(sp);
+	history->push_back(id);
+	history->push_back(x);
+	history->push_back(y);
+	history->push_back(beginT);
+	history->push_back(endT);
 }
 

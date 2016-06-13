@@ -169,19 +169,6 @@ void Species::print(double time){
 	}
 }
 
-status_list Species::getStatus(double time){
-	status_list status;
-	status_line line;
-	std::list<Individual*>::iterator i;
-
-	for(i=population.begin();i!=population.end();i++){
-		line = (*i)->getStatus();
-		line.push_front(time);
-		status.push_front(line);
-	}
-	return status;
-}
-
 int Species::getAbundance(){
 	return population.size();
 }

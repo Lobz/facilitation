@@ -32,7 +32,7 @@ void	Individual::setSpecies(Species *sp) {
 }
 
 Individual::~Individual(){
-	arena->addToHistory(info->getStatus());
+	info->addToHistory(arena);
 	clearNeighbours();
 	delete(info);
 }
@@ -173,30 +173,21 @@ bool 	Individual::noAffectingMeNeighbours(int i){
 	return affectingMeNeighbours[i].empty();
 }
 
-/* NOTE: on changing this please change the typedef on Facilitation.hpp and the names on R/utils.R */
-status_line Individual::getStatus(){
-	status_line ret  = Rcpp::List::create(species->getId(),id,p.x,p.y);
-	return ret;
-}
-
 IndividualStatus::IndividualStatus(int sp, unsigned long pid, double px, double py, double ctime):initialSp(sp),id(pid),x(px),y(py),creationTime(ctime),deathTime(-1){
 	growthTimes = {};
 }
 void IndividualStatus::setGrowth(double time){ growthTimes.push_back(time); }
 void IndividualStatus::setDeath(double time){ deathTime=time; }
 
-status_list IndividualStatus::getStatus(){
+void IndividualStatus::addToHistory(Arena *ar){
 	std::list<double>::iterator i;
-	status_list l = {};
 	double time1=creationTime,time2;
 	int sp = initialSp;
 	for(i = growthTimes.begin(); i!=growthTimes.end();i++){
 		time2 = *i;
-		l.push_front(Rcpp::List::create(sp,id,x,y,time1,time2));
+		ar->addToHistory(sp,id,x,y,time1,time2);
 		time1 = time2;
 		sp++;
 	}
-	l.push_front(Rcpp::List::create(sp,id,x,y,time1,deathTime));
-	
-	return l;
+	ar->addToHistory(sp,id,x,y,time1,deathTime);
 }
