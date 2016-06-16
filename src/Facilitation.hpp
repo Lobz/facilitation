@@ -12,7 +12,15 @@
 class Species;
 class Individual;
 
-typedef Rcpp::List status_list;
+class History{
+	public:
+	std::list<int> sp_list;
+	std::list<unsigned long> id_list;
+	std::list<double> x_list;
+	std::list<double> y_list;
+	std::list<double> beginTime_list;
+	std::list<double> endTime_list;
+};
 
 class Arena {
 	private:
@@ -22,7 +30,7 @@ class Arena {
 	Species **species;
 	Species *facilitator;
 	int bcond;
-	status_list * history;
+	History * history;
 
 	public:
 	Arena(int lifestages, double * baserates, double dispersal, double width, double height, int bcond, int dkernel);
@@ -41,7 +49,7 @@ class Arena {
 
 	void addToHistory(int sp, unsigned long id, double x, double y, double beginT, double endT);
 	/* output functions */
-	status_list * finalStatus();
+	History * finalStatus();
 	int getSpNum();
 	int* getAbundance();
 	int getTotalAbundance();

@@ -23,17 +23,18 @@ Arena::Arena(int lifestages, double *parameters, double dispersal, double width,
 
 	std::cout << "Arena initialized\n";
 
-	history = new Rcpp::List();
+	history = new History();
 }
 
-status_list * Arena::finalStatus(){
+History * Arena::finalStatus(){
 	int i;
 	for(i=0;i<spnum;i++){
 		delete(species[i]);
 	}
+	free(species);
+	free(ratesList);
 	return history;
 }
-	
 
 void Arena::setInteractions(double *interactions){
 	int i,j;
@@ -217,11 +218,11 @@ Position Arena::boundaryCondition(Position p){
 }
 
 void Arena::addToHistory(int sp, unsigned long id, double x, double y, double beginT, double endT){
-	history->push_back(sp);
-	history->push_back(id);
-	history->push_back(x);
-	history->push_back(y);
-	history->push_back(beginT);
-	history->push_back(endT);
+	history->sp_list.push_back(sp);
+	history->id_list.push_back(id);
+	history->x_list.push_back(x);
+	history->y_list.push_back(y);
+	history->beginTime_list.push_back(beginT);
+	history->endTime_list.push_back(endT);
 }
 
