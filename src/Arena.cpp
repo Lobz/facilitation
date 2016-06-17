@@ -1,7 +1,7 @@
 #include"Individual.hpp"
 #include"Random.hpp"
 
-Arena::Arena(int lifestages, double *parameters, double dispersal, double width, double height, int bcond, int dkernel) :lifestages(lifestages),maxsp(lifestages+1),width(width),height(height),bcond(bcond) {
+Arena::Arena(int maxspid, double *parameters, double width, double height, int bcond) :maxsp(maxspid),width(width),height(height),bcond(bcond) {
 	int i;
 	species = (Species**)malloc((1+maxsp)*(sizeof(Species*)));
 	ratesList = (double*)malloc((1+maxsp)*(sizeof(double)));
@@ -10,19 +10,26 @@ Arena::Arena(int lifestages, double *parameters, double dispersal, double width,
 		species[i] = new Species(this,i,parameters+FACILITATION_NUMPARAMETERS*(i-1));
 	}
 
-	for(i=1;i<lifestages;i++){
-		species[i]->setNextStage(species[i+1]);
-		species[i]->setSeedStage(species[1], dispersal, dkernel);
-	}
-	species[i]->setSeedStage(species[1], dispersal);
-	species[i+1]->setSeedStage(species[i+1], dispersal);
-
-
 	totalTime = 0.0;
 
 	std::cout << "Arena initialized\n";
 
 	history = new History();
+}
+
+void Arena::createStructuredSpecies(int minId, int maxId, double dispersal, int dkernel) {
+	int i;
+
+	for(i=minId;i<maxId;i++){
+		species[i]->setNextStage(species[i+1]);
+		species[i]->setSeedStage(species[minId], dispersal, dkernel);
+	}
+	// last stage doesn't have next stage
+	species[i]->setSeedStage(species[1], dispersal, dkernel);
+}
+
+void Arena::createSimpleSpecies(int id, double dispersal, int dkernel){
+	species[id]->setSeedStage(species[id], dispersal, dkernel);
 }
 
 History * Arena::finalStatus(){

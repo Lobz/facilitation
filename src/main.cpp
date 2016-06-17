@@ -11,9 +11,13 @@ History * run_tests(bool print, double maxtime, int num_stages, double * par, do
 	History *ret;
 	int numturns=0;
 
-	arena = new Arena(num_stages,par,dispersal,w,h,bcond,dkernel);
+	arena = new Arena(num_stages+1,par,w,h,bcond);
 	arena->setInteractions(interactions);
-	if(! arena->populate(init)) return {};
+	// create beneficiary
+	arena->createStructuredSpecies(1,num_stages,dispersal,dkernel);
+	// create facilitator
+	arena->createSimpleSpecies(num_stages+1,dispersal,dkernel);
+	if(! arena->populate(init)) return NULL;
 
 	if(print) std::cout << "#arena populated!\n";
 	if(print) std::cout << "time,species,individual,x,y\n";

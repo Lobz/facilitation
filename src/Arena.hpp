@@ -24,7 +24,7 @@ class History{
 
 class Arena {
 	private:
-	int lifestages,maxsp;
+	int maxsp;
 	double width, height;
 	double totalRate, *ratesList, totalTime;
 	Species **species;
@@ -33,9 +33,11 @@ class Arena {
 	History * history;
 
 	public:
-	Arena(int lifestages, double * baserates, double dispersal, double width, double height, int bcond, int dkernel);
+	Arena(int numsp, double * baserates, double width, double height, int bcond);
 
 	/* high level functions */
+	void createStructuredSpecies(int minId, int maxId, double dispersal, int dkernel);
+	void createSimpleSpecies(int id, double dispersal, int dkernel);
 	bool populate(int *stagesinit);
 	bool turn();
 	void setInteractions(double *interactions);

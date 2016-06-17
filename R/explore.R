@@ -23,13 +23,6 @@ facilitation.class <- function(lim.wo,lim.wi){
 	else{return("negative")} # both negative
 }
 
-facilitation.class.wrapper <- function(data){
-	lim <- mat.model.wrapper(data)
-	lim.wo <- lim[1,]
-	lim.wi <- lim[2,]
-	mapply(facilitation.class,lim.wo,lim.wi)
-}
-
 fit.data <- function(ab.mat){
 	y <- log(rowSums(ab.mat))
 	x <- as.numeric(rownames(ab.mat))
@@ -53,7 +46,6 @@ fitted.rate <-function(ab.mat){
 	coef(regression)[2]
 }
 
-
 expgrowthtime <- function(d,g){
 	integ <- integrate(f=function(x,d,g){(d*x*exp(-d*x)/(1-exp(-g*x)))},upper=Inf,lower=0,g=g,d=d)
 	t <- 1/g +1/d - integ$value
@@ -63,11 +55,11 @@ expgrowthtime <- function(d,g){
 egt <- function(d,g){expgrowthtime(d,g)[1]}
 egtVec <- function(d,g){mapply(egt,d,g)}
 
-expgrowthrate <- function(d3,alphaR,tildet){
+expgrowthrate <- function(d3,sR,tildet){
 	library(LambertW)
-	W(alphaR*tildet*exp(-d3*tildet))/tildet - d3
+	W(sR*tildet*exp(-d3*tildet))/tildet - d3
 }
-alphaRcalc <- function(d1,d2,g1,g2,R){ (g1/(g1+d1))*(g2/(g2+d2))*R }
+sRcalc <- function(d1,d2,g1,g2,R){ (g1/(g1+d1))*(g2/(g2+d2))*R }
 tiltetcalc <- function(d1,d2,g1,g2) { egtVec(d1,g1)+egtVec(d2,g2) }
 expgrowthrate.full <- function(d1,d2,d3,g1,g2,R){ expgrowthrate(d3,(g1/(g1+d1))*(g2/(g2+d2))*R, egt(d1,g1)+egt(d2,g2)) }
 
