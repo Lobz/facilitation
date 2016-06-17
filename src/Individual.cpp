@@ -7,7 +7,9 @@ unsigned long Individual::id_MAX = 0;
 Individual::Individual(Arena *ar, Species *sp, double x, double y):Individual(ar,sp,Position(x,y)){} 
 
 
-Individual::Individual(Arena *ar, Species *sp, Position pos) : arena(ar), id(id_MAX++), affectingMeNeighbours(ar->getSpNum()), affectedByMeNeighbours(ar->getSpNum()) {
+Individual::Individual(Arena *ar, Species *sp, Position pos) : arena(ar), id(id_MAX++), 
+	affectingMeNeighbours(ar->getSpNum()+1), affectedByMeNeighbours(ar->getSpNum()+1) {
+
 	p = ar->boundaryCondition(pos), 
 	spnum = arena->getSpNum();
 	setSpecies(sp);
@@ -46,7 +48,7 @@ const unsigned long Individual::getId(){return id;}
 double Individual::actualD(){
 	int sp;
 	double actuald=D,effect;
-	for(sp = 0; sp < spnum; sp++){
+	for(sp = 1; sp <= spnum; sp++){
 		if((effect = species->getInteraction(sp)) != 0 && !affectingMeNeighbours[sp].empty()){
 			actuald -= effect*affectingMeNeighbours[sp].size(); /* note that effect is LINEAR on number of affecting neighbours */
 		}
@@ -102,7 +104,7 @@ void 	Individual::die(){
 void 	Individual::clearNeighbours(){
 	int sp;
 	std::list<Individual*>::iterator i;
-	for(sp = 0; sp < spnum; sp++){
+	for(sp = 1; sp <= spnum; sp++){
 		for(i=affectingMeNeighbours[sp].begin();i!=affectingMeNeighbours[sp].end();i = affectingMeNeighbours[sp].erase(i)){
 			(*i)->removeAffectedByMeNeighbour(this);
 		}
@@ -115,7 +117,7 @@ void 	Individual::clearNeighbours(){
 
 void Individual::initNeighbours(){
 	int s;
-	for(s=0;s<spnum;s++){
+	for(s=1;s<=spnum;s++){
 		if(species->getInteraction(s) != 0){
 			/* do not use radius in looking for affecting neighbours, 
 			 * effect radius is the affecting neighbour's radius */

@@ -1,21 +1,20 @@
 #include"Facilitation.hpp"
 #include"Random.hpp"
 
-Arena::Arena(int lifestages, double *parameters, double dispersal, double width, double height, int bcond, int dkernel) :lifestages(lifestages),spnum(lifestages+1),width(width),height(height),bcond(bcond) {
+Arena::Arena(int lifestages, double *parameters, double dispersal, double width, double height, int bcond, int dkernel) :lifestages(lifestages),maxsp(lifestages+1),width(width),height(height),bcond(bcond) {
 	int i;
-	species = (Species**)malloc(spnum*(sizeof(Species*)));
-	ratesList = (double*)malloc(spnum*(sizeof(double)));
+	species = (Species**)malloc((1+maxsp)*(sizeof(Species*)));
+	ratesList = (double*)malloc((1+maxsp)*(sizeof(double)));
 
-	for(i=0;i<spnum;i++){
-		species[i] = new Species(this,i,parameters+FACILITATION_NUMPARAMETERS*i);
+	for(i=1;i<=maxsp;i++){
+		species[i] = new Species(this,i,parameters+FACILITATION_NUMPARAMETERS*(i-1));
 	}
-	facilitator = species[lifestages];
 
-	for(i=0;i<lifestages-1;i++){
+	for(i=1;i<lifestages;i++){
 		species[i]->setNextStage(species[i+1]);
-		species[i]->setSeedStage(species[0], dispersal, dkernel);
+		species[i]->setSeedStage(species[1], dispersal, dkernel);
 	}
-	species[i]->setSeedStage(species[0], dispersal);
+	species[i]->setSeedStage(species[1], dispersal);
 	species[i+1]->setSeedStage(species[i+1], dispersal);
 
 
@@ -28,7 +27,7 @@ Arena::Arena(int lifestages, double *parameters, double dispersal, double width,
 
 History * Arena::finalStatus(){
 	int i;
-	for(i=0;i<spnum;i++){
+	for(i=1;i<=maxsp;i++){
 		delete(species[i]);
 	}
 	free(species);
@@ -38,9 +37,9 @@ History * Arena::finalStatus(){
 
 void Arena::setInteractions(double *interactions){
 	int i,j;
-	for(i=0;i<spnum;i++){
-		for(j=0;j<spnum;j++){
-			species[i]->setInteraction(j,interactions[spnum*i+j]);
+	for(i=1;i<=maxsp;i++){
+		for(j=1;j<=maxsp;j++){
+			species[i]->setInteraction(j,interactions[maxsp*(i-1)+j]);
 		}
 	}
 }
@@ -48,9 +47,9 @@ void Arena::setInteractions(double *interactions){
 bool Arena::populate(int *speciesinit){
 	int i,j;
 
-	for(i=0;i<spnum;i++){
-		std::cout << "Starting to populate species " << i << " with " << speciesinit[i] << " individuals.\n";
-		for(j=0;j<speciesinit[i];j++){
+	for(i=1;i<=maxsp;i++){
+		std::cout << "Starting to populate species " << i << " with " << speciesinit[i-1] << " individuals.\n";
+		for(j=0;j<speciesinit[i-1];j++){
 			try{
 				species[i]->addIndividual(Random(width),Random(height));
 			}
@@ -68,7 +67,7 @@ bool Arena::turn() {
 	double r, time;
 
 	totalRate = 0;
-	for(i=0;i<spnum;i++){
+	for(i=1;i<=maxsp;i++){
 		ratesList[i] =  species[i]->getTotalRate();
 		totalRate += ratesList[i];
 	}
@@ -77,7 +76,7 @@ bool Arena::turn() {
 
 	if(totalRate < 0) {
 		std::cout << "#This simulation has reached an impossible state (totalRate < 0).\n";
-		for(i=0;i<spnum;i++){
+		for(i=1;i<=maxsp;i++){
 			std::cout << "Species of id=" << i << " has totalRate=" << species[i]->getTotalRate() <<"\n";
 		}
 		return false;
@@ -95,7 +94,7 @@ bool Arena::turn() {
 
 	/* select stage to act */
 	r = Random(totalRate);
-	for(i=0;i<spnum-1;i++){
+	for(i=1;i<=maxsp-1;i++){
 		r -= ratesList[i];
 		if(r < 0){
 			break;
@@ -112,12 +111,10 @@ bool Arena::turn() {
 void Arena::print(){
 	int i;
 	std::cout 	<< "\n#Current status:\n#Time: " << totalTime;
-	for(i=0;i<lifestages;i++){
+	for(i=1;i<=maxsp;i++){
 		std::cout << "\n#Stage " << i << ":\n";
 		species[i]->print(totalTime);
 	}
-	std::cout << "\n#Facilitators:\n";
-	facilitator->print(totalTime);
 }
 
 
@@ -125,8 +122,8 @@ void Arena::print(){
 int* Arena::getAbundance(){
 	int i;
 	int *ab;
-	ab = (int*)malloc(spnum*sizeof(int));
-	for(i=0;i<spnum;i++){
+	ab = (int*)malloc(maxsp*sizeof(int));
+	for(i=1;i<=maxsp;i++){
 		ab[i] = species[i]->getAbundance();
 	}
 	return ab;
@@ -135,7 +132,7 @@ int* Arena::getAbundance(){
 int Arena::getTotalAbundance(){
 	int i;
 	int ab=0;
-	for(i=0;i<spnum;i++){
+	for(i=1;i<=maxsp;i++){
 		ab += species[i]->getAbundance();
 	}
 	return ab;
@@ -155,7 +152,7 @@ void Arena::addAffectedByMe(Individual *ind){
 	Position p = ind->getPosition();
 	double radius = ind->getRadius(); /* will look for inds within this radius of me */
 
-	for(j=0;j<spnum;j++){
+	for(j=1;j<=maxsp;j++){
 		if(species[j]->getInteraction(sp) != 0){
 			ind->addAffectedByMeNeighbourList(species[j]->getPresent(p,radius));
 		}
@@ -173,7 +170,7 @@ double Arena::getHeight(){
 }
 
 int Arena::getSpNum(){
-	return spnum;
+	return maxsp;
 }
 
 Position Arena::boundaryCondition(Position p){

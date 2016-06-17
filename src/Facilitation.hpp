@@ -24,7 +24,7 @@ class History{
 
 class Arena {
 	private:
-	int lifestages,spnum;
+	int lifestages,maxsp;
 	double width, height;
 	double totalRate, *ratesList, totalTime;
 	Species **species;

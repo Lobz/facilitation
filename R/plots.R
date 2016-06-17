@@ -28,9 +28,6 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 		log <- ""
 	}
 
-	# If extinct, removes last spurious line
-	if (is.nan(rownames(mat)[dim(mat)[1]]))
-		mat <- mat[-dim(mat)[1],]
 	N <- dim(mat)[2]
 	time <- as.numeric(rownames(mat))
 	for (i in (N-1):1) # sums populations IN REVERSE, may cause problems for 1 stages only
@@ -41,7 +38,7 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 
 	if (! "ylim" %in% names(dots)) dots$ylim = c(minp, maxp)
 	if (! "xlim" %in% names(dots)) dots$xlim = c(min(time),max(time))
-	if (! "main" %in% names(dots)) dots$main = "Facilitation dynamics"
+	if (! "main" %in% names(dots)) dots$main = "Population dynamics"
 	if (! "ylab" %in% names(dots)) dots$ylab = "Population"
 	if (! "xlab" %in% names(dots)) dots$xlab = "Time"
 
@@ -85,7 +82,7 @@ spatialplot = function(data, times=seq(0,data$maxtime,length.out=20), xlim=c(0,d
 	radius <- data$radius
 	# creates list of dataframes, one for each time
 	dtlist <- lapply(times,function(t){subset(data$data,begintime <= t & (endtime >= t | is.na(endtime)))})
-	maxst <- data$n-1
+	maxst <- data$n
 	# set minimum radius for stages with rad=0
 	for(i in 1:length(radius)) if(radius[i] == 0) radius[i] = 0.05
 	# init viewport
@@ -99,10 +96,10 @@ spatialplot = function(data, times=seq(0,data$maxtime,length.out=20), xlim=c(0,d
 			grid.newpage()
 			pushViewport(vp)
 			grid.rect(gp = gpar(col = "gray"))
-			for (j in maxst:0){
+			for (j in maxst:1){
 				dtsp <- dt[dt$sp==j,]
 				if(dim(dtsp)[1] > 0){
-					grid.circle(x = dtsp$x, y=dtsp$y, r=radius[j+1],default.units="native", gp=gpar(fill=col[j+1],col=col[j+1]))
+					grid.circle(x = dtsp$x, y=dtsp$y, r=radius[j],default.units="native", gp=gpar(fill=col[j],col=col[j]))
 				}
 			}
 			grid.text(paste("t =",round(times[i],digits=4)), y=1.06)

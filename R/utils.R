@@ -1,9 +1,3 @@
-list2dataframe <- function(x) {
-	dt<-data.frame(x)
-	dt
-}
-
-
 snapshotdataframe <- function(x,times) {
 	lapply(times,function(t){subset(x,begintime <= t & (endtime >= t | is.na(endtime)))}) -> res
 	t <- times[1]

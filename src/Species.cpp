@@ -16,7 +16,7 @@ Species::Species(Arena *ar,int id, double D, double G, double R=0, double Rad=0)
 	spnum = ar->getSpNum();
 
 	interactions = (double*)malloc(spnum*(sizeof(double)));
-	for(i=0;i<spnum;i++){
+	for(i=1;i<=spnum;i++){
 		interactions[i]=0;
 	}
 
@@ -34,7 +34,7 @@ Species::~Species(){
 	free(interactions);
 }
 
-void Species::setFacilitation(double f){setInteraction(spnum-1,f);}
+void Species::setFacilitation(double f){setInteraction(spnum,f);}
 void Species::setAutoInteraction(double effect){setInteraction(id,effect);}
 
 void Species::setInteraction(int s, double effect){
