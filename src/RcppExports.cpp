@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // test_parameter
-Rcpp::List test_parameter(double maxtime, int num_stages, Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, Rcpp::IntegerVector init, double w, double h, int bcond, int dkernel, int maxpop);
+Rcpp::DataFrame test_parameter(double maxtime, int num_stages, Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, Rcpp::IntegerVector init, double w, double h, int bcond, int dkernel, int maxpop);
 RcppExport SEXP facilitation_test_parameter(SEXP maxtimeSEXP, SEXP num_stagesSEXP, SEXP parametersSEXP, SEXP dispersalSEXP, SEXP interactionsSEXP, SEXP initSEXP, SEXP wSEXP, SEXP hSEXP, SEXP bcondSEXP, SEXP dkernelSEXP, SEXP maxpopSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;

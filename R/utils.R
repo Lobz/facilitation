@@ -1,7 +1,5 @@
 list2dataframe <- function(x) {
-	dt<-data.frame(t(matrix(unlist(x),6)))
-	colnames(dt)<- c("sp", "id", "x", "y","begintime","endtime")
-	dt[dt==-1]=NA
+	dt<-data.frame(x)
 	dt
 }
 
@@ -87,10 +85,12 @@ facByRates <- function(maxtime, n, Ds, Gs, R, init, dispersal, rad=rep(2,n+1), i
 	N <- matrix(N,nrow=n+1)
 	rownames(N) <- 0:n
 	colnames(N) <- 0:n
-	dt <- list2dataframe(r)
+
+	r[r==-1]=NA
+	r$sp <- factor(r$sp)
 
 
-	list(data = dt,n=n+1, maxtime=maxtime, rawdata = r,
+	list(data = r,n=n+1, maxtime=maxtime,
 	     stages=n,D=Ds,G=Gs,R=R,radius=rad,dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary,dkernel=dispKernel)
 }
 #dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
