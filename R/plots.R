@@ -11,9 +11,10 @@
 #' @param log.y Logical. Should the y-axis be plotted in a logarithmic scale?
 #' @param \dots Further parameters to be passed to the lower level plot function
 #' @examples
-#' obj <- facByRates(times=0:10)
-#' mat <- abundance_matrix(obj)
-#' stackplot(mat)
+#' obj <- facByRates(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
+#' times <- seq(0,2,by=0.1)
+#' ab <- abundance_matrix(obj,times)
+#' stackplot(ab[,1:3])
 stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 	dots <- list(...)
 	if(missing(col))
@@ -58,10 +59,26 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 	legend("topleft", legend=legend, fill=col, bg="white")
 }
 
-##############################################################
-# function for ploting simulation frames for facilita package
-# Alexandre Adalardo de Oliveira - 16/03/2016
-##############################################################
+#' function for ploting simulation frames
+#'
+#' @author Alexandre Adalardo de Oliveira - 16/03/2016
+#' @author M. Salles
+#' @param data	result of a simulation, created by \code{\link{facByRates}}
+#' @param times	array of times at which to plot
+#' @param xlim	Optional. Limits to the x-axis
+#' @param ylim	Optional. Limits to the y-axis
+#' @param col 	Optional. A color vector
+#' @param tframe a time length to wait between frames. Do not use if using this with
+#' \code{animation}
+#' @examples
+#' malthusian <- facByRates(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+#' times <- seq(0,2,by=0.1)
+#' # plot
+#' spatialplot(malthusian,times,tframe=.1)
+#'
+#' # make a gif
+#' library(animation)
+#' saveGIF(spatialplot(malthusian,times),interval=0.1,movie.name="malthusian.gif") 
 spatialplot = function(data, times=seq(0,data$maxtime,length.out=20), xlim=c(0,data$w), ylim=c(0,data$h), 
 		       col=c(colorRampPalette(c("darkred","pink"))(data$n-1),"lightgreen"),tframe=0)
 {
@@ -95,5 +112,7 @@ spatialplot = function(data, times=seq(0,data$maxtime,length.out=20), xlim=c(0,d
 		}
 	}
 }
-#####################
-#spatialplot(data=dt)
+
+plotsnapshot <- function(data,t,...) {
+	spatialplot(data,c(t),...)
+}
