@@ -1,4 +1,4 @@
-#include"Facilitation.hpp"
+#include"Individual.hpp"
 #include"Random.hpp"
 
 Arena::Arena(int lifestages, double *parameters, double dispersal, double width, double height, int bcond, int dkernel) :lifestages(lifestages),maxsp(lifestages+1),width(width),height(height),bcond(bcond) {

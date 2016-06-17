@@ -1,4 +1,4 @@
-#include"Facilitation.hpp"
+#include"Individual.hpp"
 #include"Random.hpp"
 #include<cstdio>
 
