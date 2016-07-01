@@ -47,33 +47,25 @@ snapshotdataframe <- function(x,times) {
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance_matrix(malthusian,times)
 #' stackplot(ab[,1:3])
-facByRates <- function(maxtime, n, Ds, Gs, R, init, dispersal, rad=rep(2,n+1), interactions=rep(0,n*n), fac=rep(0,n-1), height=100, width=100, boundary="reflexive", facilitatorD=0,facilitatorR=0,facilitatorI=0, dispKernel="exponential", maxpop=30000){
+facByRates <- function(maxtime, n, Ds, Gs, R, init, dispersal, rad=rep(2,n+1), 
+		       interactions=rep(0,n*n), fac=rep(0,n-1), height=100, width=100, 
+		       boundary=c("reflexive","absortive","periodic"), 
+		       facilitatorD=0,facilitatorR=0,facilitatorI=0, 
+		       dispKernel=c("exponential","random"), 
+		       maxpop=30000){
 
 	# generate parameters for test_parameters
+	disp <- switch(match.arg(dispKernel), random=0,exponential=1)
+	bound <- switch(match.arg(boundary),reflexive=1,absortive=0,periodic=2)
+
 	if(length(rad)==1) rad <- c(rep(0,n),rad)
 	M <- t(matrix(c(Gs, 0, 0, rep(0, n-1),R,facilitatorR, Ds,facilitatorD, rad), nrow = n+1))
 	N <- matrix(interactions,nrow=n)
 	N <- rbind(N,c(fac,0))
 	N <- c(N,rep(0,n),facilitatorI)
 
-	if(dispKernel=="random") disp=0
-	else if(dispKernel=="exponential") disp=1
-	else {
-		"dispKernel not understood"
-		return(NULL)
-	}
-	
-	if(boundary=="reflexive") boundary=1
-	else if(boundary=="absortive") boundary=0
-	else if(boundary=="periodic") boundary=2
-	else {
-		"boundary not understood"
-		return(NULL)
-	}
-	
-
 	# run simultation
-	r <- test_parameter(maxtime,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary,dkernel=disp,maxpop=maxpop)
+	r <- test_parameter(maxtime,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
 	
 	# prepare output
 	N <- matrix(N,nrow=n+1)
