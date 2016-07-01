@@ -3,10 +3,10 @@
 #include<cstdio>
 
 
-Species::Species(Arena *ar,int id, double *par) : Species(ar,id,par[2],par[0],par[1],par[3]){}
+Species::Species(Arena *ar,int myid, double *par) : Species(ar,myid,par[2],par[0],par[1],par[3]){}
 
-Species::Species(Arena *ar,int id, double D, double G, double R=0, double Rad=0)
-		:id(id),G(G),D(D),R(R),Rad(Rad){
+Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, double radius=0)
+		:id(myid),G(growth),D(death),R(rep),Rad(radius){
 	int i;
 	nextStage = NULL;
 	seedStage = NULL;
