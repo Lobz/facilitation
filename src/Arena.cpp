@@ -1,7 +1,7 @@
 #include"Individual.hpp"
 #include"Random.hpp"
 
-Arena::Arena(int maxspid, double *parameters, double width, double height, int bcond) :maxsp(maxspid),width(width),height(height),bcond(bcond) {
+Arena::Arena(int maxspid, double *parameters, double w, double h, int bc) :maxsp(maxspid),width(w),height(h),bcond(bc) {
 	int i;
 	species = (Species**)malloc((1+maxsp)*(sizeof(Species*)));
 	ratesList = (double*)malloc((1+maxsp)*(sizeof(double)));
@@ -12,7 +12,7 @@ Arena::Arena(int maxspid, double *parameters, double width, double height, int b
 
 	totalTime = 0.0;
 
-	std::cout << "Arena initialized\n";
+	std::cout << "Arena " << width << "x" << height << " initialized with " << maxsp << " species.\n";
 
 	history = new History();
 }
@@ -46,7 +46,7 @@ void Arena::setInteractions(double *interactions){
 	int i,j;
 	for(i=1;i<=maxsp;i++){
 		for(j=1;j<=maxsp;j++){
-			species[i]->setInteraction(j,interactions[maxsp*(i-1)+j]);
+			species[i]->setInteraction(j,interactions[maxsp*(i-1)+(j-1)]);
 		}
 	}
 }
@@ -210,7 +210,7 @@ Position Arena::boundaryCondition(Position p){
 
 		case(0):
 			/* ABSORTIVE */
-			if(p.x < 0 || p.x > width || p.y < 0 || p.y > height) p.x = -1;
+			if(p.x < 0 || p.x > width || p.y < 0 || p.y > height) { p.x = -1; p.y=-1; }
 			break;
 		default:
 			std::cout << "Unsuported boundary condition\n";
