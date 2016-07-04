@@ -102,11 +102,11 @@ abundance_matrix <- function(data,times=seq(0,data$maxtime,length.ou=20)){
 		}
 		else {
 			abl <- rep(0,n)
-			names(abl) <- 0:(n-1)
-			for(i in 0:(n-1)){
+			names(abl) <- 1:n
+			for(i in 1:n){
 				if(i %in% names(l)){
 					c <- which(names(l)==i)
-					abl[i+1] <- l[c]
+					abl[i] <- l[c]
 				}
 			}		
 		}
