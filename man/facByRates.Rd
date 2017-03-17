@@ -6,9 +6,9 @@
 \usage{
 facByRates(maxtime, n, Ds, Gs, R, init, dispersal, rad = rep(2, n + 1),
   interactions = rep(0, n * n), fac = rep(0, n - 1), height = 100,
-  width = 100, boundary = "reflexive", facilitatorD = 0,
-  facilitatorR = 0, facilitatorI = 0, dispKernel = "exponential",
-  maxpop = 30000)
+  width = 100, boundary = c("reflexive", "absortive", "periodic"),
+  facilitatorD = 0, facilitatorR = 0, facilitatorI = 0,
+  dispKernel = c("exponential", "random"), maxpop = 30000)
 }
 \arguments{
 \item{maxtime}{How long the simulation must run}
@@ -60,5 +60,7 @@ effects decrease death rates while negative ones increase death rates.
 }
 \examples{
 malthusian <- facByRates(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+times <- seq(0,2,by=0.1)
+ab <- abundance_matrix(malthusian,times)
+stackplot(ab[,1:3])
 }
-
