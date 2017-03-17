@@ -6,7 +6,7 @@
 #include<cstdlib>
 #include<iostream>
 #include<array>
-#include"Position.hpp"
+#include"Position.h"
 #include<Rcpp.h>
 
 class Species;

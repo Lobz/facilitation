@@ -1,5 +1,5 @@
 
-#include"Individual.hpp"
+#include"Individual.h"
 #include<iostream>
 #include<fstream>
 #include<string>

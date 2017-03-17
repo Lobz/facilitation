@@ -1,7 +1,7 @@
 #ifndef INDIVIDUAL_H
 #define INDIVIDUAL_H
 
-#include"Species.hpp"
+#include"Species.h"
 
 class IndividualStatus {
 	public:

@@ -1,5 +1,5 @@
-#include"Individual.hpp"
-#include"Random.hpp"
+#include"Individual.h"
+#include"Random.h"
 #include<cstdio>
 
 

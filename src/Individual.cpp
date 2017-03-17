@@ -1,6 +1,6 @@
 
-#include"Individual.hpp"
-#include"Random.hpp"
+#include"Individual.h"
+#include"Random.h"
 
 unsigned long Individual::id_MAX = 0;
 

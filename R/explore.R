@@ -56,8 +56,7 @@ egt <- function(d,g){expgrowthtime(d,g)[1]}
 egtVec <- function(d,g){mapply(egt,d,g)}
 
 expgrowthrate <- function(d3,sR,tildet){
-	library(LambertW)
-	W(sR*tildet*exp(-d3*tildet))/tildet - d3
+	LambertW::W(sR*tildet*exp(-d3*tildet))/tildet - d3
 }
 sRcalc <- function(d1,d2,g1,g2,R){ (g1/(g1+d1))*(g2/(g2+d2))*R }
 tiltetcalc <- function(d1,d2,g1,g2) { egtVec(d1,g1)+egtVec(d2,g2) }

@@ -1,7 +1,7 @@
 #ifndef SPECIES_H
 #define SPECIES_H
 
-#include"Arena.hpp"
+#include"Arena.h"
 
 class Species {
 	private:

@@ -1,5 +1,5 @@
-#include"Individual.hpp"
-#include"Random.hpp"
+#include"Individual.h"
+#include"Random.h"
 
 Arena::Arena(int maxspid, double *parameters, double w, double h, int bc) :maxsp(maxspid),width(w),height(h),bcond(bc) {
 	int i;
