@@ -7,7 +7,7 @@
 abundance_matrix(data, times = seq(0, data$maxtime, length.ou = 20))
 }
 \arguments{
-\item{data}{result of a simulation, created by \code{\link{facByRates}}}
+\item{data}{result of a simulation, created by \code{\link{facilitation}}}
 
 \item{times}{array of times at which the abundances will be calculated}
 }
@@ -15,7 +15,7 @@ abundance_matrix(data, times = seq(0, data$maxtime, length.ou = 20))
 creates a matrix with abundances of each life stage/species over time
 }
 \examples{
-malthusian <- facByRates(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+malthusian <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
 times <- seq(0,2,by=0.1)
 ab <- abundance_matrix(malthusian,times)
 stackplot(ab[,1:3])

@@ -25,7 +25,7 @@ The \code{stackplot} function produces a stacked plot of the population over tim
 Notice that the population should have at least two stages for this function to work.
 }
 \examples{
-obj <- facByRates(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
+obj <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
 times <- seq(0,2,by=0.1)
 ab <- abundance_matrix(obj,times)
 stackplot(ab[,1:3])

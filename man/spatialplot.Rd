@@ -9,7 +9,7 @@ spatialplot(data, times = seq(0, data$maxtime, length.out = 20), xlim = c(0,
   "pink"))(data$n - 1), "lightgreen"), tframe = 0)
 }
 \arguments{
-\item{data}{result of a simulation, created by \code{\link{facByRates}}}
+\item{data}{result of a simulation, created by \code{\link{facilitation}}}
 
 \item{times}{array of times at which to plot}
 
@@ -26,7 +26,7 @@ spatialplot(data, times = seq(0, data$maxtime, length.out = 20), xlim = c(0,
 function for ploting simulation frames
 }
 \examples{
-malthusian <- facByRates(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+malthusian <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
 times <- seq(0,2,by=0.1)
 # plot
 spatialplot(malthusian,times,tframe=.1)

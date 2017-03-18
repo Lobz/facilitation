@@ -43,18 +43,17 @@ snapshotdataframe <- function(x,times) {
 #' @param facilitatorR	Facilitator reproduction rate
 #' @param facilitatorI	Facilitator intraspecific effect
 #' @examples
-#' malthusian <- facByRates(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+#' malthusian <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance_matrix(malthusian,times)
 #' stackplot(ab[,1:3])
-facByRates <- function(maxtime, n, Ds, Gs, R, init, dispersal, rad=rep(2,n+1), 
+facilitation <- function(maxtime, n, Ds, Gs, R, init, dispersal, rad=rep(2,n+1), 
 		       interactions=rep(0,n*n), fac=rep(0,n-1), height=100, width=100, 
 		       boundary=c("reflexive","absortive","periodic"), 
 		       facilitatorD=0,facilitatorR=0,facilitatorI=0, 
 		       dispKernel=c("exponential","random"), 
 		       maxpop=30000){
 
-	# generate parameters for test_parameters
 	disp <- switch(match.arg(dispKernel), random=0,exponential=1)
 	bound <- switch(match.arg(boundary),reflexive=1,absortive=0,periodic=2)
 
@@ -65,7 +64,7 @@ facByRates <- function(maxtime, n, Ds, Gs, R, init, dispersal, rad=rep(2,n+1),
 	N <- c(N,rep(0,n),facilitatorI)
 
 	# run simultation
-	r <- test_parameter(maxtime,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
+	r <- simulation(maxtime,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
 	
 	# prepare output
 	N <- matrix(N,nrow=n+1)
@@ -79,14 +78,14 @@ facByRates <- function(maxtime, n, Ds, Gs, R, init, dispersal, rad=rep(2,n+1),
 	list(data = r,n=n+1, maxtime=maxtime,
 	     stages=n,D=Ds,G=Gs,R=R,radius=rad,dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary,dkernel=dispKernel)
 }
-#dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
+#dt <- facilitation(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
 
 #' creates a matrix with abundances of each life stage/species over time
 #' 
-#' @param data	result of a simulation, created by \code{\link{facByRates}}
+#' @param data	result of a simulation, created by \code{\link{facilitation}}
 #' @param times	array of times at which the abundances will be calculated
 #' @examples
-#' malthusian <- facByRates(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+#' malthusian <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance_matrix(malthusian,times)
 #' stackplot(ab[,1:3])
