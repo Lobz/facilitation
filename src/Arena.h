@@ -58,7 +58,6 @@ class Arena {
 	double getTotalTime();
 	double getWidth();
 	double getHeight();
-	void print();
 };
 
 #endif

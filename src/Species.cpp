@@ -2,7 +2,6 @@
 #include"Random.h"
 #include<cstdio>
 
-
 Species::Species(Arena *ar,int myid, double *par) : Species(ar,myid,par[2],par[0],par[1],par[3]){}
 
 Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, double radius=0)
@@ -20,7 +19,6 @@ Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, 
 		interactions[i]=0;
 	}
 
-	std::cout << id << ": G=" << G << " , R=" << R << " , D=" << D << ", Rad=" << Rad << "\n";
 }
 
 Species::~Species(){
@@ -39,19 +37,18 @@ void Species::setAutoInteraction(double effect){setInteraction(id,effect);}
 
 void Species::setInteraction(int s, double effect){
 	if(effect > D){
-		printf("WARNING: interaction parameter set to be bigger than deathrate. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f,effect=%f\n", id,G,R,D,Rad,effect);
+		Rcpp::warning("Interaction parameter set to be bigger than deathrate.");
 	}
 	interactions[s] = effect;
-	printf("effect=%f for sp=%d on sp=%d\n",effect,s,id);
 }
 
 void Species::addIndividual(double x, double y){
 	if(G > 0 && nextStage==NULL) {
-		printf("WARNING: Next stage set to NULL but G > 0. Check input data. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f\n", id,G,R,D,Rad);
+		Rcpp::warning("Next stage set to NULL but G > 0. Check input data.");
 		throw id;
 	}
 	if(R > 0 && seedStage==NULL) {
-		printf("WARNING: Seed stage set to NULL but R > 0. Check input data. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f\n", id,G,R,D,Rad);
+		Rcpp::warning("Seed stage set to NULL but R > 0. Check input data.");
 		throw id;
 	}
 	/*Individual *i =*/ new Individual(arena,this,x,y);
@@ -118,7 +115,6 @@ std::list<Individual*> Species::getPresent(Position p, double radius){
 void Species::act(){
 	std::list<Individual*>::iterator i;
 	double r = Random(totalRate);
-	//std::cout << "species selected. - sp=" << id << ", time=" << arena->getTotalTime() << ", size=" << population.size()<< ", r= " << r << "\n";
 
 	for(i=population.begin();i!=population.end();i++){
 		r -= (*i)->getTotalRate();
@@ -128,7 +124,7 @@ void Species::act(){
 		}
 	}
 	/* if the below code is executed, it's becase no individual was selected */
-	std::cout << "WARNING: no individual selected. - sp=" << id << "\n";
+	Rcpp::warning ("No individual selected on Species::act");
 }
 
 void Species::setNextStage(Species *st) {nextStage = st;}
@@ -156,17 +152,6 @@ double Species::getInteraction(int species_id){return interactions[species_id];}
 int Species::getId(){return id;}
 double Species::getD(Position p){
 	return D;
-}
-
-void Species::print(double time){
-	std::list<Individual*>::iterator i;
-
-	std::cout << "#" << population.size() << "\n";
-
-	for(i=population.begin();i!=population.end();i++){
-		std::cout << time << "," << id << ",";
-		(*i)->print();
-	}
 }
 
 int Species::getAbundance(){

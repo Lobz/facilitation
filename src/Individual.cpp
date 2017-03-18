@@ -72,15 +72,9 @@ bool   Individual::isPresent(Position p2, double sqRadius){
 void   Individual::act(){
 	double r = Random(getTotalRate());
 
-	//	std::cout << "sp=" << species->getId() << "\n";
-
 	if(r < G) grow();
 	else if (r < G+R) reproduce();
 	else die();
-}
-
-void Individual::print(){
-	std::cout << id <<  "," << p.x << "," << p.y << "\n";
 }
 
 void 	Individual::grow(){
@@ -90,7 +84,6 @@ void 	Individual::grow(){
 }
 
 void	Individual::reproduce(){
-	//std::cout << "disperseIndividual called with p=(" << p.x <<","<<p.y<<")\n";
 	seedStage->disperseIndividual(p);
 }
 

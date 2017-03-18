@@ -59,6 +59,5 @@ class Species {
 	Species* getSeedStage();
 
 	int getAbundance();
-	void print(double time);
 };
 #endif
