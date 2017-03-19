@@ -1,5 +1,5 @@
-#include"Individual.hpp"
-#include"Random.hpp"
+#include"Individual.h"
+#include"Random.h"
 
 Arena::Arena(int maxspid, double *parameters, double w, double h, int bc) :maxsp(maxspid),width(w),height(h),bcond(bc) {
 	int i;
@@ -11,8 +11,6 @@ Arena::Arena(int maxspid, double *parameters, double w, double h, int bc) :maxsp
 	}
 
 	totalTime = 0.0;
-
-	std::cout << "Arena " << width << "x" << height << " initialized with " << maxsp << " species.\n";
 
 	history = new History();
 }
@@ -56,13 +54,12 @@ bool Arena::populate(int *speciesinit){
 	int i,j;
 
 	for(i=1;i<=maxsp;i++){
-		std::cout << "Starting to populate species " << i << " with " << speciesinit[i-1] << " individuals.\n";
 		for(j=0;j<speciesinit[i-1];j++){
 			try{
 				species[i]->addIndividual(Random(width),Random(height));
 			}
 			catch(int e){
-				std::cout << "Unable to populate\n";
+				Rcpp::warning("Unable to populate");
 				return false;
 			}
 		}
@@ -80,25 +77,18 @@ bool Arena::turn() {
 		totalRate += ratesList[i];
 	}
 
-	//std::cout << "TotalRate calculated at time=" << totalTime << "\n";
-
 	if(totalRate < 0) {
-		std::cout << "#This simulation has reached an impossible state (totalRate < 0).\n";
-		for(i=1;i<=maxsp;i++){
-			std::cout << "Species of id=" << i << " has totalRate=" << species[i]->getTotalRate() <<"\n";
-		}
+		Rcpp::warning("#This simulation has reached an impossible state (totalRate < 0).");
 		return false;
 	}
 
 	if(totalRate == 0) {
-		std::cout << "#This simulation has reached a stable state (totalRate = 0).\n";
+		Rcpp::warning("#This simulation has reached a stable state (totalRate = 0).");
 		return false;
 	}
 
 	time = Exponential(totalRate);
 	totalTime += time;
-
-	//std::cout << "TotalTime calculated at time=" << totalTime << "\n";
 
 	/* select stage to act */
 	r = Random(totalRate);
@@ -109,22 +99,9 @@ bool Arena::turn() {
 		}
 	}
 	species[i]->act();
-		
-	//std::cout << "Species " << i << "acted at time=" << totalTime << "\n";
-
 	return true;
 
 }
-
-void Arena::print(){
-	int i;
-	std::cout 	<< "\n#Current status:\n#Time: " << totalTime;
-	for(i=1;i<=maxsp;i++){
-		std::cout << "\n#Stage " << i << ":\n";
-		species[i]->print(totalTime);
-	}
-}
-
 
 /*TODO: should this array be dynamically allocated? */
 int* Arena::getAbundance(){
@@ -182,13 +159,7 @@ int Arena::getSpNum(){
 }
 
 Position Arena::boundaryCondition(Position p){
-	/*bool flag = false;
-	if(p.x <0 || p.x > width || p.y <0 || p.y > height){
-		flag = true;
-		std::cout << "Applying boundary condition: P-original = (" << p.x << "," << p.y << "), ";
-	}*/
 	switch(bcond){
-
 		case(1):
 			/* REFLEXIVE */
 			while(p.x <0 || p.x > width){
@@ -214,11 +185,8 @@ Position Arena::boundaryCondition(Position p){
 			if(p.x < 0 || p.x > width || p.y < 0 || p.y > height) { p.x = -1; p.y=-1; }
 			break;
 		default:
-			std::cout << "Unsuported boundary condition\n";
-			exit(1);
+			Rcpp::warning("Unsuported boundary condition");
 	}
-//	if(flag)std::cout << "P-final = (" << p.x << "," << p.y << ")\n";
-
 	return p;
 }
 

@@ -1,7 +1,7 @@
 #ifndef INDIVIDUAL_H
 #define INDIVIDUAL_H
 
-#include"Species.hpp"
+#include"Species.h"
 
 class IndividualStatus {
 	public:
@@ -53,7 +53,6 @@ class Individual {
 	Position getPosition();
 	double getRadius();
 	bool isPresent(Position p, double radius = 0);
-	void print();
 
 
 

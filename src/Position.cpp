@@ -1,4 +1,4 @@
-#include"Position.hpp"
+#include"Position.h"
 
 Position operator+(Position lhs, const Position& rhs)
 {

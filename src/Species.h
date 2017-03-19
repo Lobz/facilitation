@@ -1,7 +1,7 @@
 #ifndef SPECIES_H
 #define SPECIES_H
 
-#include"Arena.hpp"
+#include"Arena.h"
 
 class Species {
 	private:
@@ -60,6 +60,5 @@ class Species {
 	Species* getSeedStage();
 
 	int getAbundance();
-	void print(double time);
 };
 #endif

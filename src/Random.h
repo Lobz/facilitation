@@ -1,7 +1,7 @@
 #include<cstdlib>
 #ifndef _RANDOM_MINE
 #define _RANDOM_MINE
-#include"Position.hpp"
+#include"Position.h"
 double Random(double max);
 
 bool Bernoulli(double p);

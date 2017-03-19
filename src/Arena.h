@@ -6,7 +6,7 @@
 #include<cstdlib>
 #include<iostream>
 #include<array>
-#include"Position.hpp"
+#include"Position.h"
 #include<Rcpp.h>
 
 class Species;
@@ -59,7 +59,6 @@ class Arena {
 	double getTotalTime();
 	double getWidth();
 	double getHeight();
-	void print();
 };
 
 #endif

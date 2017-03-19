@@ -5,9 +5,9 @@
 
 using namespace Rcpp;
 
-// test_parameter
-Rcpp::DataFrame test_parameter(double maxtime, int num_stages, Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, Rcpp::IntegerVector init, double w, double h, int bcond, int dkernel, int maxpop);
-RcppExport SEXP facilitation_test_parameter(SEXP maxtimeSEXP, SEXP num_stagesSEXP, SEXP parametersSEXP, SEXP dispersalSEXP, SEXP interactionsSEXP, SEXP initSEXP, SEXP wSEXP, SEXP hSEXP, SEXP bcondSEXP, SEXP dkernelSEXP, SEXP maxpopSEXP) {
+// simulation
+Rcpp::DataFrame simulation(double maxtime, int num_stages, Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, Rcpp::IntegerVector init, double w, double h, int bcond, int dkernel, int maxpop);
+RcppExport SEXP facilitation_simulation(SEXP maxtimeSEXP, SEXP num_stagesSEXP, SEXP parametersSEXP, SEXP dispersalSEXP, SEXP interactionsSEXP, SEXP initSEXP, SEXP wSEXP, SEXP hSEXP, SEXP bcondSEXP, SEXP dkernelSEXP, SEXP maxpopSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -22,7 +22,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type bcond(bcondSEXP);
     Rcpp::traits::input_parameter< int >::type dkernel(dkernelSEXP);
     Rcpp::traits::input_parameter< int >::type maxpop(maxpopSEXP);
-    __result = Rcpp::wrap(test_parameter(maxtime, num_stages, parameters, dispersal, interactions, init, w, h, bcond, dkernel, maxpop));
+    __result = Rcpp::wrap(simulation(maxtime, num_stages, parameters, dispersal, interactions, init, w, h, bcond, dkernel, maxpop));
     return __result;
 END_RCPP
 }

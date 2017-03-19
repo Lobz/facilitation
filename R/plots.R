@@ -11,7 +11,7 @@
 #' @param log.y Logical. Should the y-axis be plotted in a logarithmic scale?
 #' @param \dots Further parameters to be passed to the lower level plot function
 #' @examples
-#' obj <- facByRates(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
+#' obj <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance_matrix(obj,times)
 #' stackplot(ab[,1:3])
@@ -60,7 +60,7 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 #'
 #' @author Alexandre Adalardo de Oliveira - 16/03/2016
 #' @author M. Salles
-#' @param data	result of a simulation, created by \code{\link{facByRates}}
+#' @param data	result of a simulation, created by \code{\link{facilitation}}
 #' @param times	array of times at which to plot
 #' @param xlim	Optional. Limits to the x-axis
 #' @param ylim	Optional. Limits to the y-axis
@@ -68,7 +68,7 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 #' @param tframe a time length to wait between frames. Do not use if using this with
 #' \code{animation}
 #' @examples
-#' malthusian <- facByRates(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+#' malthusian <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
 #' times <- seq(0,2,by=0.1)
 #' # plot
 #' spatialplot(malthusian,times,tframe=.1)
