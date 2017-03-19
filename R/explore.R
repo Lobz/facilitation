@@ -41,7 +41,7 @@ fit.data2 <- function(ab.mat,mat){
 	regression
 }
 
-fitted.rate <-function(ab.mat){
+mpm.fitted.rate <-function(ab.mat){
 	regression <- fit.data(ab.mat)
 	coef(regression)[2]
 }

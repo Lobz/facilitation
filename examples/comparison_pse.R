@@ -20,7 +20,7 @@ comparison <- function(Ds,Gs,R,init,fac,disp,maxt,c2,c3) {
 	re <- array()
 	# resutados determinísticos
 	re[1] <- limiting.rate(mat)
-	re[2] <- fitted.rate(so)
+	re[2] <- mpm.fitted.rate(so)
 	re[3] <- tryCatch(max(coef(fit.data2(so,mat))[c(2,4)]),error=function(e) NA)
 	re[4] <- expgrowthrate.full(Ds[1],Ds[2],Ds[3],Gs[1],Gs[2],R)
 
@@ -29,10 +29,10 @@ comparison <- function(Ds,Gs,R,init,fac,disp,maxt,c2,c3) {
 	d <- d*d
 	re[5] <- sum(d)/length(times)
 
-	re[6] <- fitted.rate(ab.m)
-	re[7] <- fitted.rate(ab.f)
-	re[8] <- fitted.rate(ab.l)
-	re[9] <- fitted.rate(ab.c)
+	re[6] <- mpm.fitted.rate(ab.m)
+	re[7] <- mpm.fitted.rate(ab.f)
+	re[8] <- mpm.fitted.rate(ab.l)
+	re[9] <- mpm.fitted.rate(ab.c)
 
 	re[10] <- tryCatch(max(coef(fit.data2(ab.m,mat))[c(2,4)]),error=function(e) NA)
 	re[11] <- tryCatch(max(coef(fit.data2(ab.f,mat))[c(2,4)]),error=function(e) NA)
@@ -72,7 +72,7 @@ compmalth <- function(d1,d2,d3,g1,g2,R,maxt){
 
 	re <- array()
 	re[1] <- limiting.rate(mat)
-	re[2] <- fitted.rate(so)
+	re[2] <- mpm.fitted.rate(so)
 	re[3] <- tryCatch(max(coef(fit.data2(so,mat))[c(2,4)]),error=function(e) NA)
 	re[4] <- expgrowthrate.full(Ds[1],Ds[2],Ds[3],Gs[1],Gs[2],R)
 	# resultados simulacionais
@@ -80,7 +80,7 @@ compmalth <- function(d1,d2,d3,g1,g2,R,maxt){
 	d <- d*d
 	re[5] <- sum(d)/length(times)
 
-	re[6] <- fitted.rate(ab.m)
+	re[6] <- mpm.fitted.rate(ab.m)
 	return(re)
 }
 

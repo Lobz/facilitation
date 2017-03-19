@@ -113,9 +113,9 @@ I added some basic tools for comparing the results. Since the population grows e
 ```r
 limiting.rate(mat)
 limiting.rate(mat.f)
-fitted.rate(ab)
-fitted.rate(so)
-fitted.rate(so.f)
+mpm.fitted.rate(ab)
+mpm.fitted.rate(so)
+mpm.fitted.rate(so.f)
 ```
 ### Disclaimer
 
