@@ -7,7 +7,7 @@ class Species {
 	private:
 	int id;
 	int spnum, kernelType;
-	double G, R, D, Rad, dispersalRadius;
+	double G, R, D, Rad, dispersalRadius, maxStressEffect, interactionVariation;
 	double totalRate;
 
 	Arena *arena;
@@ -18,7 +18,7 @@ class Species {
 
 	public:
 	Species(Arena *ar,int id, double *par);
-	Species(Arena *ar,int id, double D, double G, double R, double Rad);
+	Species(Arena *ar,int id, double D, double G, double R, double Rad, double maxStressEffect);
 	~Species();
 	/* BASIC RUN ACTION */
 	void act();
@@ -44,6 +44,7 @@ class Species {
 	void setFacilitation(double f);
 	void setInteraction(int s, double effect);
 	void setAutoInteraction(double effect);
+	void setInteractionVariation(double maxeffect);
 
 
 
@@ -53,7 +54,7 @@ class Species {
 	double getR();
 	double getD(Position p);
 	double getRad();
-	double getInteraction(int species_id);
+	double getInteraction(int species_id,Position p);
 	int getId();
 	Species* getNextStage();
 	Species* getSeedStage();

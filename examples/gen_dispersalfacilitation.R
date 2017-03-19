@@ -11,15 +11,14 @@ deathrates <- c(2, 1.4, 0.5)  # death rates for seed, sapling and adult
 growthrates <- c(1, 0.2)      # transition rates seed-->sapling and sapling-->adult
 reproductionrate <- 6        # reproduction rate (only adult)
 dispersalradius <- 1.2          # average distance a seed falls from the parent (distance is gaussian)
-initialpop <- c(0,0,15,10)    # initial pop. sizes for the 3 stages plus the facilitator species
+initialpop <- c(0,0,200,100)    # initial pop. sizes for the 3 stages plus the facilitator species
 facindex <- c(0,1.2)            # this will be the values by which facilitator decreases seeds and seedlings deathrates
 effects <- c(0,0,0, 0,-0.5,0, 0,0,-1) # the effects reducing deathrate (negative values increase deathrates)
 radius <- c(0,0.2,2,3)        # this are the distances up to which the individuals can have effect on others, by stage + facilitator
-h <- 40                       # arena height
-w <- 40                       # arena width
+h <- 100                       # arena height
+w <- 100                       # arena width
 
-maxt <- 150
-maxt=5
+maxt <- 250
 wrapper <- function(disp){ set.seed(1234)
 	facByRates(maxt, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=disp, R=reproductionrate, 
 		 interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)}
@@ -29,7 +28,7 @@ library(parallel)
 dispersions <- .2*2^(1:6)
 results <- mclapply(dispersions,wrapper)
 
-details=10
+details=500
 times <- seq(0,maxt,length.out=details)         # array of times of interest
 abmatrices <- mclapply(results,function(r){abundance_matrix(r,times)[,1:3]})
 

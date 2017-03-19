@@ -42,9 +42,10 @@ History * Arena::finalStatus(){
 	return history;
 }
 
-void Arena::setInteractions(double *interactions){
+void Arena::setInteractions(double *interactions, double slope){
 	int i,j;
 	for(i=1;i<=maxsp;i++){
+		species[i]->setInteractionVariation(slope);
 		for(j=1;j<=maxsp;j++){
 			species[i]->setInteraction(j,interactions[maxsp*(i-1)+(j-1)]);
 		}
@@ -160,7 +161,7 @@ void Arena::addAffectedByMe(Individual *ind){
 	double radius = ind->getRadius(); /* will look for inds within this radius of me */
 
 	for(j=1;j<=maxsp;j++){
-		if(species[j]->getInteraction(sp) != 0){
+		if(species[j]->getInteraction(sp,p) != 0){
 			ind->addAffectedByMeNeighbourList(species[j]->getPresent(p,radius));
 		}
 	}
@@ -230,3 +231,6 @@ void Arena::addToHistory(int sp, unsigned long id, double x, double y, double be
 	history->endTime_list.push_back(endT);
 }
 
+double Arena::getStressValue(Position p){
+	return p.x/width;
+}

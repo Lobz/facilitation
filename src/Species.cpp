@@ -3,10 +3,10 @@
 #include<cstdio>
 
 
-Species::Species(Arena *ar,int myid, double *par) : Species(ar,myid,par[2],par[0],par[1],par[3]){}
+Species::Species(Arena *ar,int myid, double *par) : Species(ar,myid,par[2],par[0],par[1],par[3],par[4]){}
 
-Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, double radius=0)
-		:id(myid),G(growth),D(death),R(rep),Rad(radius){
+Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, double radius=0, double maxEf=0)
+		:id(myid),G(growth),D(death),R(rep),Rad(radius),maxStressEffect(maxEf){
 	int i;
 	nextStage = NULL;
 	seedStage = NULL;
@@ -19,8 +19,9 @@ Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, 
 	for(i=1;i<=spnum;i++){
 		interactions[i]=0;
 	}
+	interactionVariation=0;
 
-	std::cout << id << ": G=" << G << " , R=" << R << " , D=" << D << ", Rad=" << Rad << "\n";
+	std::cout << id << ": G=" << G << " , R=" << R << " , D=" << D << ", Rad=" << Rad << ", maxEff=" << maxStressEffect << "\n";
 }
 
 Species::~Species(){
@@ -42,7 +43,7 @@ void Species::setInteraction(int s, double effect){
 		printf("WARNING: interaction parameter set to be bigger than deathrate. Id = %d. Parameters G=%f,R=%f,D=%f,Rad=%f,effect=%f\n", id,G,R,D,Rad,effect);
 	}
 	interactions[s] = effect;
-	printf("effect=%f for sp=%d on sp=%d\n",effect,s,id);
+	if(effect!=0) printf("effect=%f for sp=%d on sp=%d\n",effect,s,id);
 }
 
 void Species::addIndividual(double x, double y){
@@ -127,8 +128,8 @@ void Species::act(){
 			return;
 		}
 	}
-	/* if the below code is executed, it's becase no individual was selected */
-	std::cout << "WARNING: no individual selected. - sp=" << id << "\n";
+	/* if the below code is executed, it's because no individual was selected */
+	std::cout << "WARNING: no individual selected - sp=" << id << "\n";
 }
 
 void Species::setNextStage(Species *st) {nextStage = st;}
@@ -152,10 +153,15 @@ Species* Species::getNextStage() {return nextStage;}
 double Species::getG(){return G;}
 double Species::getR(){return R;}
 double Species::getRad(){return Rad;}
-double Species::getInteraction(int species_id){return interactions[species_id];}
+double Species::getInteraction(int species_id, Position p){return interactions[species_id]+arena->getStressValue(p)*interactionVariation;}
 int Species::getId(){return id;}
 double Species::getD(Position p){
-	return D;
+	if(maxStressEffect == 0){
+		return D;
+	}
+	else {
+		return arena->getStressValue(p)*maxStressEffect;
+	}
 }
 
 void Species::print(double time){
@@ -172,3 +178,5 @@ void Species::print(double time){
 int Species::getAbundance(){
 	return population.size();
 }
+
+void Species::setInteractionVariation(double maxeffect){interactionVariation=maxeffect;}

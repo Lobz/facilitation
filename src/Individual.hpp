@@ -28,7 +28,7 @@ class Individual {
 	Position p;
 	const unsigned long id;
 	int spnum;
-	double R, D, G, Rad, SqRad, facilitation;
+	double R, D, G, Rad, SqRad;
 	double actualD();
 	double totalRate;
 	Species *species, *seedStage;
