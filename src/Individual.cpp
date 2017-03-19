@@ -49,7 +49,7 @@ double Individual::actualD(){
 	int sp;
 	double actuald=D,effect;
 	for(sp = 1; sp <= spnum; sp++){
-		if((effect = species->getInteraction(sp)) != 0 && !affectingMeNeighbours[sp].empty()){
+		if((effect = species->getInteraction(sp,p)) != 0 && !affectingMeNeighbours[sp].empty()){
 			actuald -= effect*affectingMeNeighbours[sp].size(); /* note that effect is LINEAR on number of affecting neighbours */
 		}
 	}
@@ -111,7 +111,7 @@ void 	Individual::clearNeighbours(){
 void Individual::initNeighbours(){
 	int s;
 	for(s=1;s<=spnum;s++){
-		if(species->getInteraction(s) != 0){
+		if(species->getInteraction(s,p) != 0){
 			/* do not use radius in looking for affecting neighbours, 
 			 * effect radius is the affecting neighbour's radius */
 			addAffectingMeNeighbourList(arena->getPresent(s,p));

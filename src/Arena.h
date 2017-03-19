@@ -1,6 +1,6 @@
 #ifndef ARENA_H
 #define ARENA_H
-#define FACILITATION_NUMPARAMETERS 4
+#define FACILITATION_NUMPARAMETERS 5
 
 #include<list>
 #include<cstdlib>
@@ -40,12 +40,13 @@ class Arena {
 	void createSimpleSpecies(int id, double dispersal, int dkernel);
 	bool populate(int *stagesinit);
 	bool turn();
-	void setInteractions(double *interactions);
+	void setInteractions(double *interactions, double slope);
 
 	/* acessors for Species and Individuals */
 	bool findPresent(int species_id, Position p);
 	std::list<Individual*> getPresent(int species_id, Position p);
 	void addAffectedByMe(Individual *ind);
+	double getStressValue(Position p);
 
 	Position boundaryCondition(Position p);
 

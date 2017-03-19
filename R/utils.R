@@ -1,17 +1,3 @@
-snapshotdataframe <- function(x,times) {
-	lapply(times,function(t){subset(x,begintime <= t & (endtime >= t | is.na(endtime)))}) -> res
-	t <- times[1]
-	snap <- cbind(t,res[[1]])
-	if(length(times)>1){
-		for(i in 2:length(times)){
-			t <- times[i]
-			snap <- rbind(snap,cbind(t,res[[i]]))
-		}
-	}
-
-	snap
-}
-
 #' Runs a simulation with a structured population and a non-structured facilitator population
 #'
 #' All effects affect death rates. Effects are subtracted from death rates, meaning that positive
@@ -27,6 +13,9 @@ snapshotdataframe <- function(x,times) {
 #' @param init		An array of initial numbers for each stage of the structured population, and
 #' the facilitator population. Length n+1.
 #' @param dispersal	Average distance for seed dispersal
+#' @param maxstresseffects		Optional (use for a stress gradient). Array of values for
+#' how much the environmental stress can increse death rate at maximum stress. Length n+1. Stress
+#' gradient is linear, being miminum a x=0 (left) and maximum at x=width (right).
 #' @param rad		Optional (use if there are any interactions). Array of interaction radiuses. Length n+1.
 #' @param interactions	Optional. An array of effects of life stages over each other, where element
 #' [i+n*j] means the effect of stage i over stage j. Positive values equal facilitation, negative ones, competition.
@@ -42,29 +31,41 @@ snapshotdataframe <- function(x,times) {
 #' @param facilitatorD	Facilitator death rate
 #' @param facilitatorR	Facilitator reproduction rate
 #' @param facilitatorI	Facilitator intraspecific effect
+#' @param facilitatorS	Facilitator maximum stress effect
 #' @examples
 #' malthusian <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance_matrix(malthusian,times)
 #' stackplot(ab[,1:3])
-facilitation <- function(maxtime, n, Ds, Gs, R, init, dispersal, rad=rep(2,n+1), 
+facilitation <- function(maxtime, n, Ds, Gs, R, init, dispersal, maxstresseffects = rep(0,n), rad=rep(2,n+1), 
 		       interactions=rep(0,n*n), fac=rep(0,n-1), height=100, width=100, 
 		       boundary=c("reflexive","absortive","periodic"), 
-		       facilitatorD=0,facilitatorR=0,facilitatorI=0, 
+		       facilitatorD=0,facilitatorR=0,facilitatorI=0, facilitatorS=0,
 		       dispKernel=c("exponential","random"), 
 		       maxpop=30000){
 
-	disp <- switch(match.arg(dispKernel), random=0,exponential=1)
-	bound <- switch(match.arg(boundary),reflexive=1,absortive=0,periodic=2)
+	# generate parameters for test_parameters
+	dispKernel <- match.arg(dispKernel)
+	disp <- switch(dispKernel, random=0,exponential=1)
+	boundary <- match.arg(boundary)
+	bound <- switch(boundary,reflexive=1,absortive=0,periodic=2)
 
 	if(length(rad)==1) rad <- c(rep(0,n),rad)
-	M <- t(matrix(c(Gs, 0, 0, rep(0, n-1),R,facilitatorR, Ds,facilitatorD, rad), nrow = n+1))
+	M <- t(matrix(c(
+			Gs, 0, 0, #Gs
+			rep(0, n-1),R,facilitatorR, #Rs
+			Ds,facilitatorD, #Ds
+			rad, #Rads
+			maxstresseffects, facilitatorS #effects
+		), nrow = n+1))
+
 	N <- matrix(interactions,nrow=n)
 	N <- rbind(N,c(fac,0))
 	N <- c(N,rep(0,n),facilitatorI)
 
 	# run simultation
-	r <- simulation(maxtime,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
+	r <- simulation(maxtime,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,
+                    init=init,h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
 	
 	# prepare output
 	N <- matrix(N,nrow=n+1)
@@ -76,7 +77,8 @@ facilitation <- function(maxtime, n, Ds, Gs, R, init, dispersal, rad=rep(2,n+1),
 
 
 	list(data = r,n=n+1, maxtime=maxtime,
-	     stages=n,D=Ds,G=Gs,R=R,radius=rad,dispersal=dispersal,interactions=N,init=init,h=height,w=width,bcond=boundary,dkernel=dispKernel)
+	     stages=n,D=Ds,G=Gs,R=R,radius=rad,dispersal=dispersal,interactions=N,
+	     init=init,h=height,w=width,bcond=boundary,dkernel=dispKernel)
 }
 #dt <- facilitation(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
 
@@ -109,6 +111,9 @@ abundance_matrix <- function(data,times=seq(0,data$maxtime,length.ou=20)){
 				}
 			}		
 		}
+		# if that didn't work because of NA's
+		abl[is.na(abl)] <- 0
+
 		abl
 	}
 	ab <- t(sapply(subs,abmatline))
@@ -116,3 +121,18 @@ abundance_matrix <- function(data,times=seq(0,data$maxtime,length.ou=20)){
 
 	ab
 }
+
+snapshotdataframe <- function(x,times) {
+	lapply(times,function(t){subset(x,begintime <= t & (endtime >= t | is.na(endtime)))}) -> res
+	t <- times[1]
+	snap <- cbind(t,res[[1]])
+	if(length(times)>1){
+		for(i in 2:length(times)){
+			t <- times[i]
+			snap <- rbind(snap,cbind(t,res[[i]]))
+		}
+	}
+
+	snap
+}
+
