@@ -5,7 +5,7 @@
 #include<Rcpp.h>
 
 History * run_simulation(double maxtime, int num_stages, double * par, double dispersal, double * interactions, 
-        double w, double h, int *init, int bcond, int dkernel, int maxpop){
+        double w, double h, History *init, int bcond, int dkernel, int maxpop){
 	bool test=true;
 	Arena *arena;
 	History *ret;
@@ -34,10 +34,10 @@ History * run_simulation(double maxtime, int num_stages, double * par, double di
 }
 
 // [[Rcpp::export]]
-Rcpp::DataFrame simulation(double maxtime,int num_stages,Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, Rcpp::IntegerVector init, double w=100, double h=100, int bcond=1, int dkernel=1, int maxpop=30000){
+Rcpp::DataFrame simulation(double maxtime,int num_stages,Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, Rcpp::DataFrame init, double w=100, double h=100, int bcond=1, int dkernel=1, int maxpop=30000){
 	int *in;
 	History * ret;
-	in = init.begin();
+	in = new History(init);
 
 	ret = run_simulation(maxtime, num_stages,parameters.begin(),dispersal,interactions.begin(),w,h,in,bcond,dkernel,maxpop);
 

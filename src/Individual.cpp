@@ -6,16 +6,20 @@ unsigned long Individual::id_MAX = 0;
 
 Individual::Individual(Arena *ar, Species *sp, double x, double y):Individual(ar,sp,Position(x,y)){} 
 
+/* This is now the secondary constructor */
+Individual::Individual(Arena *ar, Species *sp, Position pos) : Individual( ar, sp, id_MAX++, pos, ar->getTotalTime() ){}
 
-Individual::Individual(Arena *ar, Species *sp, Position pos) : arena(ar), id(id_MAX++), 
+/* primary (bottom level) constructor */
+Individual::Individual(Arena *ar, Species *sp, Position pos, unsigned long restored_id, double bTime) : arena(ar), id(restored_id), 
 	affectingMeNeighbours(ar->getSpNum()+1), affectedByMeNeighbours(ar->getSpNum()+1) {
-
 	p = ar->boundaryCondition(pos), 
 	spnum = arena->getSpNum();
 	setSpecies(sp);
-	info  = new IndividualStatus(sp->getId(),id,p.x,p.y,arena->getTotalTime());
+	info  = new IndividualStatus(sp->getId(),id,p.x,p.y,bTime);
 	if(p.x==-1) die();
 }
+
+
 
 void	Individual::setSpecies(Species *sp) {
 	clearNeighbours();

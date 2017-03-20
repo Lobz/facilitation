@@ -41,8 +41,9 @@ class Individual {
 	void initNeighbours();
 
 	public:
-	Individual(Arena *ar, Species *sp, Position p);
 	Individual(Arena *ar, Species *sp, double x, double y);
+	Individual(Arena *ar, Species *sp, Position p);
+    Individual(Arena *ar, Species *sp, Position pos, unsigned long restored_id, double bTime);
 	/* general action function */
 	void act();
 
