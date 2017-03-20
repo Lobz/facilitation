@@ -12,6 +12,7 @@ Arena::Arena(int maxspid, double *parameters, double w, double h, int bc) :maxsp
 
 	totalTime = 0.0;
 
+	history = new History();
 }
 
 void Arena::createStructuredSpecies(int minId, int maxId, double dispersal, int dkernel) {
@@ -52,7 +53,6 @@ void Arena::setInteractions(double *interactions, double slope){
 bool Arena::populate(int *speciesinit){
 	int i,j;
 
-	history = new History();
 	for(i=1;i<=maxsp;i++){
 		for(j=0;j<speciesinit[i-1];j++){
 			try{
@@ -67,17 +67,6 @@ bool Arena::populate(int *speciesinit){
 	return true;
 }
 
-    History::History(Rcpp::DataFrame init){
-        sp_list = Rcpp::as<std::list<int>>(init["sp"]);
-        id_list = Rcpp::as<std::list<unsigned long>>(init["id"]);
-        x_list = Rcpp::as<std::list<double>>(init["x"]);
-        y_list = Rcpp::as<std::list<double>>(init["y"]);
-        beginTime_list = Rcpp::as<std::list<double>>(init["begintime"]);
-        endTime_list = Rcpp::as<std::list<double>>(init["endtime"]);
-
-        globalBeginTime = globalEndTime();
-    }
-
 double History::globalEndTime(){
     return std::max(*std::max_element(beginTime_list.begin(),beginTime_list.end()),*std::max_element(endTime_list.begin(),endTime_list.end()));
 }
@@ -90,8 +79,6 @@ bool Arena::populate(Rcpp::DataFrame init){
     std::vector<unsigned long> id;
     std::vector<double> x,y,beginTime,endTime;
 
-    history = new History(init);
-    totalTime = history->globalBeginTime;
     sp = Rcpp::as<std::vector<int>>(init["sp"]);
     id = Rcpp::as<std::vector<unsigned long>>(init["id"]);
     x = Rcpp::as<std::vector<double>>(init["x"]);
@@ -110,6 +97,7 @@ bool Arena::populate(Rcpp::DataFrame init){
 				return false;
 			}
 	}
+    totalTime = history->globalBeginTime = std::max(*std::max_element(beginTime.begin(),beginTime.end()),*std::max_element(endTime.begin(),endTime.end()));
 	return true;
 }
 

@@ -22,11 +22,6 @@ class History{
 	std::list<double> beginTime_list;
 	std::list<double> endTime_list;
 
-    /* Constructors */
-    History();
-    History(Rcpp::DataFrame init);
-
-    /* Restore history */
     int size();
     double globalEndTime();
     double globalBeginTime;
