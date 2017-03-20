@@ -67,30 +67,38 @@ bool Arena::populate(int *speciesinit){
 	return true;
 }
 
-    History::History(){}
     History::History(Rcpp::DataFrame init){
-        /* ?????? */
+        sp_list = Rcpp::as<std::list<int>>(init["sp"]);
+        id_list = Rcpp::as<std::list<unsigned long>>(init["id"]);
+        x_list = Rcpp::as<std::list<double>>(init["x"]);
+        y_list = Rcpp::as<std::list<double>>(init["y"]);
+        beginTime_list = Rcpp::as<std::list<double>>(init["begintime"]);
+        endTime_list = Rcpp::as<std::list<double>>(init["endtime"]);
 
         globalBeginTime = globalEndTime();
     }
 
 double History::globalEndTime(){
-    return max(max(beginTime_list),max(endTime_list));
+    return std::max(*std::max_element(beginTime_list),*std::max_element(endTime_list));
 }
 
-Individual* History::restoreIndividual(Arena *ar, Species **sp, int i){
-    if(endTime_list[i] != NA)
-	return new Individual(ar,sp[sp_list[i]],Position(x_list[i],y_list[i]),id_list[i],beginTime_list[i]);
-    else return NULL;
+int History::size(){ return sp_list.size(); }
+
+bool History::restoreIndividual(Arena *ar, Species **sp, int i){
+    if(endTime_list[i] > 0){
+        new Individual(ar,sp[sp_list[i]],Position(x_list[i],y_list[i]),id_list[i],beginTime_list[i]);
+        return true;
+    }
+    else return false;
 }
 
 bool Arena::populate(History *init){
 	int i,j;
 
     history = init;
-    totalTime = init->globalBeginTime;
+    totalTime = history->globalBeginTime;
 
-	for(i=0;i<history->length();i++){
+	for(i=0;i<history->size();i++){
 			try{
                 history->restoreIndividual(this,species,i);
 			}

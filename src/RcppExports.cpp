@@ -5,24 +5,3 @@
 
 using namespace Rcpp;
 
-// simulation
-Rcpp::DataFrame simulation(double maxtime, int num_stages, Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, Rcpp::IntegerVector init, double w, double h, int bcond, int dkernel, int maxpop);
-RcppExport SEXP facilitation_simulation(SEXP maxtimeSEXP, SEXP num_stagesSEXP, SEXP parametersSEXP, SEXP dispersalSEXP, SEXP interactionsSEXP, SEXP initSEXP, SEXP wSEXP, SEXP hSEXP, SEXP bcondSEXP, SEXP dkernelSEXP, SEXP maxpopSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< double >::type maxtime(maxtimeSEXP);
-    Rcpp::traits::input_parameter< int >::type num_stages(num_stagesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type parameters(parametersSEXP);
-    Rcpp::traits::input_parameter< double >::type dispersal(dispersalSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type interactions(interactionsSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type init(initSEXP);
-    Rcpp::traits::input_parameter< double >::type w(wSEXP);
-    Rcpp::traits::input_parameter< double >::type h(hSEXP);
-    Rcpp::traits::input_parameter< int >::type bcond(bcondSEXP);
-    Rcpp::traits::input_parameter< int >::type dkernel(dkernelSEXP);
-    Rcpp::traits::input_parameter< int >::type maxpop(maxpopSEXP);
-    __result = Rcpp::wrap(simulation(maxtime, num_stages, parameters, dispersal, interactions, init, w, h, bcond, dkernel, maxpop));
-    return __result;
-END_RCPP
-}
