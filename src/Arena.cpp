@@ -12,7 +12,6 @@ Arena::Arena(int maxspid, double *parameters, double w, double h, int bc) :maxsp
 
 	totalTime = 0.0;
 
-	history = new History();
 }
 
 void Arena::createStructuredSpecies(int minId, int maxId, double dispersal, int dkernel) {
@@ -53,6 +52,7 @@ void Arena::setInteractions(double *interactions, double slope){
 bool Arena::populate(int *speciesinit){
 	int i,j;
 
+	history = new History();
 	for(i=1;i<=maxsp;i++){
 		for(j=0;j<speciesinit[i-1];j++){
 			try{
@@ -79,28 +79,31 @@ bool Arena::populate(int *speciesinit){
     }
 
 double History::globalEndTime(){
-    return std::max(*std::max_element(beginTime_list),*std::max_element(endTime_list));
+    return std::max(*std::max_element(beginTime_list.begin(),beginTime_list.end()),*std::max_element(endTime_list.begin(),endTime_list.end()));
 }
 
 int History::size(){ return sp_list.size(); }
 
-bool History::restoreIndividual(Arena *ar, Species **sp, int i){
-    if(endTime_list[i] > 0){
-        new Individual(ar,sp[sp_list[i]],Position(x_list[i],y_list[i]),id_list[i],beginTime_list[i]);
-        return true;
-    }
-    else return false;
-}
+bool Arena::populate(Rcpp::DataFrame init){
+	int i;
+    std::vector<int> sp;
+    std::vector<unsigned long> id;
+    std::vector<double> x,y,beginTime,endTime;
 
-bool Arena::populate(History *init){
-	int i,j;
-
-    history = init;
+    history = new History(init);
     totalTime = history->globalBeginTime;
+    sp = Rcpp::as<std::vector<int>>(init["sp"]);
+    id = Rcpp::as<std::vector<unsigned long>>(init["id"]);
+    x = Rcpp::as<std::vector<double>>(init["x"]);
+    y = Rcpp::as<std::vector<double>>(init["y"]);
+    beginTime = Rcpp::as<std::vector<double>>(init["begintime"]);
+    endTime = Rcpp::as<std::vector<double>>(init["endtime"]);
 
-	for(i=0;i<history->size();i++){
+	for(i=0;i<init.nrows();i++){
 			try{
-                history->restoreIndividual(this,species,i);
+                if(endTime[i] > 0){
+                    new Individual(this,species[sp[i]],Position(x[i],y[i]),id[i],beginTime[i]);
+                }
 			}
 			catch(int e){
 				Rcpp::warning("Unable to populate");

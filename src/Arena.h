@@ -30,7 +30,6 @@ class History{
     int size();
     double globalEndTime();
     double globalBeginTime;
-    bool restoreIndividual(Arena *ar, Species **sp, int i); 
 };
 
 class Arena {
@@ -49,7 +48,7 @@ class Arena {
 	/* high level functions */
 	void createStructuredSpecies(int minId, int maxId, double dispersal, int dkernel);
 	void createSimpleSpecies(int id, double dispersal, int dkernel);
-	bool populate(History *init);
+	bool populate(Rcpp::DataFrame init);
 	bool populate(int *stagesinit);
 	bool turn();
 	void setInteractions(double *interactions, double slope);

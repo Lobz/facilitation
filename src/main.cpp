@@ -11,10 +11,8 @@ Rcpp::DataFrame simulation(double maxtime,int num_stages,Rcpp::NumericVector par
 	bool test=true,populated;
 	Arena *arena;
 	int numturns=0;
-	History * ret, * resto;
+	History * ret;
 
-	if(restore) resto = new History(history);
-    else in = init.begin()
     par = parameters.begin();
     inter = interactions.begin();
 
@@ -29,7 +27,7 @@ Rcpp::DataFrame simulation(double maxtime,int num_stages,Rcpp::NumericVector par
         populated = arena->populate(history);
     }
     else{
-        populated arena->populate(in);
+        populated = arena->populate(in);
     }
 	if(!populated) return NULL;
 
