@@ -33,9 +33,9 @@
 #' @param facilitatorI	Facilitator intraspecific effect
 #' @param facilitatorS	Facilitator maximum stress effect
 #' @examples
-#' malthusian <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+#' malth <- facilitation(2,3,c(5,1.2,0.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
 #' times <- seq(0,2,by=0.1)
-#' ab <- abundance_matrix(malthusian,times)
+#' ab <- abundance_matrix(malth,times)
 #' stackplot(ab[,1:3])
 facilitation <- function(maxtime, n, Ds, Gs, R, init, dispersal, maxstresseffects = rep(0,n), rad=rep(2,n+1), 
 		       interactions=rep(0,n*n), fac=rep(0,n-1), height=100, width=100, 
@@ -66,15 +66,18 @@ facilitation <- function(maxtime, n, Ds, Gs, R, init, dispersal, maxstresseffect
 	# run simultation
 	r <- simulation(maxtime,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,
                     init=init,h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
+
+
+    # obs: the object returned by function simulation, defined in main.cpp, is a data.frame with
+    # columns [sp, id, x, y, begintime, endtime]
+    # the following adjustments are made on this side because of the limits of c++ data types
+	r[r==-1]=NA
+	r$sp <- factor(r$sp)
 	
 	# prepare output
 	N <- matrix(N,nrow=n+1)
 	rownames(N) <- 0:n
 	colnames(N) <- 0:n
-
-	r[r==-1]=NA
-	r$sp <- factor(r$sp)
-
 
 	list(data = r,n=n+1, maxtime=maxtime,
 	     stages=n,D=Ds,G=Gs,R=R,radius=rad,dispersal=dispersal,interactions=N,
@@ -121,18 +124,3 @@ abundance_matrix <- function(data,times=seq(0,data$maxtime,length.ou=20)){
 
 	ab
 }
-
-snapshotdataframe <- function(x,times) {
-	lapply(times,function(t){subset(x,begintime <= t & (endtime >= t | is.na(endtime)))}) -> res
-	t <- times[1]
-	snap <- cbind(t,res[[1]])
-	if(length(times)>1){
-		for(i in 2:length(times)){
-			t <- times[i]
-			snap <- rbind(snap,cbind(t,res[[i]]))
-		}
-	}
-
-	snap
-}
-
