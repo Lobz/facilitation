@@ -33,7 +33,7 @@
 #' @param facilitatorI	Facilitator intraspecific effect
 #' @param facilitatorS	Facilitator maximum stress effect
 #' @examples
-#' malth <- facilitation(2,3,c(5,1.2,0.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+#' malth <- facilitation(2,3,c(5,1.2,0.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0))
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance_matrix(malth,times)
 #' stackplot(ab[,1:3])
@@ -105,9 +105,9 @@ facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main para
 #' @param data	result of a simulation, created by \code{\link{facilitation}}
 #' @param times	array of times at which the abundances will be calculated
 #' @examples
-#' malthusian <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+#' malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
 #' times <- seq(0,2,by=0.1)
-#' ab <- abundance_matrix(malthusian,times)
+#' ab <- abundance_matrix(malth,times)
 #' stackplot(ab[,1:3])
 abundance_matrix <- function(data,times=seq(0,data$maxtime,length.ou=20)){
 	if(max(times) > data$maxtime){ "Warning: array of times goes further than simulation maximum time" }

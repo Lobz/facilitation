@@ -68,7 +68,7 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 #' @param tframe a time length to wait between frames. Do not use if using this with
 #' \code{animation}
 #' @examples
-#' malth <- facilitation(2,3,c(5,1.2,0.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+#' malth <- facilitation(2,3,c(5,1,.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0),radius=c(0,1,2,0))
 #' times <- seq(0,2,by=0.1)
 #' # plot
 #' spatialplot(malth,times,tframe=.1)
