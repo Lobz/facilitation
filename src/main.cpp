@@ -5,7 +5,9 @@
 #include<Rcpp.h>
 
 // [[Rcpp::export]]
-Rcpp::DataFrame simulation(double maxtime,int num_stages,Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, Rcpp::IntegerVector init={}, Rcpp::DataFrame history=Rcpp::DataFrame::create(), bool restore=false, double w=100, double h=100, int bcond=1, int dkernel=1, int maxpop=30000){
+Rcpp::DataFrame simulation(double maxtime,int num_stages,Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, 
+        Rcpp::IntegerVector init, Rcpp::DataFrame history,
+        bool restore=false, double w=100, double h=100, int bcond=1, int dkernel=1, int maxpop=30000){
 	int *in;
     double *par, *inter;
 	bool test=true,populated;
@@ -13,6 +15,7 @@ Rcpp::DataFrame simulation(double maxtime,int num_stages,Rcpp::NumericVector par
 	int numturns=0;
 	History * ret;
 
+    in = init.begin();
     par = parameters.begin();
     inter = interactions.begin();
 

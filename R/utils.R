@@ -65,7 +65,7 @@ facilitation <- function(maxtime, n, Ds, Gs, R, init, dispersal, maxstresseffect
 
 	# run simultation
 	r <- simulation(maxtime,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,
-                    init=init,h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
+                    init=init,history=data.frame(),h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
 
 
     # obs: the object returned by function simulation, defined in main.cpp, is a data.frame with
