@@ -37,14 +37,15 @@
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance_matrix(malth,times)
 #' stackplot(ab[,1:3])
-facilitation <- function(maxtime, n, Ds, Gs, R, init, dispersal, maxstresseffects = rep(0,n), rad=rep(2,n+1), 
-		       interactions=rep(0,n*n), fac=rep(0,n-1), height=100, width=100, 
-		       boundary=c("reflexive","absortive","periodic"), 
-		       facilitatorD=0,facilitatorR=0,facilitatorI=0, facilitatorS=0,
-		       dispKernel=c("exponential","random"), 
-		       maxpop=30000){
+facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main parameters
+                         maxstresseffects = rep(0,n), rad=rep(2,n+1), # stress gradient effects
+                         interactions=rep(0,n*n), fac=rep(0,n-1), # interactions
+                         height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
+                         facilitatorD=0,facilitatorR=0,facilitatorI=0, facilitatorS=0, # facilitator dynamics
+                         dispKernel=c("exponential","random"), # type of dispersal
+                         maxpop=30000){
 
-	# generate parameters for test_parameters
+	# generate parameters for simulation
 	dispKernel <- match.arg(dispKernel)
 	disp <- switch(dispKernel, random=0,exponential=1)
 	boundary <- match.arg(boundary)
@@ -63,7 +64,13 @@ facilitation <- function(maxtime, n, Ds, Gs, R, init, dispersal, maxstresseffect
 	N <- rbind(N,c(fac,0))
 	N <- c(N,rep(0,n),facilitatorI)
 
-	# run simultation
+    # generate init parameter
+    if(class(init)=="data.frame"){
+        print("yeah nah")
+        return
+    }
+
+	# run simulation
 	r <- simulation(maxtime,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,
                     init=init,history=data.frame(),h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
 
