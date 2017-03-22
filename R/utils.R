@@ -65,14 +65,22 @@ facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main para
 	N <- c(N,rep(0,n),facilitatorI)
 
     # generate init parameter
+    restore=F
     if(class(init)=="data.frame"){
-        print("yeah nah")
-        return
+        # super trusting that the data.frame has the correct columns
+        restore=T
+        hist=init
+        initial=c(1)
+    }
+    else {
+        initial=init
+        hist=data.frame()
+        restore=F
     }
 
 	# run simulation
 	r <- simulation(maxtime,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,
-                    init=init,history=data.frame(),h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
+                    init=initial,history=hist,restore=restore,h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
 
 
     # obs: the object returned by function simulation, defined in main.cpp, is a data.frame with
