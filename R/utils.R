@@ -16,7 +16,7 @@
 #' @param maxstresseffects		Optional (use for a stress gradient). Array of values for
 #' how much the environmental stress can increse death rate at maximum stress. Length n+1. Stress
 #' gradient is linear, being miminum a x=0 (left) and maximum at x=width (right).
-#' @param rad		Optional (use if there are any interactions). Array of interaction radiuses. Length n+1.
+#' @param radius		Optional (use if there are any interactions). Array of interaction radiuses. Length n+1.
 #' @param interactions	Optional. An array of effects of life stages over each other, where element
 #' [i+n*j] means the effect of stage i over stage j. Positive values equal facilitation, negative ones, competition.
 #' @param height	Arena height
@@ -38,7 +38,7 @@
 #' ab <- abundance_matrix(malth,times)
 #' stackplot(ab[,1:3])
 facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main parameters
-                         maxstresseffects = rep(0,n), rad=rep(2,n+1), # stress gradient effects
+                         maxstresseffects = rep(0,n), radius=rep(2,n+1), # stress gradient effects
                          interactions=rep(0,n*n), fac=rep(0,n-1), # interactions
                          height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
                          facilitatorD=0,facilitatorR=0,facilitatorI=0, facilitatorS=0, # facilitator dynamics
@@ -51,12 +51,12 @@ facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main para
 	boundary <- match.arg(boundary)
 	bound <- switch(boundary,reflexive=1,absortive=0,periodic=2)
 
-	if(length(rad)==1) rad <- c(rep(0,n),rad)
+	if(length(radius)==1) radius <- c(rep(0,n),radius)
 	M <- t(matrix(c(
 			Gs, 0, 0, #Gs
 			rep(0, n-1),R,facilitatorR, #Rs
 			Ds,facilitatorD, #Ds
-			rad, #Rads
+			radius, #Rads
 			maxstresseffects, facilitatorS #effects
 		), nrow = n+1))
 
@@ -95,8 +95,8 @@ facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main para
 	colnames(N) <- 0:n
 
 	list(data = r,n=n+1, maxtime=maxtime,
-	     stages=n,D=Ds,G=Gs,R=R,radius=rad,dispersal=dispersal,interactions=N,
-	     init=init,h=height,w=width,bcond=boundary,dkernel=dispKernel)
+	     stages=n,Ds=Ds,Gs=Gs,R=R,radius=radius,dispersal=dispersal,interactions=N,interactions.vec=interactions,rates.matrix=M,
+	     init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel)
 }
 #dt <- facilitation(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
 
@@ -139,3 +139,16 @@ abundance_matrix <- function(data,times=seq(0,data$maxtime,length.ou=20)){
 
 	ab
 }
+
+#' proceed with a stopped simulation
+#'
+#' @param data result of a simulation, created by \code{\link{facilitation}}
+#' @param time a number: for how long to extend the simulation
+#'
+#'
+proceed <- function(data,time){
+	facilitation(init=data$data,n=data$stages, maxtime=data$maxtime+time,
+	     Ds=data$Ds,Gs=data$Gs,R=data$R,radius=data$radius,dispersal=data$dispersal,interactions=data$interactions.vec,
+	     height=data$height,width=data$width,boundary=data$boundary,dispKernel=data$dispKernel)
+}
+
