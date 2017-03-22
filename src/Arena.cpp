@@ -88,7 +88,7 @@ bool Arena::populate(Rcpp::DataFrame init){
 
 	for(i=0;i<init.nrows();i++){
 			try{
-                if(endTime[i] > 0){
+                if(Rcpp::NumericVector::is_na(endTime[i])){
                     new Individual(this,species[sp[i]],Position(x[i],y[i]),id[i],beginTime[i]);
                 }
 			}
