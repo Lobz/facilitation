@@ -53,9 +53,9 @@ facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main para
 
 	if(length(radius)==1) radius <- c(rep(0,n),radius)
 	M <- t(matrix(c(
+			Ds,facilitatorD, #Ds
 			Gs, 0, 0, #Gs
 			rep(0, n-1),R,facilitatorR, #Rs
-			Ds,facilitatorD, #Ds
 			radius, #Rads
 			maxstresseffects, facilitatorS #effects
 		), nrow = n+1))
