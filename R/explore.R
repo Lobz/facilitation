@@ -1,4 +1,4 @@
-limiting.rate <- function(mat){max(Re(eigen(mat)$values))}
+limiting.rate <- function(mat){tryCatch(max(Re(eigen(mat)$values)),error=function(e) NA)}
 
 eigen.profile <- function(mat){
 	e <- eigen(mat)$values
