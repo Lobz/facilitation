@@ -2,7 +2,7 @@
 #include"Random.h"
 #include<cstdio>
 
-Species::Species(Arena *ar,int myid, double *par) : Species(ar,myid,par[2],par[0],par[1],par[3],par[4]){}
+Species::Species(Arena *ar,int myid, double *par) : Species(ar,myid,par[0],par[1],par[2],par[3],par[4]){}
 
 Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, double radius=0, double maxEf=0)
     :id(myid),G(growth),D(death),R(rep),Rad(radius),maxStressEffect(maxEf)
