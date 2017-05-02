@@ -7,7 +7,7 @@ class Species {
 	private:
 	int id;
 	int spnum, kernelType;
-	double G, R, D, Rad, dispersalRadius, maxStressEffect, interactionVariation;
+	double D, G, R, Rad, dispersalRadius, maxStressEffect, interactionVariation;
 	double totalRate;
 
 	Arena *arena;

@@ -3,6 +3,7 @@
 
 Arena::Arena(int maxspid, double *parameters, double w, double h, int bc) :maxsp(maxspid),width(w),height(h),bcond(bc) {
 	int i;
+    /* allocates vector of size n+1 so that we can ignore number 0 */
 	species = (Species**)malloc((1+maxsp)*(sizeof(Species*)));
 	ratesList = (double*)malloc((1+maxsp)*(sizeof(double)));
 
