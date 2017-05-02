@@ -77,12 +77,12 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 #' library(animation)
 #' saveGIF(spatialplot(malth,times),interval=0.1,movie.name="malthusian.gif") 
 spatialplot = function(data, times=seq(0,data$maxtime,length.out=20), xlim=c(0,data$w), ylim=c(0,data$h), 
-		       col=c(colorRampPalette(c("darkred","pink"))(data$n-1),"lightgreen"),tframe=0)
+		       col=c(colorRampPalette(c("darkred","pink"))(data$num.total-1),"lightgreen"),tframe=0)
 {
 	radius <- data$radius
 	# creates list of dataframes, one for each time
 	dtlist <- lapply(times,function(t){subset(data$data,begintime <= t & (endtime >= t | is.na(endtime)))})
-	maxst <- data$n
+	maxst <- data$num.total
 	# set minimum radius for stages with rad=0
 	for(i in 1:length(radius)) if(radius[i] == 0) radius[i] = 0.05
 	# init viewport
