@@ -31,7 +31,7 @@
 #' stackplot(ab[,1:3]) # species 1
 #' stackplot(ab[,4:5]) # species 2
 community <- function(maxtime, numstages, parameters, dispersal, init, # the main parameters
-                         interactions=F, # interactions
+                         interactions, # interactions
                          height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
                          dispKernel=c("exponential","random"), # type of dispersal
                          maxpop=30000){
@@ -45,11 +45,8 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
     ntot <- sum(numstages)
     npop <- length(numstages)
 
-	if(interactions==F){
-        N = matrix(rep(0,ntot*ntot),ntot)
-    }
-    else {
-        N = matrix(interactions,ntot)
+	if(missing(interactions)){
+        interactions = matrix(rep(0,ntot*ntot),ntot)
     }
 
     M <- parameters
@@ -77,7 +74,7 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
     }
 
 	# run simulation
-	r <- simulation(maxtime,num_pops=npop,num_stages=numstages,parameters=c(t(M)),dispersal=dispersal,interactions=N,
+	r <- simulation(maxtime,num_pops=npop,num_stages=numstages,parameters=c(t(M)),dispersal=dispersal,interactions=interactions,
                     init=initial,history=hist,restore=restore,h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
 
 
@@ -88,14 +85,13 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
 	r$sp <- factor(r$sp)
 	
 	# prepare output
-	N <- matrix(N,nrow=ntot)
-	rownames(N) <- 1:ntot
-	colnames(N) <- 1:ntot
+	rownames(interactions) <- 1:ntot
+	colnames(interactions) <- 1:ntot
     rownames(M) <- 1:ntot
     colnames(M) <- c("D","G","R","radius","maxstresseffect")
 
 	list(data = r,num.pop = npop, num.total = ntot, num.stages = numstages, maxtime=maxtime,
-	     dispersal=dispersal,interactions=N,rates.matrix=M,radius=M[,4],
+	     dispersal=dispersal,interactions=interactions,rates.matrix=M,radius=M[,4],
 	     init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel)
 }
 
@@ -106,8 +102,8 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
 #'
 #'
 proceed <- function(data,time){
-	facilitation(init=data$data,n=data$stages, maxtime=data$maxtime+time,
-	     Ds=data$Ds,Gs=data$Gs,R=data$R,radius=data$radius,dispersal=data$dispersal,interactions=data$interactions.vec,
+	community(init=data$data,numstages=data$num.stages, maxtime=data$maxtime+time,
+	     parameters=data$rates.matrix,dispersal=data$dispersal,interactions=data$interactions,
 	     height=data$height,width=data$width,boundary=data$boundary,dispKernel=data$dispKernel)
 }
 
