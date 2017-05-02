@@ -139,16 +139,3 @@ abundance_matrix <- function(data,times=seq(0,data$maxtime,length.ou=20)){
 
 	ab
 }
-
-#' proceed with a stopped simulation
-#'
-#' @param data result of a simulation, created by \code{\link{facilitation}}
-#' @param time a number: for how long to extend the simulation
-#'
-#'
-proceed <- function(data,time){
-	facilitation(init=data$data,n=data$stages, maxtime=data$maxtime+time,
-	     Ds=data$Ds,Gs=data$Gs,R=data$R,radius=data$radius,dispersal=data$dispersal,interactions=data$interactions.vec,
-	     height=data$height,width=data$width,boundary=data$boundary,dispKernel=data$dispKernel)
-}
-
