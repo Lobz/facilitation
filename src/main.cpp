@@ -8,7 +8,7 @@
 Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num_stages,Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, 
         Rcpp::IntegerVector init, Rcpp::DataFrame history,
         bool restore=false, double w=100, double h=100, int bcond=1, int dkernel=1, int maxpop=30000){
-	int *in, i,n, n_total=0;
+	int *in, i,n, n_total=0,*nsts;
     double *par, *inter;
 	bool test=true,populated;
 	Arena *arena;
@@ -16,26 +16,27 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
 	History * ret;
 
     in = init.begin();
+    nsts=num_stages.begin();
     par = parameters.begin();
     inter = interactions.begin();
 
     for(i=0;i<num_pops;i++){
-        n_total+=num_stages[i];
+        n_total+=nsts[i];
     }
 
 	arena = new Arena(n_total,par,w,h,bcond);
 	arena->setInteractions(inter,0); // 0 interaction slope because it's not implemented yet
 
     for(i=0,n=1; i<num_pops; i++){
-        if(num_stages[i] == 1){
+        if(nsts[i] == 1){
             // create sigle-stage species
             arena->createSimpleSpecies(n,dispersal,dkernel);
             n++;
         }
         else {
             // create structured species
-            arena->createStructuredSpecies(n,num_stages[i],dispersal,dkernel);
-            n+=num_stages[i];
+            arena->createStructuredSpecies(n,n+nsts[i]-1,dispersal,dkernel);
+            n+=nsts[i];
         }
     }
 

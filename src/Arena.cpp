@@ -24,7 +24,7 @@ void Arena::createStructuredSpecies(int minId, int maxId, double dispersal, int 
 		species[i]->setSeedStage(species[minId], dispersal, dkernel);
 	}
 	// last stage doesn't have next stage
-	species[i]->setSeedStage(species[1], dispersal, dkernel);
+	species[i]->setSeedStage(species[minId], dispersal, dkernel);
 }
 
 void Arena::createSimpleSpecies(int id, double dispersal, int dkernel){
