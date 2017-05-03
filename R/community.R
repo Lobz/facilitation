@@ -50,6 +50,9 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
     }
 
     M <- parameters
+    if(nrow(M) != ntot){
+        stop("Total number of stages differs from number of rows in parameter matrix")
+    }
     if(ncol(M)==4){ # assume maxstresseffect is missing
         M <- cbind(M,rep(0,ntot))
     }
@@ -57,6 +60,18 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
         M <- cbind(M,rep(1,ntot))
         M <- cbind(M,rep(0,ntot))
     }
+    else if(ncol(M)!=5){
+        stop("Parameter matrix must have 3-5 columns")
+    }
+
+    idold<-0
+    for(i in 1:npop){
+        idold <- idold+numstages[i]
+        if(M[idold,2] != 0){ # eldest stage with a growth rate
+            stop("Invalid input: positive growth rate for last stage of population")
+        }
+    }
+
 
     # generate init parameter
     restore=F
