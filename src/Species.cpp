@@ -15,7 +15,8 @@ Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, 
     arena = ar;
     spnum = ar->getSpNum();
 
-    interactions = (double*)malloc(spnum*(sizeof(double)));
+    interactions = (double*)malloc((spnum+1)*(sizeof(double)));
+    interactions[0]=0; /* this is actually not used but let's set it to 0 just in case */
     for(i=1;i<=spnum;i++){
         interactions[i]=0;
     }

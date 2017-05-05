@@ -19,6 +19,7 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
     nsts=num_stages.begin();
     par = parameters.begin();
     inter = interactions.begin();
+    nsts = num_stages.begin();
 
     for(i=0;i<num_pops;i++){
         n_total+=nsts[i];
