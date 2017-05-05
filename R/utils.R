@@ -45,58 +45,26 @@ facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main para
                          dispKernel=c("exponential","random"), # type of dispersal
                          maxpop=30000){
 
-	# generate parameters for simulation
-	dispKernel <- match.arg(dispKernel)
-	disp <- switch(dispKernel, random=0,exponential=1)
-	boundary <- match.arg(boundary)
-	bound <- switch(boundary,reflexive=1,absortive=0,periodic=2)
-
-	if(length(radius)==1) radius <- c(rep(0,n),radius)
-	M <- t(matrix(c(
+    if(length(radius)==1){radius <- rep(radius,n+1)}
+	M <- matrix(c(
 			Ds,facilitatorD, #Ds
 			Gs, 0, 0, #Gs
 			rep(0, n-1),R,facilitatorR, #Rs
 			radius, #Rads
 			maxstresseffects, facilitatorS #effects
-		), nrow = n+1))
+		), nrow = n+1)
 
 	N <- matrix(interactions,nrow=n)
 	N <- rbind(N,c(fac,0))
 	N <- c(N,rep(0,n),facilitatorI)
+    N <- matrix(N,n+1)
 
-    # generate init parameter
-    restore=F
-    if(class(init)=="data.frame"){
-        # super trusting that the data.frame has the correct columns
-        restore=T
-        hist=init
-        initial=c(1)
-    }
-    else {
-        initial=init
-        hist=data.frame()
-        restore=F
-    }
 
 	# run simulation
-	r <- simulation(maxtime,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,
-                    init=initial,history=hist,restore=restore,h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
+	community(maxtime,c(n,1),parameters=M,dispersal=dispersal,interactions=N,
+                    init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel,maxpop=maxpop)
 
 
-    # obs: the object returned by function simulation, defined in main.cpp, is a data.frame with
-    # columns [sp, id, x, y, begintime, endtime]
-    # the following adjustments are made on this side because of the limits of c++ data types
-	r[r==-1]=NA
-	r$sp <- factor(r$sp)
-	
-	# prepare output
-	N <- matrix(N,nrow=n+1)
-	rownames(N) <- 0:n
-	colnames(N) <- 0:n
-
-	list(data = r,n=n+1, maxtime=maxtime,
-	     stages=n,Ds=Ds,Gs=Gs,R=R,radius=radius,dispersal=dispersal,interactions=N,interactions.vec=interactions,rates.matrix=M,
-	     init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel)
 }
 #dt <- facilitation(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
 
