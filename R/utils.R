@@ -77,7 +77,7 @@ facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main para
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance_matrix(malth,times)
 #' stackplot(ab[,1:3])
-abundance_matrix <- function(data,times=seq(0,data$maxtime,length.ou=20)){
+abundance_matrix <- function(data,times=seq(0,data$maxtime,length.out=50)){
 	if(max(times) > data$maxtime){ "Warning: array of times goes further than simulation maximum time" }
 	n <- data$num.total
 	subs <- lapply(times,function(t){subset(data$data,begintime <= t & (endtime >= t | is.na(endtime)),select=c(1,2))})

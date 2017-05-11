@@ -76,7 +76,7 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 #' # make a gif
 #' library(animation)
 #' saveGIF(spatialplot(malth,times),interval=0.1,movie.name="malthusian.gif") 
-spatialplot = function(data, times=seq(0,data$maxtime,length.out=20), xlim=c(0,data$w), ylim=c(0,data$h), 
+spatialplot = function(data, times=seq(0,data$maxtime,length.out=50), xlim=c(0,data$w), ylim=c(0,data$h), 
 		       col=c(colorRampPalette(c("darkred","pink"))(data$num.total-1),"lightgreen"),tframe=0)
 {
 	radius <- data$radius
