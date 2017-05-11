@@ -15,8 +15,8 @@ abundance_matrix(data, times = seq(0, data$maxtime, length.ou = 20))
 creates a matrix with abundances of each life stage/species over time
 }
 \examples{
-malthusian <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
 times <- seq(0,2,by=0.1)
-ab <- abundance_matrix(malthusian,times)
+ab <- abundance_matrix(malth,times)
 stackplot(ab[,1:3])
 }

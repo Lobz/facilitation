@@ -6,7 +6,7 @@
 \usage{
 spatialplot(data, times = seq(0, data$maxtime, length.out = 20), xlim = c(0,
   data$w), ylim = c(0, data$h), col = c(colorRampPalette(c("darkred",
-  "pink"))(data$n - 1), "lightgreen"), tframe = 0)
+  "pink"))(data$num.total - 1), "lightgreen"), tframe = 0)
 }
 \arguments{
 \item{data}{result of a simulation, created by \code{\link{facilitation}}}
@@ -26,14 +26,14 @@ spatialplot(data, times = seq(0, data$maxtime, length.out = 20), xlim = c(0,
 function for ploting simulation frames
 }
 \examples{
-malthusian <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+malth <- facilitation(2,3,c(5,1,.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0),radius=c(0,1,2,0))
 times <- seq(0,2,by=0.1)
 # plot
-spatialplot(malthusian,times,tframe=.1)
+spatialplot(malth,times,tframe=.1)
 
 # make a gif
 library(animation)
-saveGIF(spatialplot(malthusian,times),interval=0.1,movie.name="malthusian.gif") 
+saveGIF(spatialplot(malth,times),interval=0.1,movie.name="malthusian.gif") 
 }
 \author{
 Alexandre Adalardo de Oliveira - 16/03/2016
