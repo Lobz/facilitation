@@ -83,7 +83,7 @@ plotsnapshot(results,t=6.25)
 You may calculate the abundances through time:
 ```r
 times <- seq(0,maxt,.2)         # array of times of interest
-ab <- abundance_matrix(results,times)
+ab <- abundance.matrix(results,times)
 ```
 Having an abundance matrix, you can plot your population in a stackplot. Obs.: the stackplot makes
 most sense if you plot only one species at a time, so let's plot the columns 1:3, ie, species 1.
@@ -97,8 +97,8 @@ stackplot(ab[,1:3],log.y=T)
 
 Note that you can choose as much detail in your abundance matrix as you'd like, changin the `times` parameter. Compare:
 ```r
-stackplot(abundance_matrix(results,seq(0,maxt,length.out=20))[,1:3])
-stackplot(abundance_matrix(results,seq(0,maxt,length.out=200))[,1:3])
+stackplot(abundance.matrix(results,seq(0,maxt,length.out=20))[,1:3])
+stackplot(abundance.matrix(results,seq(0,maxt,length.out=200))[,1:3])
 ```
 The package also includes functions to plot the expected abundances according to a linear differential model. To produce the matrix corresponding to the ODE and calculate the solution (that is, the matrix exponential), run the following:
 ```r

@@ -29,7 +29,7 @@
 #' param <- matrix(c(2,1,0, 1,1,0, .5,0,6, 1,1,0, .5,0,2), byrow=T, nrow=5) 
 #' malth <- community(3,c(3,2),param,dispersal=2,init=init)
 #' times <- seq(0,3,by=0.1)
-#' ab <- abundance_matrix(malth,times)
+#' ab <- abundance.matrix(malth,times)
 #' stackplot(ab[,1:3]) # species 1
 #' stackplot(ab[,4:5]) # species 2
 community <- function(maxtime, numstages, parameters, dispersal, init, # the main parameters

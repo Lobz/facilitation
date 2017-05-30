@@ -5,7 +5,7 @@
 #' The \code{stackplot} function produces a stacked plot of the population over time.
 #' Notice that the population should have at least two stages for this function to work.
 #' 
-#' @param mat A population matrix, as produced by \code{\link{abundance_matrix}}
+#' @param mat A population matrix, as produced by \code{\link{abundance.matrix}}
 #' @param col Optional. A color vector
 #' @param legend Optional. An array of names
 #' @param log.y Logical. Should the y-axis be plotted in a logarithmic scale?
@@ -13,7 +13,7 @@
 #' @examples
 #' obj <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
 #' times <- seq(0,2,by=0.1)
-#' ab <- abundance_matrix(obj,times)
+#' ab <- abundance.matrix(obj,times)
 #' stackplot(ab[,1:3])
 stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 	dots <- list(...)

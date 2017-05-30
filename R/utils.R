@@ -35,7 +35,7 @@
 #' @examples
 #' malth <- facilitation(2,3,c(5,1.2,0.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0))
 #' times <- seq(0,2,by=0.1)
-#' ab <- abundance_matrix(malth,times)
+#' ab <- abundance.matrix(malth,times)
 #' stackplot(ab[,1:3])
 facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main parameters
                          maxstresseffects = rep(0,n), radius=rep(2,n+1), # stress gradient effects
@@ -75,12 +75,14 @@ facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main para
 #' @examples
 #' malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
 #' times <- seq(0,2,by=0.1)
-#' ab <- abundance_matrix(malth,times)
+#' ab <- abundance.matrix(malth,times)
 #' stackplot(ab[,1:3])
-abundance_matrix <- function(data,times=seq(0,data$maxtime,length.out=50)){
+abundance.matrix <- function(data,by.age=F,times=seq(0,data$maxtime,length.out=50)){
 	if(max(times) > data$maxtime){ "Warning: array of times goes further than simulation maximum time" }
 	n <- data$num.total
-	subs <- lapply(times,function(t){subset(data$data,begintime <= t & (endtime >= t | is.na(endtime)),select=c(1,2))})
+    if(relative){d <- relative.history(data)}
+    else{d<-data$data}
+	subs <- lapply(times,function(t){subset(d,begintime <= t & (endtime >= t | is.na(endtime)),select=c(1,2))})
 	abmatline <- function(x){
 		l <- tapply(x$id,x$sp,length)
 		# complete the rows that are missing
@@ -107,3 +109,39 @@ abundance_matrix <- function(data,times=seq(0,data$maxtime,length.out=50)){
 
 	ab
 }
+
+#' calculates the lifespan of each individual
+#'
+#' @param data	result of a simulation, created by \code{\link{facilitation}}
+#' @examples
+#' malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
+#' l <- longevity(malth)
+#' hist(l$longevity)
+longevity <- function(data){
+    d <- data$data[with(data$data,order(-endtime)),] #orders by endtime, last to first
+    ind.life <- function(i){c(i$sp[1],min(i$begintime),i$endtime[1])}
+    b <- by(d,d$id,ind.life)
+    b <- matrix(unlist(b),max(d$id)+1,byrow=T) # TURNS THE OUTPUT INTO A MATRIX
+    r <- data.frame(b)
+    names(r)=c("last.stage","birth","death")
+    r$longevity <-b[,3]-b[,2]
+    r
+}
+
+#' lifehistory relative to birthdate of each individual
+#'
+relative.history <- function(data){
+    d <- data$data
+    relative <- function(i){
+        birtht<-min(i$begintime)
+        i$begintime <- i$begintime - birtht
+        i$endtime <- i$endtime - birtht
+        i
+    }
+    b <- by(d,d$id,relative)
+    do.call("rbind",b)
+}
+
+
+
+
