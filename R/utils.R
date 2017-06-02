@@ -77,10 +77,10 @@ facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main para
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance.matrix(malth,times)
 #' stackplot(ab[,1:3])
-abundance.matrix <- function(data,by.age=F,times=seq(0,data$maxtime,length.out=50)){
+abundance.matrix <- function(data,by.age=F,times=seq(0,data$maxtime,length.out=50),...){
 	if(max(times) > data$maxtime){ "Warning: array of times goes further than simulation maximum time" }
 	n <- data$num.total
-    if(relative){d <- relative.history(data)}
+    if(by.age){d <- age.data(data,...)}
     else{d<-data$data}
 	subs <- lapply(times,function(t){subset(d,begintime <= t & (endtime >= t | is.na(endtime)),select=c(1,2))})
 	abmatline <- function(x){
@@ -129,17 +129,26 @@ longevity <- function(data){
 }
 
 #' lifehistory relative to birthdate of each individual
-#'
-relative.history <- function(data){
-    d <- data$data
-    relative <- function(i){
-        birtht<-min(i$begintime)
-        i$begintime <- i$begintime - birtht
-        i$endtime <- i$endtime - birtht
-        i
+#' 
+age.data <- function(data,cap.living=F){
+    if(is.null(data$age.data)) {
+        d <- data$data
+        if(cap.living){
+            d[is.na(d)]<-data$maxtime
+        }
+        else{
+            d<-na.exclude(d)
+        }
+        relative <- function(i){
+            birtht<-min(i$begintime)
+            i$begintime <- i$begintime - birtht
+            i$endtime <- i$endtime - birtht
+            i
+        }
+        b <- by(d,d$id,relative)
+        data$age.data <- do.call("rbind",b)
     }
-    b <- by(d,d$id,relative)
-    do.call("rbind",b)
+    data$age.data
 }
 
 
