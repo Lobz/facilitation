@@ -10,12 +10,13 @@
 #' @param legend Optional. An array of names
 #' @param log.y Logical. Should the y-axis be plotted in a logarithmic scale?
 #' @param \dots Further parameters to be passed to the lower level plot function
+#' @param qt Optional. For distributions, show only up to quantile qt (percentage)
 #' @examples
 #' obj <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance.matrix(obj,times)
 #' stackplot(ab[,1:3])
-stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
+stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 	dots <- list(...)
 	if(missing(col))
 		#col <- terrain.colors(dim(mat)[2])
@@ -35,6 +36,22 @@ stackplot <- function(mat, col, legend, log.y = FALSE, ...) {
 	mat <- cbind(mat, rep(minp, length(time)))
 	# maximo da escala do grafico
 	maxp <-max(mat[,1])
+
+    # percentage
+    if(perc){
+        mat <- mat*100.0/maxp
+        maxp <- 100
+        minp <- 100.0*minp/maxp
+        if (! "ylab" %in% names(dots)) dots$ylab = "Population (%)"
+    }
+
+    # cap at quantile
+    if(qt<100){
+        quant <- maxp*(100.0-qt)/100.0
+        linemax <- max(which(mat[,1]>=quant))
+        mat <- mat[1:linemax,]
+        time <- time[1:linemax]
+    }
 
 	if (! "ylim" %in% names(dots)) dots$ylim = c(minp, maxp)
 	if (! "xlim" %in% names(dots)) dots$xlim = c(min(time),max(time))
