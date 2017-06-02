@@ -77,7 +77,7 @@ facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main para
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance.matrix(malth,times)
 #' stackplot(ab[,1:3])
-abundance.matrix <- function(data,by.age=F,times=seq(0,data$maxtime,length.out=50),...){
+abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age=F,...){
 	if(max(times) > data$maxtime){ "Warning: array of times goes further than simulation maximum time" }
 	n <- data$num.total
     if(by.age){d <- age.data(data,...)}
@@ -119,12 +119,12 @@ abundance.matrix <- function(data,by.age=F,times=seq(0,data$maxtime,length.out=5
 #' hist(l$longevity)
 longevity <- function(data){
     d <- data$data[with(data$data,order(-endtime)),] #orders by endtime, last to first
-    ind.life <- function(i){c(i$sp[1],min(i$begintime),i$endtime[1])}
+    ind.life <- function(i){c(i$sp[1],i$id[1],min(i$begintime),i$endtime[1])}
     b <- by(d,d$id,ind.life)
     b <- matrix(unlist(b),max(d$id)+1,byrow=T) # TURNS THE OUTPUT INTO A MATRIX
     r <- data.frame(b)
-    names(r)=c("last.stage","birth","death")
-    r$longevity <-b[,3]-b[,2]
+    names(r)=c("last.stage","id","birth","death")
+    r$longevity <- r$death-r$birth
     r
 }
 
