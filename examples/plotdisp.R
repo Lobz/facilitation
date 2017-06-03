@@ -20,7 +20,7 @@ w <- 100                       # arena width
 maxt <- 500
 #deathrates <- deathrates-c(facindex,0)
 wrapper <- function(disp){ set.seed(1235)
-facByRates(maxt, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=disp, R=reproductionrate, 
+facilitation(maxt, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=disp, R=reproductionrate, 
 	   interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)}
 
 library(parallel)
@@ -30,7 +30,7 @@ results <- mclapply(dispersions,wrapper)
 
 details=400
 times <- seq(10,maxt,length.out=details)         # array of times of interest
-	abmatrices <- mclapply(results,function(r){abundance_matrix(r,times)[,1:3]})
+	abmatrices <- mclapply(results,function(r){abundance.matrix(r,times)[,1:3]})
 
 	poptots <- lapply(abmatrices,rowSums)
 	# PLOT TOGHETER 
@@ -60,7 +60,7 @@ times <- seq(10,maxt,length.out=details)         # array of times of interest
 			lines(logisticgrowth(c[1],c[2],c[3],times)~times,col=colors[i],lty=2)
 		}
 	}
-	savePlot("dispersesumKregressed.png")
+    savePlot("dispersesumKregressed.png")
 
 	sapply(fits,function(f){tryCatch(coef(f),error=function(e){ c(NA,NA,NA) }) })->c
 	c

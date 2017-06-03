@@ -20,7 +20,7 @@ w <- 100                       # arena width
 
 maxt <- 250
 wrapper <- function(disp){ set.seed(1234)
-	facByRates(maxt, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=disp, R=reproductionrate, 
+	facilitation(maxt, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=disp, R=reproductionrate, 
 		 interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)}
 
 library(parallel)
@@ -30,7 +30,7 @@ results <- mclapply(dispersions,wrapper)
 
 details=500
 times <- seq(0,maxt,length.out=details)         # array of times of interest
-abmatrices <- mclapply(results,function(r){abundance_matrix(r,times)[,1:3]})
+abmatrices <- mclapply(results,function(r){abundance.matrix(r,times)[,1:3]})
 
 poptots <- lapply(abmatrices,rowSums)
 # PLOT TOGHETER 
