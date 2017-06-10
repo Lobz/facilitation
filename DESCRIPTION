@@ -10,8 +10,8 @@ Imports:
     Matrix,
     LambertW,
     grid
-Suggests:
     animation
+Suggests:
 Depends:
     R (>= 3.1.0)
 License: GPL-2
