@@ -65,15 +65,11 @@ See the script `examples/test_community.R` for a few more examples.
 
 # Showing the results
 
-You can plot the actual individuals in space in an animation with:
+You can plot the actual individuals in space in an animation with `spatialanimation`, which invokes
+package `animation`.
 ```r
 times <- seq(0,maxt,.2)         # array of times of interest
-spatialplot(results,times,tframe=0.1)
-```
-You can use the package `animation` to save the animation into a gif (set tframe to 0 (default) unless you want to waste a lot of time!).
-```r
-library(animation)
-saveGIF(spatialplot(results,times),interval=0.1,movie.name="sim.gif") 
+spatialanimation(results,times,interval=0.1,movie.name="sim.gif") 
 ```
 This is a shorthand if you want a snapshot of a given point in time:
 ```r
