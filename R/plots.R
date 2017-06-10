@@ -88,13 +88,11 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 #' malth <- facilitation(2,3,c(5,1,.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0),radius=c(0,1,2,0))
 #' times <- seq(0,2,by=0.1)
 #' # plot
-#' spatialplot(malth,times,tframe=.1)
-#'
-#' # make a gif
-#' library(animation)
-#' saveGIF(spatialplot(malth,times),interval=0.1,movie.name="malthusian.gif") 
-spatialplot = function(data, times=seq(0,data$maxtime,length.out=50), xlim=c(0,data$w), ylim=c(0,data$h), 
-		       col=c(colorRampPalette(c("darkred","pink"))(data$num.total-1),"lightgreen"),tframe=0)
+#' spatialanimation(malth,times,interval=.1,movie.name="malthusian.gif")
+spatialanimation = function(data, times=seq(0,data$maxtime,length.out=50), interval=0.1,
+                            movie.name="facilitationmovie.gif",
+                            xlim=c(0,data$w), ylim=c(0,data$h), 
+           col=c(colorRampPalette(c("darkred","pink"))(data$num.total-1),"lightgreen"),...)
 {
 	radius <- data$radius
 	# creates list of dataframes, one for each time
@@ -102,6 +100,24 @@ spatialplot = function(data, times=seq(0,data$maxtime,length.out=50), xlim=c(0,d
 	maxst <- data$num.total
 	# set minimum radius for stages with rad=0
 	for(i in 1:length(radius)) if(radius[i] == 0) radius[i] = 0.05
+    saveGIF(spatialplot(dtlist,times,xlim,ylim,data$num.total:1,col,radius,...),interval=interval,movie.name=movie.name)
+}
+
+
+#' function for ploting simulation frames
+#'
+#' @author Alexandre Adalardo de Oliveira - 16/03/2016
+#' @author M. Salles
+#' @param dtlist	A list of data.frames, one for each time in times, containing columns sp,x,y 
+#' @param times	Array of times, corresponding to the data.frames
+#' @param xlim	Limits to the x-axis
+#' @param ylim	Limits to the y-axis
+#' @param sp    Array of species/stages id, in order of plotting bottom to top
+#' @param col 	A color array, one for each species/stage
+#' @param radius Array or radiuses, one for each species/stage
+spatialplot = function(dtlist, times=1:length(data), xlim, ylim, sp, 
+                       col=colorRampPalette(c("darkred","pink"))(length(sp)), radius)
+{
 	# init viewport
 	vp <- viewport(width = 0.8, height = 0.8, xscale=xlim, yscale=ylim)
 	# loop through times
@@ -113,7 +129,7 @@ spatialplot = function(data, times=seq(0,data$maxtime,length.out=50), xlim=c(0,d
 			grid.newpage()
 			pushViewport(vp)
 			grid.rect(gp = gpar(col = "gray"))
-			for (j in maxst:1){
+			for (j in sp){
 				dtsp <- dt[dt$sp==j,]
 				if(dim(dtsp)[1] > 0){
 					grid.circle(x = dtsp$x, y=dtsp$y, r=radius[j],default.units="native", gp=gpar(fill=col[j],col=col[j]))
@@ -122,11 +138,12 @@ spatialplot = function(data, times=seq(0,data$maxtime,length.out=50), xlim=c(0,d
 			grid.text(paste("t =",round(times[i],digits=4)), y=1.06)
 			grid.xaxis(at=round(seq(xlim[1],xlim[2], len=5)))
 			grid.yaxis(at=round(seq(ylim[1],ylim[2], len=5)))
-			Sys.sleep(tframe)
 		}
 	}
 }
 
+
+
 plotsnapshot <- function(data,t,...) {
-	spatialplot(data,c(t),...)
+	spatialanimation(data,c(t,t),...)
 }

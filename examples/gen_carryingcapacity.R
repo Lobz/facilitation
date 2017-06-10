@@ -16,4 +16,4 @@ dt <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, disper
 
 ab <- abundance_matrix(dt$data)
 stackplot(ab[,1:3],70)
-saveGIF(spatialplot(dt),interval=0.1,movie.name="competition.gif") 
+spatialanimation(dt,interval=0.1,movie.name="competition.gif") 

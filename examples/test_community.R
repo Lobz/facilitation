@@ -55,8 +55,4 @@ interact <- matrix(c(0,0,0,0,0,-.1, 0,-.1,+.1,-.1,0,+.1, 0,0,-.1,0,-.2,-.1,
                                                          0,0,-.01,0,-.01,-.02),ncol=6)
 results$competfac3 <- community(maxt,nstages,param,dispersal,init,interactions=interact)
 
-abunds <- lapply(results,abundance_matrix)
-
-library(animation)
-spatial.gif  <- function(name,...){saveGIF(spatialplot(...),interval=0.1,movie.name=name)}
-
+abunds <- lapply(results,abundance.matrix)
