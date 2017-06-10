@@ -79,7 +79,7 @@ if(length(is.na(c(fits)))<length(c(fits))){
 plotgif <- function(i){
     details=50
     times <- seq(5,maxt,length.out=details)         # array of times of interest
-    saveGIF(spatialplot(results[[i]],times),interval=0.1,movie.name=paste0("df",i,".gif"))
+    spatialanimation(results[[i]],times,interval=0.1,movie.name=paste0("df",i,".gif"))
 }
 
 for(i in 1:length(dispersions)){

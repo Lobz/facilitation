@@ -1,4 +1,3 @@
-load_all()
 numstages <- 3
 deathrates <- c(2, 0.2, 0.2)  # death rates for seed, sapling and adult
 growthrates <- c(1, 0.2)      # transition rates seed-->sapling and sapling-->adult
@@ -12,10 +11,10 @@ radius <- c(0,0.5,2,2)        # this are the distances up to which the individua
 h <- 50                       # arena height
 w <- 50                       # arena width
 
-results <- facByRates(maxtime=t, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, 
+results <- facilitation(maxtime=t, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, 
 		 R=reproductionrate, init=initialpop, rad=radius, h=h, w=w)
 times <- seq(0,t,length.out=100)
-ab <- abundance_matrix(results,times)[,1:numstages]
+ab <- abundance.matrix(results,times)[,1:numstages]
 mat <- mat.model(n=numstages,Ds=deathrates,Gs=growthrates,R=reproductionrate)
 so <- solution.matrix(p0=initialpop[1:numstages], M=mat, times=times)
 
