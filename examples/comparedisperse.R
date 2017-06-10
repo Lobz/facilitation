@@ -14,11 +14,11 @@ growthrates <- c(1, 0.2)      # transition rates seed-->sapling and sapling-->ad
 reproductionrate <- 7        # reproduction rate (only adult)
 facindex <- c(0,1.2)            # this will be the values by which facilitator decreases seeds and seedlings deathrates
 effects <- c(0,0,0, 0,-0.5,0, 0,0,-1) # the effects reducing deathrate (negative values increase deathrates)
-radius <- c(0,0.2,1,3)        # this are the distances up to which the individuals can have effect on others, by stage + facilitator
+radius <- c(0,0.2,1,2)        # this are the distances up to which the individuals can have effect on others, by stage + facilitator
 h <- 100                       # arena height
 w <- 100                       # arena width
 d<-generate.overdisperse(4,4.7,3,height=h,width=w) # generate initial facilitator distribution 
-if(nrow(d)>100)d<-d[sample(1:nrow(d),100),]
+if(nrow(d)>200)d<-d[sample(1:nrow(d),200),]
 i<-initial.distribution(c(400,0,0),min.id=max(d$id)+1,height=h,width=w) # generate initial population for facilitated
 initialpop <- rbind(d,i)
 maxt <- 500
