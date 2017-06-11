@@ -119,8 +119,18 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
 #'
 #'
 proceed <- function(data,time){
-	community(init=data$data,numstages=data$num.stages, maxtime=data$maxtime+time,
-	     parameters=data$rates.matrix,dispersal=data$dispersal,interactions=data$interactions,
-	     height=data$height,width=data$width,boundary=data$boundary,dispKernel=data$dispKernel)
+    d<-data$data
+    current<-subset(d,is.na(d$endtime))
+    past.hist<-subset(d,!is.na(d$endtime))
+    
+	c <- community(init=current,numstages=data$num.stages, maxtime=data$maxtime+time,
+	     parameters=data$rates.matrix,dispersal=data$dispersal,
+         interactions=data$interactions, height=data$height,width=data$width,
+         boundary=data$boundary,dispKernel=data$dispKernel)
+
+    r<-c$data
+    b<-rbind(r,past.hist)
+    c$data<-b
+    c
 }
 
