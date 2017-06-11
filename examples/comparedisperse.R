@@ -1,6 +1,4 @@
 ### This script generates a comparison plot between simulations with different dispersal rates
-### Nota: this is the ne used in the presentations 2016/2017 
-library(animation)
 #1/(2+1)=1/3
 #.2/(.2+1.2)=1/7
 #s=1/21
@@ -21,7 +19,7 @@ d<-generate.overdisperse(4,4.7,height=h,width=w) # generate initial facilitator 
 if(nrow(d)>200)d<-d[sample(1:nrow(d),200),]
 i<-initial.distribution(c(400,0,0),min.id=max(d$id)+1,height=h,width=w) # generate initial population for facilitated
 initialpop <- rbind(d,i)
-maxt <- 500
+maxt <- 50
 wrapper <- function(disp){
 facilitation(maxt, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=disp, R=reproductionrate, 
              interactions=effects, fac=facindex, init=initialpop, radius=radius, height=h, width=w)}
