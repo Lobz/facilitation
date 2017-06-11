@@ -16,7 +16,7 @@
 #' @param maxstresseffects		Optional (use for a stress gradient). Array of values for
 #' how much the environmental stress can increse death rate at maximum stress. Length n+1. Stress
 #' gradient is linear, being miminum a x=0 (left) and maximum at x=width (right).
-#' @param rad		Optional (use if there are any interactions). Array of interaction radiuses. Length n+1.
+#' @param radius		Optional (use if there are any interactions). Array of interaction radiuses. Length n+1.
 #' @param interactions	Optional. An array of effects of life stages over each other, where element
 #' [i+n*j] means the effect of stage i over stage j. Positive values equal facilitation, negative ones, competition.
 #' @param height	Arena height
@@ -33,52 +33,38 @@
 #' @param facilitatorI	Facilitator intraspecific effect
 #' @param facilitatorS	Facilitator maximum stress effect
 #' @examples
-#' malthusian <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+#' malth <- facilitation(2,3,c(5,1.2,0.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0))
 #' times <- seq(0,2,by=0.1)
-#' ab <- abundance_matrix(malthusian,times)
+#' ab <- abundance.matrix(malth,times)
 #' stackplot(ab[,1:3])
-facilitation <- function(maxtime, n, Ds, Gs, R, init, dispersal, maxstresseffects = rep(0,n), rad=rep(2,n+1), 
-		       interactions=rep(0,n*n), fac=rep(0,n-1), height=100, width=100, 
-		       boundary=c("reflexive","absortive","periodic"), 
-		       facilitatorD=0,facilitatorR=0,facilitatorI=0, facilitatorS=0,
-		       dispKernel=c("exponential","random"), 
-		       maxpop=30000){
+facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main parameters
+                         maxstresseffects = rep(0,n), radius=rep(2,n+1), # stress gradient effects
+                         interactions=rep(0,n*n), fac=rep(0,n-1), # interactions
+                         height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
+                         facilitatorD=0,facilitatorR=0,facilitatorI=0, facilitatorS=0, # facilitator dynamics
+                         dispKernel=c("exponential","random"), # type of dispersal
+                         maxpop=30000){
 
-	# generate parameters for test_parameters
-	dispKernel <- match.arg(dispKernel)
-	disp <- switch(dispKernel, random=0,exponential=1)
-	boundary <- match.arg(boundary)
-	bound <- switch(boundary,reflexive=1,absortive=0,periodic=2)
-
-	if(length(rad)==1) rad <- c(rep(0,n),rad)
-	M <- t(matrix(c(
+    if(length(radius)==1){radius <- rep(radius,n+1)}
+	M <- matrix(c(
+			Ds,facilitatorD, #Ds
 			Gs, 0, 0, #Gs
 			rep(0, n-1),R,facilitatorR, #Rs
-			Ds,facilitatorD, #Ds
-			rad, #Rads
+			radius, #Rads
 			maxstresseffects, facilitatorS #effects
-		), nrow = n+1))
+		), nrow = n+1)
 
 	N <- matrix(interactions,nrow=n)
 	N <- rbind(N,c(fac,0))
 	N <- c(N,rep(0,n),facilitatorI)
-
-	# run simultation
-	r <- simulation(maxtime,num_stages=n,parameters=c(M),dispersal=dispersal,interactions=N,
-                    init=init,h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
-	
-	# prepare output
-	N <- matrix(N,nrow=n+1)
-	rownames(N) <- 0:n
-	colnames(N) <- 0:n
-
-	r[r==-1]=NA
-	r$sp <- factor(r$sp)
+    N <- matrix(N,n+1)
 
 
-	list(data = r,n=n+1, maxtime=maxtime,
-	     stages=n,D=Ds,G=Gs,R=R,radius=rad,dispersal=dispersal,interactions=N,
-	     init=init,h=height,w=width,bcond=boundary,dkernel=dispKernel)
+	# run simulation
+	community(maxtime,c(n,1),parameters=M,dispersal=dispersal,interactions=N,
+                    init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel,maxpop=maxpop)
+
+
 }
 #dt <- facilitation(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
 
@@ -87,14 +73,16 @@ facilitation <- function(maxtime, n, Ds, Gs, R, init, dispersal, maxstresseffect
 #' @param data	result of a simulation, created by \code{\link{facilitation}}
 #' @param times	array of times at which the abundances will be calculated
 #' @examples
-#' malthusian <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+#' malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
 #' times <- seq(0,2,by=0.1)
-#' ab <- abundance_matrix(malthusian,times)
+#' ab <- abundance.matrix(malth,times)
 #' stackplot(ab[,1:3])
-abundance_matrix <- function(data,times=seq(0,data$maxtime,length.ou=20)){
+abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age=F,...){
 	if(max(times) > data$maxtime){ "Warning: array of times goes further than simulation maximum time" }
-	n <- data$n
-	subs <- lapply(times,function(t){subset(data$data,begintime <= t & (endtime >= t | is.na(endtime)),select=c(1,2))})
+	n <- data$num.total
+    if(by.age){d <- age.data(data,...)}
+    else{d<-data$data}
+	subs <- lapply(times,function(t){subset(d,begintime <= t & (endtime >= t | is.na(endtime)),select=c(1,2))})
 	abmatline <- function(x){
 		l <- tapply(x$id,x$sp,length)
 		# complete the rows that are missing
@@ -122,17 +110,47 @@ abundance_matrix <- function(data,times=seq(0,data$maxtime,length.ou=20)){
 	ab
 }
 
-snapshotdataframe <- function(x,times) {
-	lapply(times,function(t){subset(x,begintime <= t & (endtime >= t | is.na(endtime)))}) -> res
-	t <- times[1]
-	snap <- cbind(t,res[[1]])
-	if(length(times)>1){
-		for(i in 2:length(times)){
-			t <- times[i]
-			snap <- rbind(snap,cbind(t,res[[i]]))
-		}
-	}
-
-	snap
+#' calculates the lifespan of each individual
+#'
+#' @param data	result of a simulation, created by \code{\link{facilitation}}
+#' @examples
+#' malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
+#' l <- longevity(malth)
+#' hist(l$longevity)
+longevity <- function(data){
+    d <- data$data[with(data$data,order(-endtime)),] #orders by endtime, last to first
+    ind.life <- function(i){c(i$sp[1],i$id[1],min(i$begintime),i$endtime[1])}
+    b <- by(d,d$id,ind.life)
+    b <- matrix(unlist(b),max(d$id)+1,byrow=T) # TURNS THE OUTPUT INTO A MATRIX
+    r <- data.frame(b)
+    names(r)=c("last.stage","id","birth","death")
+    r$longevity <- r$death-r$birth
+    r
 }
+
+#' lifehistory relative to birthdate of each individual
+#' 
+age.data <- function(data,cap.living=F){
+    if(is.null(data$age.data)) {
+        d <- data$data
+        if(cap.living){
+            d[is.na(d)]<-data$maxtime
+        }
+        else{
+            d<-na.exclude(d)
+        }
+        relative <- function(i){
+            birtht<-min(i$begintime)
+            i$begintime <- i$begintime - birtht
+            i$endtime <- i$endtime - birtht
+            i
+        }
+        b <- by(d,d$id,relative)
+        data$age.data <- do.call("rbind",b)
+    }
+    data$age.data
+}
+
+
+
 

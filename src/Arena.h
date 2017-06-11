@@ -9,6 +9,7 @@
 #include"Position.h"
 #include<Rcpp.h>
 
+class Arena;
 class Species;
 class Individual;
 
@@ -20,6 +21,10 @@ class History{
 	std::list<double> y_list;
 	std::list<double> beginTime_list;
 	std::list<double> endTime_list;
+
+    int size();
+    double globalEndTime();
+    double globalBeginTime;
 };
 
 class Arena {
@@ -38,6 +43,7 @@ class Arena {
 	/* high level functions */
 	void createStructuredSpecies(int minId, int maxId, double dispersal, int dkernel);
 	void createSimpleSpecies(int id, double dispersal, int dkernel);
+	bool populate(Rcpp::DataFrame init);
 	bool populate(int *stagesinit);
 	bool turn();
 	void setInteractions(double *interactions, double slope);

@@ -3,6 +3,7 @@
 
 Arena::Arena(int maxspid, double *parameters, double w, double h, int bc) :maxsp(maxspid),width(w),height(h),bcond(bc) {
 	int i;
+    /* allocates vector of size n+1 so that we can ignore number 0 */
 	species = (Species**)malloc((1+maxsp)*(sizeof(Species*)));
 	ratesList = (double*)malloc((1+maxsp)*(sizeof(double)));
 
@@ -23,7 +24,7 @@ void Arena::createStructuredSpecies(int minId, int maxId, double dispersal, int 
 		species[i]->setSeedStage(species[minId], dispersal, dkernel);
 	}
 	// last stage doesn't have next stage
-	species[i]->setSeedStage(species[1], dispersal, dkernel);
+	species[i]->setSeedStage(species[minId], dispersal, dkernel);
 }
 
 void Arena::createSimpleSpecies(int id, double dispersal, int dkernel){
@@ -64,6 +65,40 @@ bool Arena::populate(int *speciesinit){
 			}
 		}
 	}
+	return true;
+}
+
+double History::globalEndTime(){
+    return std::max(*std::max_element(beginTime_list.begin(),beginTime_list.end()),*std::max_element(endTime_list.begin(),endTime_list.end()));
+}
+
+int History::size(){ return sp_list.size(); }
+
+bool Arena::populate(Rcpp::DataFrame init){
+	int i;
+    std::vector<int> sp;
+    std::vector<unsigned long> id;
+    std::vector<double> x,y,beginTime,endTime;
+
+    sp = Rcpp::as<std::vector<int>>(init["sp"]);
+    id = Rcpp::as<std::vector<unsigned long>>(init["id"]);
+    x = Rcpp::as<std::vector<double>>(init["x"]);
+    y = Rcpp::as<std::vector<double>>(init["y"]);
+    beginTime = Rcpp::as<std::vector<double>>(init["begintime"]);
+    endTime = Rcpp::as<std::vector<double>>(init["endtime"]);
+
+	for(i=0;i<init.nrows();i++){
+			try{
+                if(Rcpp::NumericVector::is_na(endTime[i])){
+                    new Individual(this,species[sp[i]],Position(x[i],y[i]),id[i],beginTime[i]);
+                }
+			}
+			catch(int e){
+				Rcpp::warning("Unable to populate");
+				return false;
+			}
+	}
+    totalTime = history->globalBeginTime = std::max(*std::max_element(beginTime.begin(),beginTime.end()),*std::max_element(endTime.begin(),endTime.end()));
 	return true;
 }
 

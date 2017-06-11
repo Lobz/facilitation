@@ -12,9 +12,9 @@ radius <- sort(rexp(n+1,1))        # this are the distances up to which the indi
 h <- 40                       # arena height
 w <- 40                       # arena width
 
-dt1 <- facByRates(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, 
+dt1 <- facilitation(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, 
 		 interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w,facilitatorD=.1,facilitatorR=.3,facilitatorC=.3)
-ab1 <- abundance_matrix(dt1$data)
+ab1 <- abundance.matrix(dt1$data)
 stackplot(ab1[,1:n])
 savePlot("moarstages.png")
-saveGIF(spatialplot(dt1),interval=0.1,movie.name="moarstages.gif") 
+spatialanimation(dt1,interval=0.1,movie.name="moarstages.gif") 

@@ -4,36 +4,26 @@
 \alias{spatialplot}
 \title{function for ploting simulation frames}
 \usage{
-spatialplot(data, times = seq(0, data$maxtime, length.out = 20), xlim = c(0,
-  data$w), ylim = c(0, data$h), col = c(colorRampPalette(c("darkred",
-  "pink"))(data$n - 1), "lightgreen"), tframe = 0)
+spatialplot(dtlist, times = 1:length(data), xlim, ylim, sp,
+  col = colorRampPalette(c("darkred", "pink"))(length(sp)), radius)
 }
 \arguments{
-\item{data}{result of a simulation, created by \code{\link{facilitation}}}
+\item{dtlist}{A list of data.frames, one for each time in times, containing columns sp,x,y}
 
-\item{times}{array of times at which to plot}
+\item{times}{Array of times, corresponding to the data.frames}
 
-\item{xlim}{Optional. Limits to the x-axis}
+\item{xlim}{Limits to the x-axis}
 
-\item{ylim}{Optional. Limits to the y-axis}
+\item{ylim}{Limits to the y-axis}
 
-\item{col}{Optional. A color vector}
+\item{sp}{Array of species/stages id, in order of plotting bottom to top}
 
-\item{tframe}{a time length to wait between frames. Do not use if using this with
-\code{animation}}
+\item{col}{A color array, one for each species/stage}
+
+\item{radius}{Array or radiuses, one for each species/stage}
 }
 \description{
 function for ploting simulation frames
-}
-\examples{
-malthusian <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
-times <- seq(0,2,by=0.1)
-# plot
-spatialplot(malthusian,times,tframe=.1)
-
-# make a gif
-library(animation)
-saveGIF(spatialplot(malthusian,times),interval=0.1,movie.name="malthusian.gif") 
 }
 \author{
 Alexandre Adalardo de Oliveira - 16/03/2016

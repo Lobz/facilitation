@@ -4,11 +4,12 @@
 \alias{facilitation}
 \title{Runs a simulation with a structured population and a non-structured facilitator population}
 \usage{
-facilitation(maxtime, n, Ds, Gs, R, init, dispersal, rad = rep(2, n + 1),
-  interactions = rep(0, n * n), fac = rep(0, n - 1), height = 100,
-  width = 100, boundary = c("reflexive", "absortive", "periodic"),
-  facilitatorD = 0, facilitatorR = 0, facilitatorI = 0,
-  dispKernel = c("exponential", "random"), maxpop = 30000)
+facilitation(maxtime, n, Ds, Gs, R, dispersal, init, maxstresseffects = rep(0,
+  n), radius = rep(2, n + 1), interactions = rep(0, n * n), fac = rep(0, n
+  - 1), height = 100, width = 100, boundary = c("reflexive", "absortive",
+  "periodic"), facilitatorD = 0, facilitatorR = 0, facilitatorI = 0,
+  facilitatorS = 0, dispKernel = c("exponential", "random"),
+  maxpop = 30000)
 }
 \arguments{
 \item{maxtime}{How long the simulation must run}
@@ -21,12 +22,16 @@ facilitation(maxtime, n, Ds, Gs, R, init, dispersal, rad = rep(2, n + 1),
 
 \item{R}{Rate of seed production by adult of the structured population}
 
+\item{dispersal}{Average distance for seed dispersal}
+
 \item{init}{An array of initial numbers for each stage of the structured population, and
 the facilitator population. Length n+1.}
 
-\item{dispersal}{Average distance for seed dispersal}
+\item{maxstresseffects}{Optional (use for a stress gradient). Array of values for
+how much the environmental stress can increse death rate at maximum stress. Length n+1. Stress
+gradient is linear, being miminum a x=0 (left) and maximum at x=width (right).}
 
-\item{rad}{Optional (use if there are any interactions). Array of interaction radiuses. Length n+1.}
+\item{radius}{Optional (use if there are any interactions). Array of interaction radiuses. Length n+1.}
 
 \item{interactions}{Optional. An array of effects of life stages over each other, where element
 [i+n*j] means the effect of stage i over stage j. Positive values equal facilitation, negative ones, competition.}
@@ -47,6 +52,8 @@ species, of length \code{n-1}. Positive values equal facilitation, negative ones
 
 \item{facilitatorI}{Facilitator intraspecific effect}
 
+\item{facilitatorS}{Facilitator maximum stress effect}
+
 \item{dispKernel}{Type of dispersion kernel. Options are "exponential" and "random", in which
 seeds are dispersed randomly regarless of parent position (note: "random" option ignores
 dispersal parameter)}
@@ -59,8 +66,8 @@ All effects affect death rates. Effects are subtracted from death rates, meaning
 effects decrease death rates while negative ones increase death rates.
 }
 \examples{
-malthusian <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0),rad=c(0,1,2,0))
+malth <- facilitation(2,3,c(5,1.2,0.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0))
 times <- seq(0,2,by=0.1)
-ab <- abundance_matrix(malthusian,times)
+ab <- abundance.matrix(malth,times)
 stackplot(ab[,1:3])
 }
