@@ -100,7 +100,7 @@ spatialanimation = function(data, times=seq(0,data$maxtime,length.out=50), inter
 	maxst <- data$num.total
 	# set minimum radius for stages with rad=0
 	for(i in 1:length(radius)) if(radius[i] == 0) radius[i] = 0.05
-    saveGIF(spatialplot(dtlist,times,xlim,ylim,data$num.total:1,col,radius,...),interval=interval,movie.name=movie.name)
+    saveGIF(spatialplot(dtlist,times=times,xlim=xlim,ylim=ylim,sp=data$num.total:1,col,radius,...),interval=interval,movie.name=movie.name)
 }
 
 

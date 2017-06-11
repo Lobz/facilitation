@@ -17,7 +17,7 @@ effects <- c(0,0,0, 0,-0.5,0, 0,0,-1) # the effects reducing deathrate (negative
 radius <- c(0,0.2,1,2)        # this are the distances up to which the individuals can have effect on others, by stage + facilitator
 h <- 100                       # arena height
 w <- 100                       # arena width
-d<-generate.overdisperse(4,4.7,3,height=h,width=w) # generate initial facilitator distribution 
+d<-generate.overdisperse(4,4.7,height=h,width=w) # generate initial facilitator distribution 
 if(nrow(d)>200)d<-d[sample(1:nrow(d),200),]
 i<-initial.distribution(c(400,0,0),min.id=max(d$id)+1,height=h,width=w) # generate initial population for facilitated
 initialpop <- rbind(d,i)
@@ -38,6 +38,7 @@ abmatrices <- mclapply(results,function(r){abundance.matrix(r,times)[,1:3]})
 poptots <- lapply(abmatrices,rowSums)
 
 # PLOT TOGHETER 
+png("compareandregress.png")
 par(mfrow=c(1,1))
 colors <- colorRampPalette(c("red","blue4"))(length(dispersions))
 
@@ -50,7 +51,6 @@ for(i in 1:length(dispersions)){
 }
 
 legend("topleft", legend=dispersions, fill=colors)
-savePlot("dispersesumK.png")
 
 #FIT STUFF
 logisticgrowth <- function(r,K,N0,t){ ((K*N0*exp(r*t))/(K-N0+N0*exp(r*t))) }
@@ -67,14 +67,14 @@ for(i in 1:length(dispersions)){
     x <- logisticgrowth(c[1],c[2],c[3],times)
     lines(x~times,col=colors[i],lty=2)
 }
-savePlot("dispersesumKregressed.png")
+dev.off()
 
-if(length(is.na(c(fits)))<length(c(fits))){
+png("fits.png")
     par(mfrow=c(2,1))
     barplot(fits[1,],names.arg=dispersions,col=colors,main="r")
     barplot(fits[2,],names.arg=dispersions,col=colors,main="K")
     par(mfrow=c(1,1))
-}
+    dev.off()
 
 plotgif <- function(i){
     details=50
