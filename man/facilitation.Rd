@@ -68,6 +68,6 @@ effects decrease death rates while negative ones increase death rates.
 \examples{
 malth <- facilitation(2,3,c(5,1.2,0.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0))
 times <- seq(0,2,by=0.1)
-ab <- abundance_matrix(malth,times)
+ab <- abundance.matrix(malth,times)
 stackplot(ab[,1:3])
 }
