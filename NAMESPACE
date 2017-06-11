@@ -1,3 +1,5 @@
 useDynLib(facilitation)
 exportPattern("^[^\\.]")
 import(Rcpp)
+import(grid)
+import(animation)

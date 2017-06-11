@@ -1,97 +1,66 @@
-
-#include"Facilitation.hpp"
+#include"Individual.h"
 #include<iostream>
 #include<fstream>
 #include<string>
 #include<Rcpp.h>
 
-status_list run_tests(bool print, int ntimes,double * times, int num_stages, double * par, double fac, double w, double h, int *init){
-	int i;
-	double nextTime, timeInterval;
-	bool test=true;
+// [[Rcpp::export]]
+Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num_stages,Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, 
+        Rcpp::IntegerVector init, Rcpp::DataFrame history,
+        bool restore=false, double w=100, double h=100, int bcond=1, int dkernel=1, int maxpop=30000){
+	int *in, i,n, n_total=0,*nsts;
+    double *par, *inter;
+	bool test=true,populated;
 	Arena *arena;
-	status_list ret = {};
+	int numturns=0;
+	History * ret;
 
-	arena = new Arena(num_stages,par,fac,w,h);
-	if(! arena->populate(init)) return ret;;
+    in = init.begin();
+    nsts=num_stages.begin();
+    par = parameters.begin();
+    inter = interactions.begin();
+    nsts = num_stages.begin();
 
-	if(print) std::cout << "#arena populated!\n";
-	if(print) std::cout << "time,species,individual,x,y\n";
+    for(i=0;i<num_pops;i++){
+        n_total+=nsts[i];
+    }
 
-	for(i=1;i < ntimes && test;i++) {
-		if(print) std::cout << "#Turn " << i << ",";
-		if(print) std::cout << "#Time: " << arena->getTotalTime() << "\n";
-		if(print) arena->print();
-		if(arena->getTotalTime() >= times[i]) std::cout << "Nothing happens\n";
-		else { 
-			while(arena->getTotalTime() < times[i] && test){
-				test = arena->turn();
-//				std::cout << "#Turn " << i << ",";
-//				std::cout << "#Time: " << arena->getTotalTime() << "\n";
-			}
+	arena = new Arena(n_total,par,w,h,bcond);
+	arena->setInteractions(inter,0); // 0 interaction slope because it's not implemented yet
 
-			ret.splice(ret.end(),arena->getStatus());
+    for(i=0,n=1; i<num_pops; i++){
+        if(nsts[i] == 1){
+            // create sigle-stage species
+            arena->createSimpleSpecies(n,dispersal,dkernel);
+            n++;
+        }
+        else {
+            // create structured species
+            arena->createStructuredSpecies(n,n+nsts[i]-1,dispersal,dkernel);
+            n+=nsts[i];
+        }
+    }
+
+    if(restore){
+        populated = arena->populate(history);
+    }
+    else{
+        populated = arena->populate(in);
+    }
+    if(!populated) return NULL;
+
+	while(arena->getTotalTime() < maxtime && test){
+		test = arena->turn();
+		numturns++;
+		if(arena->getTotalAbundance() > maxpop) {
+			Rcpp::warning("Maximum population reached. Stopping...");
+			test = false;
 		}
 	}
 
+	ret = arena->finalStatus();
 
-	return ret;
-}
-
-// [[Rcpp::export]]
-Rcpp::List test_basic(std::string filename,std::string outfilename = ""){
-
-	Rcpp::List ret;
-	int num_stages, h, w, i, *init,ntime=50;
-	double fac, *par, *time;
-	bool out = (outfilename!="");
-
-	std::ifstream inputfile(filename);
-	std::ofstream outputfile(out? outfilename : "output_default.txt");
-	auto coutbuf = std::cout.rdbuf(outputfile.rdbuf()); //save and redirect output
-
-	if(!inputfile) {
-		std::cerr << "#file \""<< filename << "\"not found\n";
-		return NULL;
-	}
-	
-	std::cout << "#how many stages?\n";
-	inputfile >> num_stages;
-	std::cout << "#supply width, height and facilitation parameter.\n";
-	inputfile >> w; inputfile >> h; inputfile >> fac;
-	std::cout << "#facilitation parameter: " << fac << "\n";
-	std::cout << "#supply N+1 parameter matrix in lines of 'G R D Radius'\n";
-	par = (double*)malloc((num_stages+1)*4*(sizeof(double*)));
-	for(i=0;i<num_stages+1;i++){
-		inputfile >> par[i*4+0]; inputfile >> par[i*4+1]; inputfile >> par[i*4+2]; inputfile >> par[i*4+3];
-	}
-	std::cout << "#supply initial populations\n";
-	init = (int*)malloc((num_stages+1)*(sizeof(int)));
-	for(i=0;i<num_stages+1;i++){
-		inputfile >>init[i];
-	}
-	inputfile.close();
-	std::cout << "#okay!\n";
-
-	time = (double*) malloc(ntime*sizeof(double));
-	for(i=1,time[0]=0;i<ntime;i++) time[i] = time[i-1] + 0.1;
-	ret = run_tests(out,ntime,time,num_stages,par,fac,w,h, init);
-
-	if(out) std::cout.rdbuf(coutbuf); //reset to standard output again
-
-	return ret;
-
-}
-
-// [[Rcpp::export]]
-Rcpp::List test_parameter(Rcpp::NumericVector times, int num_stages,Rcpp::NumericVector parameters, double f, Rcpp::IntegerVector init, double w=10, double h=10){
-	double *par;
-	int *in;
-	Rcpp::List ret;
-	in = init.begin();
-	par = parameters.begin();
-
-	ret = run_tests(false,times.length(),times.begin(), num_stages,par,f,w,h,in);
-
-	return ret;
+	return Rcpp::DataFrame::create(Rcpp::Named("sp")=ret->sp_list,Rcpp::Named("id")=ret->id_list,
+			Rcpp::Named("x")=ret->x_list,Rcpp::Named("y")=ret->y_list,
+			Rcpp::Named("begintime")=ret->beginTime_list,Rcpp::Named("endtime")=ret->endTime_list);
 }

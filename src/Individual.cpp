@@ -1,67 +1,92 @@
 
-#include"Facilitation.hpp"
-#include"Random.hpp"
+#include"Individual.h"
+#include"Random.h"
 
 unsigned long Individual::id_MAX = 0;
 
-Individual::Individual(Species *sp, double x, double y) : p(x,y), id(id_MAX++){
+Individual::Individual(Arena *ar, Species *sp, double x, double y):Individual(ar,sp,Position(x,y)){} 
+
+/* This is now the secondary constructor */
+Individual::Individual(Arena *ar, Species *sp, Position pos) : Individual( ar, sp, pos, id_MAX++, ar->getTotalTime() ){}
+
+/* primary (bottom level) constructor */
+Individual::Individual(Arena *ar, Species *sp, Position pos, unsigned long restored_id, double bTime) : arena(ar), id(restored_id), 
+	affectingMeNeighbours(ar->getSpNum()+1), affectedByMeNeighbours(ar->getSpNum()+1) {
+
+    if(id_MAX <= id) id_MAX = id+1;
+	p = ar->boundaryCondition(pos), 
+	spnum = arena->getSpNum();
 	setSpecies(sp);
-}
-Individual::Individual(Species *sp, Position p) : p(p), id(id_MAX++){
-	setSpecies(sp);
+	info  = new IndividualStatus(sp->getId(),id,p.x,p.y,bTime);
+	if(p.x==-1) die();
 }
 
+
+
 void	Individual::setSpecies(Species *sp) {
+	clearNeighbours();
+
 	species = sp;
 	G = species->getG();
 	R = species->getR();
 	D = species->getD(p);
-	facilitation = species->getFac();
 	Rad = species->getRad();
 	SqRad = Rad*Rad;
 	seedStage = species->getSeedStage();
 	ref = species->add(this);
 
-	if(facilitation > D) facilitation = D;
-	if(facilitation > 0) initNeighbours();
+	initNeighbours();
 
+}
+
+Individual::~Individual(){
+	info->addToHistory(arena);
+	clearNeighbours();
+	delete(info);
+}
+
+
+int 		Individual::getSpeciesId(){return species->getId();}
+Position 	Individual::getPosition(){return p;}
+double 		Individual::getRadius(){return Rad;}
+const unsigned long Individual::getId(){return id;}
+
+double Individual::actualD(){
+	int sp;
+	double actuald=D,effect;
+	for(sp = 1; sp <= spnum; sp++){
+		if((effect = species->getInteraction(sp,p)) != 0 && !affectingMeNeighbours[sp].empty()){
+			actuald -= effect*affectingMeNeighbours[sp].size(); /* note that effect is LINEAR on number of affecting neighbours */
+		}
+	}
+	if(actuald < 0) return 0;
+	return actuald;
 }
 
 double Individual::getTotalRate(){
 
-	if(facilitation > 0 && !neighbours.empty()) return G+R+D-facilitation;
-	else return G+R+D;
+	return G+R+actualD();
 }
 
-bool   Individual::isPresent(Position p2){
+bool   Individual::isPresent(Position p2, double sqRadius){
+	if(sqRadius == 0) sqRadius = SqRad;
 	p2 -= p;
-	if((p2.x)*(p2.x) + (p2.y)*(p2.y) < SqRad) return true;
+	if((p2.x)*(p2.x) + (p2.y)*(p2.y) < sqRadius) return true;
 	else return false;
 }
 
 void   Individual::act(){
-	double r = Random(G+R+D);
-
-	//	std::cout << "sp=" << species->getId() << "\n";
+	double r = Random(getTotalRate());
 
 	if(r < G) grow();
 	else if (r < G+R) reproduce();
 	else die();
 }
 
-void Individual::print(){
-	std::cout << id <<  "," << p.x << "," << p.y << "\n";
-}
-
-status_line Individual::getStatus(){
-	/* NOTE: on changing this type please change the typedef on Facilitation.hpp */
-	status_line ret  = {species->getId(),id,p.x,p.y};
-	return ret;
-}
-
 void 	Individual::grow(){
 	species->remove(this->ref);
-	setSpecies(species->getNextStage());
+	setSpecies(species->getNextStage()); /* note: setSpecies clears and re-inits the neighbours */
+	info->setGrowth(arena->getTotalTime());
 }
 
 void	Individual::reproduce(){
@@ -69,29 +94,101 @@ void	Individual::reproduce(){
 }
 
 void 	Individual::die(){
-	std::list<Individual*>::iterator i;
 	species->remove(this->ref);
-
-	for(i=neighbours.begin();i!=neighbours.end();i++){
-		(*i)->removeNeighbour(this);
-	}
+	info->setDeath(arena->getTotalTime());
+	clearNeighbours();
 	delete(this);
 }
 
-void Individual::initNeighbours(){
+void 	Individual::clearNeighbours(){
+	int sp;
 	std::list<Individual*>::iterator i;
-	neighbours = species->getFacilitators(p);
+	for(sp = 1; sp <= spnum; sp++){
+		for(i=affectingMeNeighbours[sp].begin();i!=affectingMeNeighbours[sp].end();i = affectingMeNeighbours[sp].erase(i)){
+			(*i)->removeAffectedByMeNeighbour(this);
+		}
 
-	for(i=neighbours.begin();i!=neighbours.end();i++){
-		(*i)->addNeighbour(this);
+		for(i=affectedByMeNeighbours[sp].begin();i!=affectedByMeNeighbours[sp].end();i = affectedByMeNeighbours[sp].erase(i)){
+			(*i)->removeAffectingMeNeighbour(this);
+		}
 	}
 }
 
-void 	Individual::addNeighbour(Individual *i){
-	neighbours.push_back(i);
+void Individual::initNeighbours(){
+	int s;
+	for(s=1;s<=spnum;s++){
+		if(species->getInteraction(s,p) != 0){
+			/* do not use radius in looking for affecting neighbours, 
+			 * effect radius is the affecting neighbour's radius */
+			addAffectingMeNeighbourList(arena->getPresent(s,p));
+		}
+	}
+
+	/* this function automatically uses my radius */
+	arena->addAffectedByMe(this);
 }
 
-void 	Individual::removeNeighbour(Individual *i){
-	neighbours.remove(i);
+void Individual::addAffectedByMeNeighbourList(std::list<Individual*> neighList){
+	std::list<Individual*>::iterator i;
+
+	for(i=neighList.begin();i!=neighList.end();i++){
+		addAffectedByMeNeighbour(*i);
+		/* makes sure that your neighbours adds you too */
+		(*i)->addAffectingMeNeighbour(this);
+	}
 }
 
+void Individual::addAffectingMeNeighbourList(std::list<Individual*> neighList){
+	std::list<Individual*>::iterator i;
+
+	for(i=neighList.begin();i!=neighList.end();i++){
+		addAffectingMeNeighbour(*i);
+		/* makes sure that your neighbours adds you too */
+		(*i)->addAffectedByMeNeighbour(this);
+	}
+}
+
+void 	Individual::addAffectedByMeNeighbour(Individual *i){
+	int s = i->getSpeciesId();
+	if(i==this){return;}
+	affectedByMeNeighbours[s].push_back(i);
+}
+
+void 	Individual::addAffectingMeNeighbour(Individual *i){
+	int s = i->getSpeciesId();
+	if(i==this){return;}
+	affectingMeNeighbours[s].push_back(i);
+}
+
+void 	Individual::removeAffectedByMeNeighbour(Individual *i){
+	int s = i->getSpeciesId();
+	affectedByMeNeighbours[s].remove(i);
+}
+
+void 	Individual::removeAffectingMeNeighbour(Individual *i){
+	int s = i->getSpeciesId();
+	affectingMeNeighbours[s].remove(i);
+}
+
+bool 	Individual::noAffectingMeNeighbours(int i){
+	return affectingMeNeighbours[i].empty();
+}
+
+IndividualStatus::IndividualStatus(int sp, unsigned long pid, double px, double py, double ctime):initialSp(sp),id(pid),x(px),y(py),creationTime(ctime),deathTime(-1){
+	growthTimes = {};
+}
+void IndividualStatus::setGrowth(double time){ growthTimes.push_back(time); }
+void IndividualStatus::setDeath(double time){ deathTime=time; }
+
+void IndividualStatus::addToHistory(Arena *ar){
+	std::list<double>::iterator i;
+	double time1=creationTime,time2;
+	int sp = initialSp;
+	for(i = growthTimes.begin(); i!=growthTimes.end();i++){
+		time2 = *i;
+		ar->addToHistory(sp,id,x,y,time1,time2);
+		time1 = time2;
+		sp++;
+	}
+	ar->addToHistory(sp,id,x,y,time1,deathTime);
+}

@@ -1,5 +1,6 @@
-#include"Random.hpp"
+#include"Random.h"
 #include<Rcpp.h>
+#include<cmath>
 
 
 double Random(double max){
@@ -22,4 +23,9 @@ double Normal(double m, double v){
 
 short RandomSign(){
 	return Bernoulli(0.5)?-1:1;
+}
+
+Position RandomDirection(){
+	double teta = Random(2*PI);
+	return Position(cos(teta),sin(teta));
 }

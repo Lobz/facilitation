@@ -1,4 +1,4 @@
-#include"Position.hpp"
+#include"Position.h"
 
 Position operator+(Position lhs, const Position& rhs)
 {
@@ -12,6 +12,12 @@ Position operator-(Position lhs, const Position& rhs)
 	return lhs;
 }
 
+Position operator*(const double lhs, Position& rhs)
+{
+	rhs *= lhs;
+	return rhs;
+}
+
 Position& Position::operator+=(const Position& rhs){
 	x += rhs.x;
 	y += rhs.y;
@@ -20,6 +26,11 @@ Position& Position::operator+=(const Position& rhs){
 Position& Position::operator-=(const Position& rhs){
 	x -= rhs.x;
 	y -= rhs.y;
+	return *this;
+}
+Position& Position::operator*=(const double rhs){
+	x *= rhs;
+	y *= rhs;
 	return *this;
 }
 

@@ -1,3 +1,5 @@
+*.gif
+*.png
 *.o
 *.so
 *.out
@@ -12,5 +14,4 @@ output_default.txt
 teste/
 dev_src/
 .*.swp
-
 
