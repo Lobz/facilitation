@@ -20,10 +20,16 @@ if(nrow(d)>200)d<-d[sample(1:nrow(d),200),]
 i<-initial.distribution(c(400,0,0),min.id=max(d$id)+1,height=h,width=w) # generate initial population for facilitated
 initialpop <- rbind(d,i)
 maxt <- 50
-wrapper <- function(disp){
-facilitation(maxt, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=disp, R=reproductionrate, 
-             interactions=effects, fac=facindex, init=initialpop, radius=radius, height=h, width=w)}
+    initial.obj<-facilitation(0, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=0, R=reproductionrate, 
+                 interactions=effects, fac=facindex, init=initialpop, radius=radius, height=h, width=w)
 
+wrapper <- function(disp){
+    initial.obj$dispersal<-disp
+    t <- system.time(r <- proceed(initial.obj,10))
+    while(r$maxtime < maxt && max(t) < 900)
+        t <- system.time(r <- proceed(r,10))
+    r
+}
 library(parallel)
 
 dispersions <- .25*2^(1:9)
