@@ -78,36 +78,48 @@ facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main para
 #' ab <- abundance.matrix(malth,times)
 #' stackplot(ab[,1:3])
 abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age=F,...){
+    ## check if array of times is appropriate to simulation
 	if(max(times) > data$maxtime){ "Warning: array of times goes further than simulation maximum time" }
-	n <- data$num.total
+
+    ## check if by.age
     if(by.age){d <- age.data(data,...)}
     else{d<-data$data}
+
+    ## gather data from time points
 	subs <- lapply(times,function(t){subset(d,begintime <= t & (endtime >= t | is.na(endtime)),select=c(1,2))})
-	abmatline <- function(x){
-		l <- tapply(x$id,x$sp,length)
-		# complete the rows that are missing
-		if(length(l) == n){
-			abl = l
-		}
-		else {
-			abl <- rep(0,n)
-			names(abl) <- 1:n
-			for(i in 1:n){
-				if(i %in% names(l)){
-					c <- which(names(l)==i)
-					abl[i] <- l[c]
-				}
-			}		
-		}
-		# if that didn't work because of NA's
-		abl[is.na(abl)] <- 0
 
-		abl
-	}
-	ab <- t(sapply(subs,abmatline))
-	rownames(ab) <- times
+    ## number of stage/species id
+	n <- data$num.total
+    if(n==1) { ## treat n==1 separately because R is weird
+        ab <- matrix(sapply(subs,nrow),ncol=1)
+    }
+    else {
+        abmatline <- function(x){
+            l <- tapply(x$id,x$sp,length)
+            # complete the rows that are missing
+            if(length(l) == n){
+                abl = l
+            }
+            else {
+                abl <- rep(0,n)
+                names(abl) <- 1:n
+                for(i in 1:n){
+                    if(i %in% names(l)){
+                        c <- which(names(l)==i)
+                        abl[i] <- l[c]
+                    }
+                }		
+            }
+            # if that didn't work because of NA's
+            abl[is.na(abl)] <- 0
 
-	ab
+            abl
+        }
+        ab <- t(sapply(subs,abmatline))
+    }
+    rownames(ab) <- times
+
+    ab
 }
 
 #' calculates the lifespan of each individual
