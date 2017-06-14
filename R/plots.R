@@ -5,7 +5,8 @@
 #' The \code{stackplot} function produces a stacked plot of the population over time.
 #' Notice that the population should have at least two stages for this function to work.
 #' 
-#' @param mat A population matrix, as produced by \code{\link{abundance.matrix}}
+#' @param mat A population matrix, as produced by \code{\link{abundance.matrix}} or something that
+#' can be coerced to matrix
 #' @param col Optional. A color vector
 #' @param legend Optional. An array of names
 #' @param log.y Logical. Should the y-axis be plotted in a logarithmic scale?
@@ -29,10 +30,14 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 		log <- ""
 	}
 
+    mat<-as.matrix(mat)
+
 	N <- dim(mat)[2]
 	time <- as.numeric(rownames(mat))
-	for (i in (N-1):1) # sums populations IN REVERSE, may cause problems for 1 stages only
-		mat[,i] = mat[,i] + mat[,i+1]
+    if(N>1){
+        for (i in (N-1):1) # sums populations IN REVERSE
+            mat[,i] = mat[,i] + mat[,i+1]
+    }
 	mat <- cbind(mat, rep(minp, length(time)))
 	# maximo da escala do grafico
 	maxp <-max(mat[,1])
@@ -65,12 +70,14 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 		y <- c(mat[,i], rev(mat[,i+1]))
 		polygon(x,y, col=col[i])
 	}
-	if (missing(legend)) { 
-		if(N == 2) legend <- c("Juveniles", "Adults")
-		if(N == 3) legend <- c("Seeds", "Juveniles", "Adults")
-		if(N > 3) legend <- c(1:N)
-	}
-	legend("topleft", legend=legend, fill=col, bg="white")
+    if(N>1){ # legend is unnecessary if N==1
+        if (missing(legend)) { 
+            if(N == 2) legend <- c("Juveniles", "Adults")
+            if(N == 3) legend <- c("Seeds", "Juveniles", "Adults")
+            if(N > 3) legend <- c(1:N)
+        }
+        legend("topleft", legend=legend, fill=col, bg="white")
+    }
 }
 
 #' function for ploting simulation frames
@@ -92,14 +99,14 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 spatialanimation = function(data, times=seq(0,data$maxtime,length.out=50), interval=0.1,
                             movie.name="facilitationmovie.gif",
                             xlim=c(0,data$w), ylim=c(0,data$h), 
-           col=c(colorRampPalette(c("darkred","pink"))(data$num.total-1),"lightgreen"),...)
+                            col=c(colorRampPalette(c("darkred","pink"))(data$num.total-1),"lightgreen"),...)
 {
-	radius <- data$radius
-	# creates list of dataframes, one for each time
-	dtlist <- lapply(times,function(t){subset(data$data,begintime <= t & (endtime >= t | is.na(endtime)))})
-	maxst <- data$num.total
-	# set minimum radius for stages with rad=0
-	for(i in 1:length(radius)) if(radius[i] == 0) radius[i] = 0.05
+    radius <- data$radius
+    # creates list of dataframes, one for each time
+    dtlist <- lapply(times,function(t){subset(data$data,begintime <= t & (endtime >= t | is.na(endtime)))})
+    maxst <- data$num.total
+    # set minimum radius for stages with rad=0
+    for(i in 1:length(radius)) if(radius[i] == 0) radius[i] = 0.05
     saveGIF(spatialplot(dtlist,times=times,xlim=xlim,ylim=ylim,sp=data$num.total:1,col,radius,...),interval=interval,movie.name=movie.name)
 }
 
@@ -118,32 +125,32 @@ spatialanimation = function(data, times=seq(0,data$maxtime,length.out=50), inter
 spatialplot = function(dtlist, times=1:length(data), xlim, ylim, sp, 
                        col=colorRampPalette(c("darkred","pink"))(length(sp)), radius)
 {
-	# init viewport
-	vp <- viewport(width = 0.8, height = 0.8, xscale=xlim, yscale=ylim)
-	# loop through times
-	for (i in 1:length(times))
-	{
-		dt = dtlist[[i]]
-		if(dim(dt)[1] > 0) {# interrupt if population is zero
+    # init viewport
+    vp <- viewport(width = 0.8, height = 0.8, xscale=xlim, yscale=ylim)
+    # loop through times
+    for (i in 1:length(times))
+    {
+        dt = dtlist[[i]]
+        if(dim(dt)[1] > 0) {# interrupt if population is zero
 
-			grid.newpage()
-			pushViewport(vp)
-			grid.rect(gp = gpar(col = "gray"))
-			for (j in sp){
-				dtsp <- dt[dt$sp==j,]
-				if(dim(dtsp)[1] > 0){
-					grid.circle(x = dtsp$x, y=dtsp$y, r=radius[j],default.units="native", gp=gpar(fill=col[j],col=col[j]))
-				}
-			}
-			grid.text(paste("t =",round(times[i],digits=4)), y=1.06)
-			grid.xaxis(at=round(seq(xlim[1],xlim[2], len=5)))
-			grid.yaxis(at=round(seq(ylim[1],ylim[2], len=5)))
-		}
-	}
+            grid.newpage()
+            pushViewport(vp)
+            grid.rect(gp = gpar(col = "gray"))
+            for (j in sp){
+                dtsp <- dt[dt$sp==j,]
+                if(dim(dtsp)[1] > 0){
+                    grid.circle(x = dtsp$x, y=dtsp$y, r=radius[j],default.units="native", gp=gpar(fill=col[j],col=col[j]))
+                }
+            }
+            grid.text(paste("t =",round(times[i],digits=4)), y=1.06)
+            grid.xaxis(at=round(seq(xlim[1],xlim[2], len=5)))
+            grid.yaxis(at=round(seq(ylim[1],ylim[2], len=5)))
+        }
+    }
 }
 
 
 
 plotsnapshot <- function(data,t,...) {
-	spatialanimation(data,c(t,t),...)
+    spatialanimation(data,c(t,t),...)
 }
