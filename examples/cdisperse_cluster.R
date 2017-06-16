@@ -8,29 +8,37 @@ radius <- 1 # adimensionalize this too
 ### non adimensionalized ones
 D <- 1
 R <- r + D 
-n0 <- 100
+n0 <- 10
 compet <- -.5 
 
 param <- matrix(c(D,0,R,radius),nrow=nstages,byrow=T)
 interact <- matrix(c(compet),ncol=nstages)
-initial.obj <- community(0,nstages,param,dispersal=0,init=n0,interactions=interact,h=30,w=30)
+initial.obj <- community(0,nstages,param,dispersal=0,init=n0,interactions=interact,h=50,w=50)
 
 wrapper <- function(disp){
+    if(disp=="random"){
+        disp<-1
+        initial.obj$dispKernel<-"random"
+    }
+    else {
+        initial.obj$dispKernel<-"exponential"
+    }
     initial.obj$dispersal<-disp
-    t <- system.time(r <- proceed(initial.obj,1))
+    t <- system.time(r <- proceed(initial.obj,10))
     while(r$maxtime < maxt && max(t) < 900)
-        t <- system.time(r <- proceed(r,1))
+        t <- system.time(r <- proceed(r,10))
     r
 }
 
 ndisps <- 10
 mindisp <- .25
 disprate <- 2
-dispersions <- mindisp*disprate^(0:(ndisps-1))
+dispersions <- c(mindisp*disprate^(0:(ndisps-1)),"random")
+ndisps <- ndisps+1
 nreps <- 5
 dispvec <- rep(dispersions,nreps)
 
-maxt <- 5
+maxt <- 50
 
 library(parallel)
 cl = makePSOCKcluster(machinefile("mpd.hosts"))
@@ -40,14 +48,15 @@ clusterExport(cl,"wrapper")
 clusterExport(cl,"initial.obj")
 clusterExport(cl,"maxt")
 results <- parLapply(cl,dispvec,wrapper)
-results <- parLapply(cl,results,function(r) proceed(r,100))
 
 details=500
-times <- seq(5,results[[1]]$maxtime,length.out=details)         # array of times of interest
+times <- seq(0,results[[1]]$maxtime,length.out=details)         # array of times of interest
 clusterExport(cl,"times")
 abmatrices <- parLapply(cl,results,function(r){abundance.matrix(r,times)})
 
-abjoined <-lapply(dispersions,function(d){do.call("rbind",abmatrices[dispvec==d])})
+abgrouped <- lapply(dispersions,function(d){abmatrices[dispvec==d]})
+abjoined <-lapply(abgrouped,function(group){do.call("rbind",group)})
+abaverage <- lapply(abgrouped,function(group){rowSums(do.call("cbind",group))/nreps})
 
 stopCluster(cl)
 
@@ -56,12 +65,12 @@ png("compareandregress.png")
 par(mfrow=c(1,1))
 colors <- colorRampPalette(c("red","blue4"))(ndisps)
 
-maxpop = max(sapply(poptots,max))
+maxpop = max(sapply(abmatrices,max))
 plot(NULL,NULL,ylim=c(0,maxpop),xlim=c(0,maxt),ylab="População",xlab="Tempo",main="População total para raios de dispersão variados")
 
 for(i in 1:ndisps){
-    for(j in 1:nreps-1){
-       x <- poptots[[i+ndisps*j]]
+    for(j in 1:nreps){
+       x <- abgrouped[[i]][[j]]
         lines(x~times,col=colors[i],lwd=1.2)
     }
 }
@@ -69,10 +78,12 @@ for(i in 1:ndisps){
 legend("topleft", legend=dispersions, fill=colors)
 
 #FIT STUFF
-logisticgrowth <- function(r,K,N0,t){ ((K*N0*exp(r*t))/(K-N0+N0*exp(r*t))) }
+logisticgrowth <- function(r,K,N0,t){ (1.0*K/((K-N0)*exp(-r*t)/N0 +1)) }
+logit<-function(K,p) log(1.0*p/(K-p))
+
 mat <- mat.model(n=numstages,Ds=deathrates-c(facindex,0),Gs=growthrates,R=reproductionrate)
 intr <- limiting.rate(mat) 
-fit.data.log <- function(pop) {nls(pop~logisticgrowth(r,K,N0,as.numeric(names(pop))),start=list(r=intr,K=maxpop,N0=80))}
+fit.data.log <- function(pop) {nls(pop~logisticgrowth(r,K,N0,as.numeric(rownames(pop))),start=list(r=intr,K=maxpop,N0=80))}
 reglog <- function(dt){tryCatch(coef(fit.data.log(dt)),error=function(e){ c(NA,NA,NA) })}
 
 fits <- sapply(poptots,reglog)	
