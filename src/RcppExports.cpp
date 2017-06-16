@@ -29,3 +29,13 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+static const R_CallMethodDef CallEntries[] = {
+    {"facilitation_simulation", (DL_FUNC) &facilitation_simulation, 14},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_facilitation(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}
