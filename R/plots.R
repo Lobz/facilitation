@@ -88,7 +88,7 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 #' @param times	array of times at which to plot
 #' @param xlim	Optional. Limits to the x-axis
 #' @param ylim	Optional. Limits to the y-axis
-#' @param col 	Optional. A color vector
+#' @param color 	Optional. A color vector
 #' @param tframe a time length to wait between frames. Do not use if using this with
 #' \code{animation}
 #' @examples
@@ -99,7 +99,7 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 spatialanimation = function(data, times=seq(0,data$maxtime,length.out=50), interval=0.1,
                             movie.name="facilitationmovie.gif",
                             xlim=c(0,data$w), ylim=c(0,data$h), 
-                            col=c(colorRampPalette(c("darkred","pink"))(data$num.total-1),"lightgreen"),...)
+                            color=c(colorRampPalette(c("darkred","pink"))(data$num.total-1),"lightgreen"),...)
 {
     radius <- data$radius
     # creates list of dataframes, one for each time
@@ -107,7 +107,7 @@ spatialanimation = function(data, times=seq(0,data$maxtime,length.out=50), inter
     maxst <- data$num.total
     # set minimum radius for stages with rad=0
     for(i in 1:length(radius)) if(radius[i] == 0) radius[i] = 0.05
-    saveGIF(spatialplot(dtlist,times=times,xlim=xlim,ylim=ylim,sp=data$num.total:1,col,radius,...),interval=interval,movie.name=movie.name)
+    saveGIF(spatialplot(dtlist,times=times,xlim=xlim,ylim=ylim,sp=data$num.total:1,color,radius,...),interval=interval,movie.name=movie.name)
 }
 
 
