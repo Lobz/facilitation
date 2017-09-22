@@ -133,8 +133,8 @@ longevity <- function(data){
     d <- data$data[with(data$data,order(-endtime)),] #orders by endtime, last to first
     ind.life <- function(i){c(i$sp[1],i$id[1],min(i$begintime),i$endtime[1])}
     b <- by(d,d$id,ind.life)
-    b <- matrix(unlist(b),max(d$id)+1,byrow=T) # TURNS THE OUTPUT INTO A MATRIX
-    r <- data.frame(b)
+    m <- do.call("rbind",b)  # TURNS THE OUTPUT INTO A MATRIX
+    r <- data.frame(m)
     names(r)=c("last.stage","id","birth","death")
     r$longevity <- r$death-r$birth
     r
@@ -143,24 +143,21 @@ longevity <- function(data){
 #' lifehistory relative to birthdate of each individual
 #' 
 age.data <- function(data,cap.living=F){
-    if(is.null(data$age.data)) {
-        d <- data$data
-        if(cap.living){
-            d[is.na(d)]<-data$maxtime
-        }
-        else{
-            d<-na.exclude(d)
-        }
-        relative <- function(i){
-            birtht<-min(i$begintime)
-            i$begintime <- i$begintime - birtht
-            i$endtime <- i$endtime - birtht
-            i
-        }
-        b <- by(d,d$id,relative)
-        data$age.data <- do.call("rbind",b)
+    d <- data$data
+    if(cap.living){
+        d[is.na(d)]<-data$maxtime
     }
-    data$age.data
+    else{
+        d<-na.exclude(d)
+    }
+    relative <- function(i){
+        birtht<-min(i$begintime)
+        i$begintime <- i$begintime - birtht
+        i$endtime <- i$endtime - birtht
+        i
+    }
+    b <- by(d,d$id,relative)
+    data$age.data <- do.call("rbind",b)
 }
 
 
