@@ -1,22 +1,30 @@
 ### starting a new script, with only one stage, one species, very simple    
 
+library(facilitation)
 
 ### Logistic one species one stage
 nstages <- 1
-r <- 1 # births - deaths .. adimensionalized
-radius <- 1 # adimensionalize this too
+des.r <- 1.0 # births - deaths .. adimensionalized
+radius <- 1.0 # adimensionalize this too
 ### non adimensionalized ones
-D <- 1
-R <- r + D 
+D <- 1.0
+R <- des.r + D 
 n0 <- 10
 compet <- -.5 
 
-param <- matrix(c(D,0,R,radius),nrow=nstages,byrow=T)
-interact <- matrix(c(compet),ncol=nstages)
-initial.obj <- community(0,nstages,param,dispersal=0,init=n0,interactions=interact,h=50,w=50)
+### Logistic one species one stage test effect of spacialization
+### N' = (R - D)N - cN² =====> K = r/c
+des.K <- 1000
+radius <- 100 # interact with everyone
+compet <- des.r/des.K ### 1/1000 = .001
+
+wrapper <- function(compet) {
+    initial.obj$interactions <- matrix(c(compet),ncol=nstages)
+    proceed(initial.obj,maxt)
+}
 
 wrapper <- function(disp){
-    if(disp=="random"){
+    if(disp<0){
         disp<-1
         initial.obj$dispKernel<-"random"
     }
@@ -24,16 +32,21 @@ wrapper <- function(disp){
         initial.obj$dispKernel<-"exponential"
     }
     initial.obj$dispersal<-disp
-    t <- system.time(r <- proceed(initial.obj,10))
-    while(r$maxtime < maxt && max(t) < 900)
-        t <- system.time(r <- proceed(r,10))
+    r <- proceed(initial.obj,maxt)
+    
+   
     r
 }
+
+
+param <- matrix(c(D,0,R,radius),nrow=nstages,byrow=T)
+interact <- matrix(c(compet),ncol=nstages)
+initial.obj <- community(0,nstages,param,dispersal=0,init=n0,interactions=interact,h=50,w=50)
 
 ndisps <- 10
 mindisp <- .25
 disprate <- 2
-dispersions <- c(mindisp*disprate^(0:(ndisps-1)),"random")
+dispersions <- c(mindisp*disprate^(0:(ndisps-1)),-1)
 ndisps <- ndisps+1
 nreps <- 5
 dispvec <- rep(dispersions,nreps)
@@ -52,11 +65,12 @@ results <- parLapply(cl,dispvec,wrapper)
 details=500
 times <- seq(0,results[[1]]$maxtime,length.out=details)         # array of times of interest
 clusterExport(cl,"times")
+
 abmatrices <- parLapply(cl,results,function(r){abundance.matrix(r,times)})
 
 abgrouped <- lapply(dispersions,function(d){abmatrices[dispvec==d]})
-abjoined <-lapply(abgrouped,function(group){do.call("rbind",group)})
-abaverage <- lapply(abgrouped,function(group){rowSums(do.call("cbind",group))/nreps})
+abjoined <-lapply(abgrouped,function(group){do.call("cbind",group)})
+abaverage <- lapply(abjoined,function(m){rowSums(m)/nreps})
 
 stopCluster(cl)
 
@@ -75,16 +89,24 @@ for(i in 1:ndisps){
     }
 }
 
+for(i in 1:10){
+    x<-logisticgrowth(fits[1,i],fits[2,i],10,times)
+    lines(x~times)
+}
+
+
 legend("topleft", legend=dispersions, fill=colors)
 
 #FIT STUFF
 logisticgrowth <- function(r,K,N0,t){ (1.0*K/((K-N0)*exp(-r*t)/N0 +1)) }
-logit<-function(K,p) log(1.0*p/(K-p))
 
-mat <- mat.model(n=numstages,Ds=deathrates-c(facindex,0),Gs=growthrates,R=reproductionrate)
-intr <- limiting.rate(mat) 
-fit.data.log <- function(pop) {nls(pop~logisticgrowth(r,K,N0,as.numeric(rownames(pop))),start=list(r=intr,K=maxpop,N0=80))}
-reglog <- function(dt){tryCatch(coef(fit.data.log(dt)),error=function(e){ c(NA,NA,NA) })}
+fit.data.log <- function(pop) {nls(pop~logisticgrowth(r,K,10,as.numeric(rownames(pop))),start=list(r=1,K=maxpop))}
+reglog <- function(dt){tryCatch(coef(fit.data.log(dt)),error=function(e){ c(NA,NA) })}
+
+ll <- function(ab, r, K, 
+
+
+
 
 fits <- sapply(poptots,reglog)	
 fits
