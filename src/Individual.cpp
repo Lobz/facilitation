@@ -59,7 +59,7 @@ double Individual::updateD(){
 			actuald -= effect*affectingMeNeighbours[sp].size(); /* note that effect is LINEAR on number of affecting neighbours */
 		}
 	}
-	if(actuald < 0) actualD = 0;
+	if(actuald < 0) actuald = 0;
     currentD = actuald;
 	return actuald;
 }
