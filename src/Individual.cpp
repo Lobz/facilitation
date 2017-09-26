@@ -34,6 +34,7 @@ void	Individual::setSpecies(Species *sp) {
 	SqRad = Rad*Rad;
 	seedStage = species->getSeedStage();
 	ref = species->add(this);
+    updateD();
 
 	initNeighbours();
 
