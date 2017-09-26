@@ -2,7 +2,7 @@
 Sys.setenv("PKG_LIBS"="-lprofiler")
 
 load_all()
-maxt<-10
+maxt<-60
 dispersal<-10
 
 ### n species two stages competition 
@@ -30,8 +30,8 @@ idealsim <- function(nind){
 
     neutral <- community(maxt,nstages,param,dispersal,init,interactions=interact,h=h,w=w)
 
-    neutral
+    save(neutral,file="test.RData")
 }
 
-neutral<-idealsim(800)
+neutral<-idealsim(400)
 
