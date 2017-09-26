@@ -3,6 +3,7 @@
 #include<fstream>
 #include<string>
 #include<Rcpp.h>
+#include <gperftools/profiler.h>
 
 // [[Rcpp::export]]
 Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num_stages,Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, 
@@ -25,6 +26,8 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
         n_total+=nsts[i];
     }
 
+    ProfilerStart("./myprofile.log");
+//the part of the code to be profiled
 	arena = new Arena(n_total,par,w,h,bcond);
 	arena->setInteractions(inter,0); // 0 interaction slope because it's not implemented yet
 
@@ -60,6 +63,7 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
 
 	ret = arena->finalStatus();
 
+ProfilerStop();
 	return Rcpp::DataFrame::create(Rcpp::Named("sp")=ret->sp_list,Rcpp::Named("id")=ret->id_list,
 			Rcpp::Named("x")=ret->x_list,Rcpp::Named("y")=ret->y_list,
 			Rcpp::Named("begintime")=ret->beginTime_list,Rcpp::Named("endtime")=ret->endTime_list);
