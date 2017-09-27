@@ -33,5 +33,5 @@ idealsim <- function(nind){
     save(neutral,file="test.RData")
 }
 
-neutral<-idealsim(400)
+neutral<-idealsim(800)
 
