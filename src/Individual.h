@@ -29,7 +29,7 @@ class Individual {
 	const unsigned long id;
 	int spnum;
 	double R, D, G, Rad, SqRad;
-	double actualD();
+	double currentD, updateD();
 	double totalRate;
 	Species *species, *seedStage;
 	Arena *arena;

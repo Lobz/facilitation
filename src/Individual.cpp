@@ -34,6 +34,7 @@ void	Individual::setSpecies(Species *sp) {
 	SqRad = Rad*Rad;
 	seedStage = species->getSeedStage();
 	ref = species->add(this);
+    updateD();
 
 	initNeighbours();
 
@@ -51,7 +52,7 @@ Position 	Individual::getPosition(){return p;}
 double 		Individual::getRadius(){return Rad;}
 const unsigned long Individual::getId(){return id;}
 
-double Individual::actualD(){
+double Individual::updateD(){
 	int sp;
 	double actuald=D,effect;
 	for(sp = 1; sp <= spnum; sp++){
@@ -59,13 +60,14 @@ double Individual::actualD(){
 			actuald -= effect*affectingMeNeighbours[sp].size(); /* note that effect is LINEAR on number of affecting neighbours */
 		}
 	}
-	if(actuald < 0) return 0;
+	if(actuald < 0) actuald = 0;
+    currentD = actuald;
 	return actuald;
 }
 
 double Individual::getTotalRate(){
 
-	return G+R+actualD();
+	return G+R+currentD;
 }
 
 bool   Individual::isPresent(Position p2, double sqRadius){
@@ -152,22 +154,26 @@ void 	Individual::addAffectedByMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	if(i==this){return;}
 	affectedByMeNeighbours[s].push_back(i);
+    updateD();
 }
 
 void 	Individual::addAffectingMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	if(i==this){return;}
 	affectingMeNeighbours[s].push_back(i);
+    updateD();
 }
 
 void 	Individual::removeAffectedByMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	affectedByMeNeighbours[s].remove(i);
+    updateD();
 }
 
 void 	Individual::removeAffectingMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	affectingMeNeighbours[s].remove(i);
+    updateD();
 }
 
 bool 	Individual::noAffectingMeNeighbours(int i){
