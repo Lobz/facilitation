@@ -1,4 +1,4 @@
-maxt <- 10
+maxt <- 30
 dispersal<-2
 
 results<-list()
