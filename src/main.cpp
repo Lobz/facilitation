@@ -5,7 +5,10 @@
 #include<Rcpp.h>
 
 // [[Rcpp::export]]
-Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num_stages,Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, 
+Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num_stages,Rcpp::NumericVector parameters, double dispersal,
+        Rcpp::NumericVector interactionsD, 
+        Rcpp::NumericVector interactionsG, 
+        Rcpp::NumericVector interactionsR, 
         Rcpp::IntegerVector init, Rcpp::DataFrame history,
         bool restore=false, double w=100, double h=100, int bcond=1, int dkernel=1, int maxpop=30000){
 	int *in, i,n, n_total=0,*nsts;
@@ -18,7 +21,6 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
     in = init.begin();
     nsts=num_stages.begin();
     par = parameters.begin();
-    inter = interactions.begin();
     nsts = num_stages.begin();
 
     for(i=0;i<num_pops;i++){
@@ -26,7 +28,13 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
     }
 
 	arena = new Arena(n_total,par,w,h,bcond);
-	arena->setInteractions(inter,0); // 0 interaction slope because it's not implemented yet
+
+    inter = interactionsD.begin();
+	arena->setInteractionsD(inter); 
+    inter = interactionsG.begin();
+	arena->setInteractionsG(inter); 
+    inter = interactionsR.begin();
+	arena->setInteractionsR(inter); 
 
     for(i=0,n=1; i<num_pops; i++){
         if(nsts[i] == 1){

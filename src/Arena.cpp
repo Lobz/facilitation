@@ -41,12 +41,29 @@ History * Arena::finalStatus(){
 	return history;
 }
 
-void Arena::setInteractions(double *interactions, double slope){
+void Arena::setInteractionsD(double *interactions){
 	int i,j;
 	for(i=1;i<=maxsp;i++){
-		species[i]->setInteractionVariation(slope);
 		for(j=1;j<=maxsp;j++){
-			species[i]->setInteraction(j,interactions[maxsp*(i-1)+(j-1)]);
+			species[i]->setInteractionD(j,interactions[maxsp*(i-1)+(j-1)]);
+		}
+	}
+}
+
+void Arena::setInteractionsG(double *interactions){
+	int i,j;
+	for(i=1;i<=maxsp;i++){
+		for(j=1;j<=maxsp;j++){
+			species[i]->setInteractionG(j,interactions[maxsp*(i-1)+(j-1)]);
+		}
+	}
+}
+
+void Arena::setInteractionsR(double *interactions){
+	int i,j;
+	for(i=1;i<=maxsp;i++){
+		for(j=1;j<=maxsp;j++){
+			species[i]->setInteractionR(j,interactions[maxsp*(i-1)+(j-1)]);
 		}
 	}
 }
@@ -166,6 +183,7 @@ std::list<Individual*> Arena::getPresent(int species_id,Position p){
 	return species[species_id]->getPresent(p);
 }
 
+/* This will add a List of neighbours to an individual */
 void Arena::addAffectedByMe(Individual *ind){
 	int j;
 	int sp = ind->getSpeciesId();
@@ -173,7 +191,7 @@ void Arena::addAffectedByMe(Individual *ind){
 	double radius = ind->getRadius(); /* will look for inds within this radius of me */
 
 	for(j=1;j<=maxsp;j++){
-		if(species[j]->getInteraction(sp,p) != 0){
+		if(species[j]->affectedBy(sp)){
 			ind->addAffectedByMeNeighbourList(species[j]->getPresent(p,radius));
 		}
 	}

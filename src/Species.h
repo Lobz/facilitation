@@ -7,14 +7,14 @@ class Species {
 	private:
 	int id;
 	int spnum, kernelType;
-	double D, G, R, Rad, dispersalRadius, maxStressEffect, interactionVariation;
+	double D, G, R, Rad, dispersalRadius, maxStressEffect;
 	double totalRate;
 
 	Arena *arena;
 	std::list<Individual*> population;
 	Species *nextStage, *seedStage;
-	/* array of interaction coeficients (affecting deathrate) */
-	double *interactions;
+	/* array of interaction coeficients (affecting D,G,R) */
+	double *interactionsD,*interactionsG,*interactionsR;
 
 	public:
 	Species(Arena *ar,int id, double *par);
@@ -41,11 +41,9 @@ class Species {
 	/* SETS */
 	void setNextStage(Species *st);
 	void setSeedStage(Species *st, double dispersal, int kernel = 1);
-	void setFacilitation(double f);
-	void setInteraction(int s, double effect);
-	void setAutoInteraction(double effect);
-	void setInteractionVariation(double maxeffect);
-
+	void setInteractionD(int s, double effect);
+	void setInteractionG(int s, double effect);
+	void setInteractionR(int s, double effect);
 
 
 	/* GETS */
@@ -54,7 +52,10 @@ class Species {
 	double getR();
 	double getD(Position p);
 	double getRad();
-	double getInteraction(int species_id,Position p);
+	double getInteractionD(int species_id);
+	double getInteractionG(int species_id);
+	double getInteractionR(int species_id);
+    bool   affectedBy(int species_id); /* finds if there is interaction */
 	int getId();
 	Species* getNextStage();
 	Species* getSeedStage();

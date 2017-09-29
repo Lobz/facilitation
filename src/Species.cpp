@@ -15,12 +15,15 @@ Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, 
     arena = ar;
     spnum = ar->getSpNum();
 
-    interactions = (double*)malloc((spnum+1)*(sizeof(double)));
-    interactions[0]=0; /* this is actually not used but let's set it to 0 just in case */
+    interactionsD = (double*)malloc((spnum+1)*(sizeof(double)));
+    interactionsG = (double*)malloc((spnum+1)*(sizeof(double)));
+    interactionsR = (double*)malloc((spnum+1)*(sizeof(double)));
+    interactionsD[0]=interactionsG[0]=interactionsR[0]=0; /* this is actually not used but let's set it to 0 just in case */
     for(i=1;i<=spnum;i++){
-        interactions[i]=0;
+        interactionsD[i]=0;
+        interactionsG[i]=0;
+        interactionsR[i]=0;
     }
-    interactionVariation=0;
 }
 
 Species::~Species(){
@@ -31,17 +34,30 @@ Species::~Species(){
         delete(*i);
     }
 
-    free(interactions);
+    free(interactionsD);
+    free(interactionsG);
+    free(interactionsR);
 }
 
-void Species::setFacilitation(double f){setInteraction(spnum,f);}
-void Species::setAutoInteraction(double effect){setInteraction(id,effect);}
-
-void Species::setInteraction(int s, double effect){
+void Species::setInteractionD(int s, double effect){
     if(effect > D){
-        Rcpp::warning("Interaction parameter set to be bigger than deathrate.");
+        Rcpp::warning("Interaction parameter set to be bigger than rate.");
     }
-    interactions[s] = effect;
+    interactionsD[s] = effect;
+}
+
+void Species::setInteractionG(int s, double effect){
+    if(effect > G){
+        Rcpp::warning("Interaction parameter set to be bigger than rate.");
+    }
+    interactionsG[s] = effect;
+}
+
+void Species::setInteractionR(int s, double effect){
+    if(effect > R){
+        Rcpp::warning("Interaction parameter set to be bigger than rate.");
+    }
+    interactionsR[s] = effect;
 }
 
 void Species::addIndividual(double x, double y){
@@ -153,7 +169,6 @@ Species* Species::getNextStage() {return nextStage;}
 double Species::getG(){return G;}
 double Species::getR(){return R;}
 double Species::getRad(){return Rad;}
-double Species::getInteraction(int species_id, Position p){return interactions[species_id]+arena->getStressValue(p)*interactionVariation;}
 int Species::getId(){return id;}
 double Species::getD(Position p){
     if(maxStressEffect == 0){
@@ -164,8 +179,13 @@ double Species::getD(Position p){
     }
 }
 
+double Species::getInteractionD(int species_id){return interactionsD[species_id];}
+double Species::getInteractionG(int species_id){return interactionsG[species_id];}
+double Species::getInteractionR(int species_id){return interactionsR[species_id];}
+bool Species::affectedBy(int s) {
+    return (interactionsD[s] != 0 || interactionsG[s] != 0 || interactionsR[s] != 0);
+}
+
 int Species::getAbundance(){
     return population.size();
 }
-
-void Species::setInteractionVariation(double maxeffect){interactionVariation=maxeffect;}

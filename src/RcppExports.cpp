@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // simulation
-Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num_stages, Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactions, Rcpp::IntegerVector init, Rcpp::DataFrame history, bool restore, double w, double h, int bcond, int dkernel, int maxpop);
-RcppExport SEXP facilitation_simulation(SEXP maxtimeSEXP, SEXP num_popsSEXP, SEXP num_stagesSEXP, SEXP parametersSEXP, SEXP dispersalSEXP, SEXP interactionsSEXP, SEXP initSEXP, SEXP historySEXP, SEXP restoreSEXP, SEXP wSEXP, SEXP hSEXP, SEXP bcondSEXP, SEXP dkernelSEXP, SEXP maxpopSEXP) {
+Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num_stages, Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactionsD, Rcpp::NumericVector interactionsG, Rcpp::NumericVector interactionsR, Rcpp::IntegerVector init, Rcpp::DataFrame history, bool restore, double w, double h, int bcond, int dkernel, int maxpop);
+RcppExport SEXP facilitation_simulation(SEXP maxtimeSEXP, SEXP num_popsSEXP, SEXP num_stagesSEXP, SEXP parametersSEXP, SEXP dispersalSEXP, SEXP interactionsDSEXP, SEXP interactionsGSEXP, SEXP interactionsRSEXP, SEXP initSEXP, SEXP historySEXP, SEXP restoreSEXP, SEXP wSEXP, SEXP hSEXP, SEXP bcondSEXP, SEXP dkernelSEXP, SEXP maxpopSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -16,7 +16,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type num_stages(num_stagesSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type parameters(parametersSEXP);
     Rcpp::traits::input_parameter< double >::type dispersal(dispersalSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type interactions(interactionsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type interactionsD(interactionsDSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type interactionsG(interactionsGSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type interactionsR(interactionsRSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type init(initSEXP);
     Rcpp::traits::input_parameter< Rcpp::DataFrame >::type history(historySEXP);
     Rcpp::traits::input_parameter< bool >::type restore(restoreSEXP);
@@ -25,13 +27,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type bcond(bcondSEXP);
     Rcpp::traits::input_parameter< int >::type dkernel(dkernelSEXP);
     Rcpp::traits::input_parameter< int >::type maxpop(maxpopSEXP);
-    rcpp_result_gen = Rcpp::wrap(simulation(maxtime, num_pops, num_stages, parameters, dispersal, interactions, init, history, restore, w, h, bcond, dkernel, maxpop));
+    rcpp_result_gen = Rcpp::wrap(simulation(maxtime, num_pops, num_stages, parameters, dispersal, interactionsD, interactionsG, interactionsR, init, history, restore, w, h, bcond, dkernel, maxpop));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"facilitation_simulation", (DL_FUNC) &facilitation_simulation, 14},
+    {"facilitation_simulation", (DL_FUNC) &facilitation_simulation, 16},
     {NULL, NULL, 0}
 };
 

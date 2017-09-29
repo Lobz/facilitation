@@ -33,7 +33,6 @@ class Arena {
 	double width, height;
 	double totalRate, *ratesList, totalTime;
 	Species **species;
-	Species *facilitator;
 	int bcond;
 	History * history;
 
@@ -46,7 +45,9 @@ class Arena {
 	bool populate(Rcpp::DataFrame init);
 	bool populate(int *stagesinit);
 	bool turn();
-	void setInteractions(double *interactions, double slope);
+	void setInteractionsD(double *interactions);
+	void setInteractionsG(double *interactions);
+	void setInteractionsR(double *interactions);
 
 	/* acessors for Species and Individuals */
 	bool findPresent(int species_id, Position p);

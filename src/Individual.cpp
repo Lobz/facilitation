@@ -27,17 +27,16 @@ void	Individual::setSpecies(Species *sp) {
 	clearNeighbours();
 
 	species = sp;
-	G = species->getG();
-	R = species->getR();
-	D = species->getD(p);
+	baseG = species->getG();
+	baseR = species->getR();
+	baseD = species->getD(p);
 	Rad = species->getRad();
 	SqRad = Rad*Rad;
 	seedStage = species->getSeedStage();
 	ref = species->add(this);
-    updateD();
 
+    updateRates();
 	initNeighbours();
-
 }
 
 Individual::~Individual(){
@@ -52,22 +51,32 @@ Position 	Individual::getPosition(){return p;}
 double 		Individual::getRadius(){return Rad;}
 const unsigned long Individual::getId(){return id;}
 
-double Individual::updateD(){
-	int sp;
-	double actuald=D,effect;
+void Individual::updateRates(){
+	int sp, num;
+	double effect;
+    D=baseD,G=baseG,R=baseR;
 	for(sp = 1; sp <= spnum; sp++){
-		if((effect = species->getInteraction(sp,p)) != 0 && !affectingMeNeighbours[sp].empty()){
-			actuald -= effect*affectingMeNeighbours[sp].size(); /* note that effect is LINEAR on number of affecting neighbours */
+        num = affectingMeNeighbours[sp].size();/* note that effect is LINEAR on number of affecting neighbours */
+		if(!affectingMeNeighbours[sp].empty()){
+            if((effect = species->getInteractionD(sp)) != 0)
+                D -= effect*num; /* note that D is a negative trait so positive effects decrease D */
+
+            if((effect = species->getInteractionG(sp)) != 0)
+                G += effect*num; 
+
+            if((effect = species->getInteractionR(sp)) != 0)
+                R += effect*num; 
+
 		}
 	}
-	if(actuald < 0) actuald = 0;
-    currentD = actuald;
-	return actuald;
+	if(D < 0) D = 0;
+	if(G < 0) G = 0;
+	if(R < 0) R = 0;
 }
 
 double Individual::getTotalRate(){
 
-	return G+R+currentD;
+	return D + G + R;
 }
 
 bool   Individual::isPresent(Position p2, double sqRadius){
@@ -118,14 +127,16 @@ void 	Individual::clearNeighbours(){
 
 void Individual::initNeighbours(){
 	int s;
+    /* find what neighbours are affecting me */
 	for(s=1;s<=spnum;s++){
-		if(species->getInteraction(s,p) != 0){
+		if(species->affectedBy(s) != 0){
 			/* do not use radius in looking for affecting neighbours, 
 			 * effect radius is the affecting neighbour's radius */
 			addAffectingMeNeighbourList(arena->getPresent(s,p));
 		}
 	}
 
+    /* find what neighbours are affected by me */
 	/* this function automatically uses my radius */
 	arena->addAffectedByMe(this);
 }
@@ -154,26 +165,26 @@ void 	Individual::addAffectedByMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	if(i==this){return;}
 	affectedByMeNeighbours[s].push_back(i);
-    updateD();
+    updateRates();
 }
 
 void 	Individual::addAffectingMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	if(i==this){return;}
 	affectingMeNeighbours[s].push_back(i);
-    updateD();
+    updateRates();
 }
 
 void 	Individual::removeAffectedByMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	affectedByMeNeighbours[s].remove(i);
-    updateD();
+    updateRates();
 }
 
 void 	Individual::removeAffectingMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	affectingMeNeighbours[s].remove(i);
-    updateD();
+    updateRates();
 }
 
 bool 	Individual::noAffectingMeNeighbours(int i){
