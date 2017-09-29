@@ -12,12 +12,15 @@
 #' @param dispersal	Average distance for seed dispersal
 #' @param maxstresseffects		Optional (use for a stress gradient). Array of values for the slope
 #' of increase of environmental effect on each stage
-#' @param interactions	Optional. An array of effects of life stages over each other, where element
-#' [i+n*j] means the effect of stage i over stage j. Positive values equal facilitation, negative ones, competition.
+#' @param interactionsD	Optional. An array of effects of life stages over each other, where element
+#' [i+n*j] means the effect of stage i over stage j. Positive values equal facilitation, negative
+#' ones, competition. Affects deathrates.
+#' @param interactionsG	Same as above, but affecting growth rates.
+#' @param interactionsR	Same as above, but affecting reproduction rates.
 #' @param height	Arena height
 #' @param width		Arena width
 #' @param boundary	Type of boundary condition. Options are "reflexive", "absortive" and
-#' "periodic". Default os reflexive.
+#' "periodic". Default is reflexive.
 #' @param dispKernel	Type of dispersion kernel. Options are "exponential" and "random", in which
 #' seeds are dispersed randomly regarless of parent position (note: "random" option ignores
 #' dispersal parameter)
@@ -33,7 +36,7 @@
 #' stackplot(ab[,1:3]) # species 1
 #' stackplot(ab[,4:5]) # species 2
 community <- function(maxtime, numstages, parameters, dispersal, init, # the main parameters
-                         interactions, # interactions
+                         interactionsD, interactionsG, interactionsR, # interactions
                          height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
                          dispKernel=c("exponential","random"), # type of dispersal
                          maxpop=30000){
@@ -47,8 +50,16 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
     ntot <- sum(numstages)
     npop <- length(numstages)
 
-	if(missing(interactions)){
-        interactions = matrix(rep(0,ntot*ntot),ntot)
+	if(missing(interactionsD)){
+        interactionsD = matrix(rep(0,ntot*ntot),ntot)
+    }
+
+	if(missing(interactionsG)){
+        interactionsG = matrix(rep(0,ntot*ntot),ntot)
+    }
+
+	if(missing(interactionsR)){
+        interactionsR = matrix(rep(0,ntot*ntot),ntot)
     }
 
     M <- parameters
@@ -91,7 +102,8 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
     }
 
 	# run simulation
-	r <- simulation(maxtime,num_pops=npop,num_stages=numstages,parameters=c(t(M)),dispersal=dispersal,interactions=interactions,
+	r <- simulation(maxtime,num_pops=npop,num_stages=numstages,parameters=c(t(M)),dispersal=dispersal,
+                    interactionsD=interactionsD,interactionsG=interactionsG,interactionsR=interactionsR,
                     init=initial,history=hist,restore=restore,h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
 
 
@@ -102,13 +114,11 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
 	r$sp <- factor(r$sp)
 	
 	# prepare output
-	rownames(interactions) <- 1:ntot
-	colnames(interactions) <- 1:ntot
     rownames(M) <- 1:ntot
     colnames(M) <- c("D","G","R","radius","maxstresseffect")
 
 	list(data = r,num.pop = npop, num.total = ntot, num.stages = numstages, maxtime=maxtime,
-	     dispersal=dispersal,interactions=interactions,rates.matrix=M,radius=M[,4],
+	     dispersal=dispersal,interactions=list(D=interactionsD,G=interactionsG,R=interactionsR),rates.matrix=M,radius=M[,4],
 	     init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel)
 }
 
@@ -125,7 +135,10 @@ proceed <- function(data,time){
     
 	c <- community(init=current,numstages=data$num.stages, maxtime=data$maxtime+time,
 	     parameters=data$rates.matrix,dispersal=data$dispersal,
-         interactions=data$interactions, height=data$height,width=data$width,
+         interactionsD=data$interactions$D, 
+         interactionsG=data$interactions$G, 
+         interactionsR=data$interactions$R, 
+         height=data$height,width=data$width,
          boundary=data$boundary,dispKernel=data$dispKernel)
 
     r<-c$data

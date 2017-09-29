@@ -61,7 +61,7 @@ facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main para
 
 
 	# run simulation
-	community(maxtime,c(n,1),parameters=M,dispersal=dispersal,interactions=N,
+	community(maxtime,c(n,1),parameters=M,dispersal=dispersal,interactionsD=N,
                     init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel,maxpop=maxpop)
 
 
