@@ -17,7 +17,6 @@ mat.model  <- function(n=3,Ds=runif(n,rep(.00001,n),c(rep(2,n-1),0.01)),Gs=runif
 	M
 }
 
-expm <- function(M) as.matrix(Matrix::expm(M))
 
 #' solution.matrix 
 #' 
@@ -27,6 +26,8 @@ expm <- function(M) as.matrix(Matrix::expm(M))
 #' @param M a square matrix with as many rows as P0
 #' @param times an array containing the times in which to calculate the solution
 solution.matrix <- function(p0, M, times = c(1:10)){
+    expm <- function(M) as.matrix(Matrix::expm(M))
+
 	S <- matrix(nrow=nrow(M),ncol=length(times))
 	for(i in 1:length(times)){
 		    S[,i] <- expm(M*times[i]) %*% p0
@@ -34,20 +35,3 @@ solution.matrix <- function(p0, M, times = c(1:10)){
 	colnames(S) <- times
 	t(S)
 }
-	
-#> mat_model(3,c(1,2,3),c(10,10),100)
-#     [,1] [,2] [,3]
-#[1,]  -11    0  100
-#[2,]   10  -12    0
-#[3,]    0   10   -3
-#> mat <- model(5)
-#           [,1]       [,2]       [,3]       [,4]       [,5]
-#[1,] -1.5629490  0.0000000  0.0000000  0.0000000  0.3634946
-#[2,]  0.3972985 -0.5617822  0.0000000  0.0000000  0.0000000
-#[3,]  0.0000000  0.3668222 -2.8920797  0.0000000  0.0000000
-#[4,]  0.0000000  0.0000000  0.5600529 -1.3567011  0.0000000
-#[5,]  0.0000000  0.0000000  0.0000000  0.1860525 -0.6183549
-
-
-
-	
