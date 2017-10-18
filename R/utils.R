@@ -88,7 +88,7 @@ abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age
     else{d<-data$data}
 
     ## gather data from time points
-	subs <- lapply(times,function(t){subset(d,begintime <= t & (endtime >= t | is.na(endtime)),select=c(1,2))})
+	subs <- lapply(times,function(t){subset(d,d$begintime <= t & (d$endtime >= t | is.na(d$endtime)),select=c(1,2))})
 
     ## number of stage/species id
 	n <- data$num.total
