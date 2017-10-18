@@ -6,7 +6,7 @@
 \usage{
 spatialanimation(data, times = seq(0, data$maxtime, length.out = 50),
   interval = 0.1, movie.name = "facilitationmovie.gif", xlim = c(0,
-  data$w), ylim = c(0, data$h), col = c(colorRampPalette(c("darkred",
+  data$w), ylim = c(0, data$h), color = c(colorRampPalette(c("darkred",
   "pink"))(data$num.total - 1), "lightgreen"), ...)
 }
 \arguments{
@@ -18,7 +18,7 @@ spatialanimation(data, times = seq(0, data$maxtime, length.out = 50),
 
 \item{ylim}{Optional. Limits to the y-axis}
 
-\item{col}{Optional. A color vector}
+\item{color}{Optional. A color vector}
 
 \item{tframe}{a time length to wait between frames. Do not use if using this with
 \code{animation}}

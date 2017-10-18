@@ -7,7 +7,8 @@
 stackplot(mat, col, legend, log.y = FALSE, perc = F, qt = 100, ...)
 }
 \arguments{
-\item{mat}{A population matrix, as produced by \code{\link{abundance.matrix}}}
+\item{mat}{A population matrix, as produced by \code{\link{abundance.matrix}} or something that
+can be coerced to matrix}
 
 \item{col}{Optional. A color vector}
 

@@ -11,6 +11,9 @@ abundance.matrix(data, times = seq(0, data$maxtime, length.out = 50),
 \item{data}{result of a simulation, created by \code{\link{facilitation}}}
 
 \item{times}{array of times at which the abundances will be calculated}
+
+\item{by.age}{T/F. Use this option to get the number of individuals to reach each age, instead of
+abundances for each time.}
 }
 \description{
 creates a matrix with abundances of each life stage/species over time

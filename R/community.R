@@ -32,6 +32,7 @@
 #' ab <- abundance.matrix(malth,times)
 #' stackplot(ab[,1:3]) # species 1
 #' stackplot(ab[,4:5]) # species 2
+#' @export
 community <- function(maxtime, numstages, parameters, dispersal, init, # the main parameters
                          interactions, # interactions
                          height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
@@ -114,10 +115,11 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
 
 #' proceed with a stopped simulation
 #'
-#' @param data result of a simulation, created by \code{\link{facilitation}}
+#' @param data result of a simulation, created by \code{\link{community}}
 #' @param time a number: for how long to extend the simulation
 #'
 #'
+#' @export
 proceed <- function(data,time){
     d<-data$data
     current<-subset(d,is.na(d$endtime))

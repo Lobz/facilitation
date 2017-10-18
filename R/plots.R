@@ -17,6 +17,9 @@
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance.matrix(obj,times)
 #' stackplot(ab[,1:3])
+#' @export
+#' @import grDevices 
+#' @import graphics
 stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 	dots <- list(...)
 	if(missing(col))
@@ -96,6 +99,11 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 #' times <- seq(0,2,by=0.1)
 #' # plot
 #' spatialanimation(malth,times,interval=.1,movie.name="malthusian.gif")
+#' @export
+#' @import grDevices 
+#' @import graphics
+#' @import animation
+#' @import grid
 spatialanimation = function(data, times=seq(0,data$maxtime,length.out=50), interval=0.1,
                             movie.name="facilitationmovie.gif",
                             xlim=c(0,data$w), ylim=c(0,data$h), 
@@ -111,19 +119,19 @@ spatialanimation = function(data, times=seq(0,data$maxtime,length.out=50), inter
 }
 
 
-#' function for ploting simulation frames
-#'
-#' @author Alexandre Adalardo de Oliveira - 16/03/2016
-#' @author M. Salles
-#' @param dtlist	A list of data.frames, one for each time in times, containing columns sp,x,y 
-#' @param times	Array of times, corresponding to the data.frames
-#' @param xlim	Limits to the x-axis
-#' @param ylim	Limits to the y-axis
-#' @param sp    Array of species/stages id, in order of plotting bottom to top
-#' @param col 	A color array, one for each species/stage
-#' @param radius Array or radiuses, one for each species/stage
-spatialplot = function(dtlist, times=1:length(data), xlim, ylim, sp, 
-                       col=colorRampPalette(c("darkred","pink"))(length(sp)), radius)
+# function for ploting simulation frames
+#
+# @author Alexandre Adalardo de Oliveira - 16/03/2016
+# @author M. Salles
+# @param dtlist	A list of data.frames, one for each time in times, containing columns sp,x,y 
+# @param times	Array of times, corresponding to the data.frames
+# @param xlim	Limits to the x-axis
+# @param ylim	Limits to the y-axis
+# @param sp    Array of species/stages id, in order of plotting bottom to top
+# @param col 	A color array, one for each species/stage
+# @param radius Array or radiuses, one for each species/stage
+spatialplot = function(dtlist, times, xlim, ylim, sp, 
+                       col, radius)
 {
     # init viewport
     vp <- viewport(width = 0.8, height = 0.8, xscale=xlim, yscale=ylim)
@@ -150,7 +158,10 @@ spatialplot = function(dtlist, times=1:length(data), xlim, ylim, sp,
 }
 
 
-
+#' make a gif with a single frame
+#' @export
+#' @param t a single time at which to plot
+#' @rdname spatialanimation
 plotsnapshot <- function(data,t,...) {
     spatialanimation(data,c(t,t),...)
 }

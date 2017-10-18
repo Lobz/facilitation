@@ -10,6 +10,8 @@
 #' @examples
 #'mat <- mat.model(5)
 #'mat2 <- mat.model(3,c(1,2,3),c(10,10),100)
+#' @export
+#' @import stats
 mat.model  <- function(n=3,Ds=runif(n,rep(.00001,n),c(rep(2,n-1),0.01)),Gs=runif(n-1,0.00001,2),R=runif(1,0.0001,10)){
 	Gs[n] <- 0
 	M <- diag(-Ds-Gs) + diag(Gs)[c(n,1:(n-1)),]
@@ -25,6 +27,8 @@ mat.model  <- function(n=3,Ds=runif(n,rep(.00001,n),c(rep(2,n-1),0.01)),Gs=runif
 #' @param p0 initial condition, as an array
 #' @param M a square matrix with as many rows as P0
 #' @param times an array containing the times in which to calculate the solution
+#' @export
+#' @import Matrix
 solution.matrix <- function(p0, M, times = c(1:10)){
     expm <- function(M) as.matrix(Matrix::expm(M))
 
@@ -35,3 +39,8 @@ solution.matrix <- function(p0, M, times = c(1:10)){
 	colnames(S) <- times
 	t(S)
 }
+
+#' a function to calculate the dominant eigenvalue of a matrix
+#' @param mat a matrix
+#' @export
+limiting.rate <- function(mat){tryCatch(max(Re(eigen(mat,s=F)$values)),error=function(e) NA)}
