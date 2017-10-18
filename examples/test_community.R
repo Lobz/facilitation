@@ -1,4 +1,4 @@
-maxt <- 30
+#maxt <- 30
 dispersal<-2
 
 results<-list()
@@ -6,6 +6,7 @@ results<-list()
 ### Simple mathusian one species
 nstages <- 3
 init <- c(0,0,100)
+################# D G R
 param <- matrix(c(5,1,0, 1,1,0, .5,0,10),nrow=3,byrow=T)
 results$malth1 <- community(maxt,nstages,param,dispersal,init)
 
