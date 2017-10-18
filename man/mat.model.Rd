@@ -5,7 +5,7 @@
 \title{mat.model}
 \usage{
 mat.model(n = 3, Ds = runif(n, rep(1e-05, n), c(rep(2, n - 1), 0.01)),
-  Gs = runif(n - 1, 1e-05, 2), R = runif(1, 1e-04, 10))
+  Gs = runif(n - 1, 1e-05, 2), R = rexp(n, 1))
 }
 \arguments{
 \item{n}{The number of life stages. Default is 3.}
@@ -14,7 +14,7 @@ mat.model(n = 3, Ds = runif(n, rep(1e-05, n), c(rep(2, n - 1), 0.01)),
 
 \item{Gs}{An (n-1)-array with growth rates for each stage but the last.}
 
-\item{R}{Reproduction rate. Default is rexp(1,1).}
+\item{R}{A n-array of reproduction rates for each stage.}
 }
 \description{
 The \code{mat.model} function produces the interaction matrix for a structured

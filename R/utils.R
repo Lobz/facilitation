@@ -72,6 +72,8 @@ facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main para
 #' 
 #' @param data	result of a simulation, created by \code{\link{facilitation}}
 #' @param times	array of times at which the abundances will be calculated
+#' @param by.age T/F. Use this option to get the number of individuals to reach each age, instead of
+#' abundances for each time.
 #' @examples
 #' malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
 #' times <- seq(0,2,by=0.1)
@@ -86,7 +88,7 @@ abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age
     else{d<-data$data}
 
     ## gather data from time points
-	subs <- lapply(times,function(t){subset(d,begintime <= t & (endtime >= t | is.na(endtime)),select=c(1,2))})
+	subs <- lapply(times,function(t){subset(d,d$begintime <= t & (d$endtime >= t | is.na(d$endtime)),select=c(1,2))})
 
     ## number of stage/species id
 	n <- data$num.total
@@ -124,7 +126,7 @@ abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age
 
 #' calculates the lifespan of each individual
 #'
-#' @param data	result of a simulation, created by \code{\link{facilitation}}
+#' @param data	result of a simulation, created by \code{\link{community}}
 #' @examples
 #' malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
 #' l <- longevity(malth)
@@ -140,8 +142,13 @@ longevity <- function(data){
     r
 }
 
-#' lifehistory relative to birthdate of each individual
+#' lifehistory relative to birthdate of each individual (used by abundance.matrix with by.age)
 #' 
+#' @param data	result of a simulation, created by \code{\link{community}}
+#' @param cap.living T/F. Use this option to set the time of death of living individuals to max
+#' simulation time. Otherwise, living individuals are excluded from the data. Either way, this data
+#' will be more representative if only a small fraction of total individuals is living at the end of
+#' simulation.
 age.data <- function(data,cap.living=F){
     d <- data$data
     if(cap.living){
@@ -159,7 +166,4 @@ age.data <- function(data,cap.living=F){
     b <- by(d,d$id,relative)
     data$age.data <- do.call("rbind",b)
 }
-
-
-
 

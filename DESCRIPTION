@@ -1,14 +1,14 @@
 Package: facilitation
 Title: A C++ Framework for Species Interaction IBMs
-Version: 0.3.1
+Version: 0.3.2
 Authors@R: c(person("Mali", "Salles", email = "marinacs@gmail.com", role = c("aut", "cre")),
-             person("Andre", "Chalom", email="andrechalom@gmail.com", role=c("aut")))
+             person("Andre", "Chalom", email="andrechalom@gmail.com", role=c("aut")),
+             person("Alexandre", "Adalardo", role="ctb"))
 Description: A C++ framework for species interaction IBMs.
 LinkingTo: Rcpp
 Imports:
     Rcpp,
     Matrix,
-    LambertW,
     grid,
     animation
 Suggests:
@@ -17,3 +17,4 @@ Depends:
 License: GPL-2
 LazyData: true
 RoxygenNote: 6.0.1
+URL: https://github.com/Lobz/facilitation

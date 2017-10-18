@@ -17,6 +17,9 @@
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance.matrix(obj,times)
 #' stackplot(ab[,1:3])
+#' @export
+#' @import grDevices 
+#' @import graphics
 stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 	dots <- list(...)
 	if(missing(col))
@@ -80,7 +83,7 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
     }
 }
 
-#' function for ploting simulation frames
+#' function for ploting simulation as a gif
 #'
 #' @author Alexandre Adalardo de Oliveira - 16/03/2016
 #' @author M. Salles
@@ -89,42 +92,53 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 #' @param xlim	Optional. Limits to the x-axis
 #' @param ylim	Optional. Limits to the y-axis
 #' @param color 	Optional. A color vector
-#' @param tframe a time length to wait between frames. Do not use if using this with
+#' @param interval a time length to wait between frames
+#' @param drawing.order an array of stages id, to be drawn bottom to top. Absent stages will not be
+#' drawn.
 #' \code{animation}
 #' @examples
 #' malth <- facilitation(2,3,c(5,1,.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0),radius=c(0,1,2,0))
 #' times <- seq(0,2,by=0.1)
 #' # plot
 #' spatialanimation(malth,times,interval=.1,movie.name="malthusian.gif")
+#' @export
+#' @import grDevices 
+#' @import graphics
+#' @import animation
+#' @import grid
 spatialanimation = function(data, times=seq(0,data$maxtime,length.out=50), interval=0.1,
+                            draw=data$num.total:1,
+                            radius=data$radius[draw],
+                            color=colorRampPalette(c("darkred","lightgreen"))(length(drawing.order)),
                             movie.name="facilitationmovie.gif",
                             xlim=c(0,data$w), ylim=c(0,data$h), 
-                            color=c(colorRampPalette(c("darkred","pink"))(data$num.total-1),"lightgreen"),...)
+                            ...)
 {
-    radius <- data$radius
     # creates list of dataframes, one for each time
-    dtlist <- lapply(times,function(t){subset(data$data,begintime <= t & (endtime >= t | is.na(endtime)))})
+    d<-data$data
+	dtlist <- lapply(times,function(t){subset(d,d$begintime <= t & (d$endtime >= t | is.na(d$endtime)),select=c(1,3,4))})
     maxst <- data$num.total
     # set minimum radius for stages with rad=0
     for(i in 1:length(radius)) if(radius[i] == 0) radius[i] = 0.05
-    saveGIF(spatialplot(dtlist,times=times,xlim=xlim,ylim=ylim,sp=data$num.total:1,color,radius,...),interval=interval,movie.name=movie.name)
+    saveGIF(spatialplot(dtlist,times=times,xlim=xlim,ylim=ylim,sp=draw,color,radius,...),interval=interval,movie.name=movie.name)
 }
 
 
-#' function for ploting simulation frames
-#'
-#' @author Alexandre Adalardo de Oliveira - 16/03/2016
-#' @author M. Salles
-#' @param dtlist	A list of data.frames, one for each time in times, containing columns sp,x,y 
-#' @param times	Array of times, corresponding to the data.frames
-#' @param xlim	Limits to the x-axis
-#' @param ylim	Limits to the y-axis
-#' @param sp    Array of species/stages id, in order of plotting bottom to top
-#' @param col 	A color array, one for each species/stage
-#' @param radius Array or radiuses, one for each species/stage
-spatialplot = function(dtlist, times=1:length(data), xlim, ylim, sp, 
-                       col=colorRampPalette(c("darkred","pink"))(length(sp)), radius)
+# function for ploting simulation frames
+#
+# @author Alexandre Adalardo de Oliveira - 16/03/2016
+# @author M. Salles
+# @param dtlist	A list of data.frames, one for each time in times, containing columns sp,x,y 
+# @param times	Array of times, corresponding to the data.frames
+# @param xlim	Limits to the x-axis
+# @param ylim	Limits to the y-axis
+# @param sp    Array of species/stages id, in order of plotting bottom to top
+# @param col 	A color array, one for each species/stage
+# @param radius Array or radiuses, one for each species/stage
+spatialplot = function(dtlist, times, xlim, ylim, sp, 
+                       col, radius)
 {
+    n <- length(sp)
     # init viewport
     vp <- viewport(width = 0.8, height = 0.8, xscale=xlim, yscale=ylim)
     # loop through times
@@ -136,8 +150,8 @@ spatialplot = function(dtlist, times=1:length(data), xlim, ylim, sp,
             grid.newpage()
             pushViewport(vp)
             grid.rect(gp = gpar(col = "gray"))
-            for (j in sp){
-                dtsp <- dt[dt$sp==j,]
+            for (j in 1:n){
+                dtsp <- dt[dt$sp==sp[j],]
                 if(dim(dtsp)[1] > 0){
                     grid.circle(x = dtsp$x, y=dtsp$y, r=radius[j],default.units="native", gp=gpar(fill=col[j],col=col[j]))
                 }
@@ -150,7 +164,10 @@ spatialplot = function(dtlist, times=1:length(data), xlim, ylim, sp,
 }
 
 
-
+#' make a gif with a single frame
+#' @export
+#' @param t a single time at which to plot
+#' @rdname spatialanimation
 plotsnapshot <- function(data,t,...) {
     spatialanimation(data,c(t,t),...)
 }

@@ -7,7 +7,7 @@
 proceed(data, time)
 }
 \arguments{
-\item{data}{result of a simulation, created by \code{\link{facilitation}}}
+\item{data}{result of a simulation, created by \code{\link{community}}}
 
 \item{time}{a number: for how long to extend the simulation}
 }

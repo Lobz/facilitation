@@ -7,7 +7,7 @@
 longevity(data)
 }
 \arguments{
-\item{data}{result of a simulation, created by \code{\link{facilitation}}}
+\item{data}{result of a simulation, created by \code{\link{community}}}
 }
 \description{
 calculates the lifespan of each individual
