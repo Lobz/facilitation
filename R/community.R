@@ -33,6 +33,8 @@
 #' stackplot(ab[,1:3]) # species 1
 #' stackplot(ab[,4:5]) # species 2
 #' @export
+#' @useDynLib facilitation
+#' @import Rcpp
 community <- function(maxtime, numstages, parameters, dispersal, init, # the main parameters
                          interactions, # interactions
                          height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
