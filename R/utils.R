@@ -32,6 +32,7 @@
 #' @param facilitatorR	Facilitator reproduction rate
 #' @param facilitatorI	Facilitator intraspecific effect
 #' @param facilitatorS	Facilitator maximum stress effect
+#' @export
 #' @examples
 #' malth <- facilitation(2,3,c(5,1.2,0.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0))
 #' times <- seq(0,2,by=0.1)
@@ -74,11 +75,13 @@ facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main para
 #' @param times	array of times at which the abundances will be calculated
 #' @param by.age T/F. Use this option to get the number of individuals to reach each age, instead of
 #' abundances for each time.
+#' @param \dots additional parameters to be passed to the \code{\link{age.data}} function
 #' @examples
 #' malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance.matrix(malth,times)
 #' stackplot(ab[,1:3])
+#' @export
 abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age=F,...){
     ## check if array of times is appropriate to simulation
 	if(max(times) > data$maxtime){ "Warning: array of times goes further than simulation maximum time" }
@@ -128,6 +131,7 @@ abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age
 #'
 #' @param data	result of a simulation, created by \code{\link{community}}
 #' @examples
+#' @export
 #' malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
 #' l <- longevity(malth)
 #' hist(l$longevity)

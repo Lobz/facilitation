@@ -16,6 +16,8 @@ can be coerced to matrix}
 
 \item{log.y}{Logical. Should the y-axis be plotted in a logarithmic scale?}
 
+\item{perc}{Logical. If set to true, will output the y-axis as a percentage instead of the absolute numbers}
+
 \item{qt}{Optional. For distributions, show only up to quantile qt (percentage)}
 
 \item{\dots}{Further parameters to be passed to the lower level plot function}

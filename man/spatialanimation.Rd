@@ -3,12 +3,13 @@
 \name{spatialanimation}
 \alias{spatialanimation}
 \alias{plotsnapshot}
-\title{function for ploting simulation frames}
+\title{Function for ploting simulation as a gif}
 \usage{
 spatialanimation(data, times = seq(0, data$maxtime, length.out = 50),
-  interval = 0.1, movie.name = "facilitationmovie.gif", xlim = c(0,
-  data$w), ylim = c(0, data$h), color = c(colorRampPalette(c("darkred",
-  "pink"))(data$num.total - 1), "lightgreen"), ...)
+  interval = 0.1, draw = data$num.total:1, radius = data$radius[draw],
+  color = colorRampPalette(c("darkred", "lightgreen"))(length(draw)),
+  movie.name = "facilitationmovie.gif", xlim = c(0, data$w), ylim = c(0,
+  data$h))
 
 plotsnapshot(data, t, ...)
 }
@@ -17,21 +18,29 @@ plotsnapshot(data, t, ...)
 
 \item{times}{array of times at which to plot}
 
+\item{interval}{a time length to wait between frames}
+
+\item{draw}{an array of stages id, to be drawn bottom to top. Absent stages will not be
+drawn.}
+
+\item{radius}{Optional. Array representing the sizes in which the individuals will be drawn.}
+
+\item{color}{Optional. A color vector}
+
+\item{movie.name}{The filename of the gif that will be saved.
+If left blank, the individuals will be drawn with the radius defined by their stage.}
+
 \item{xlim}{Optional. Limits to the x-axis}
 
 \item{ylim}{Optional. Limits to the y-axis}
 
-\item{color}{Optional. A color vector}
-
 \item{t}{a single time at which to plot}
 
-\item{tframe}{a time length to wait between frames. Do not use if using this with
-\code{animation}}
+\item{\dots}{additional parameters to be passed to spatialanimation}
 }
 \description{
-function for ploting simulation frames
-
-make a gif with a single frame
+The spatialanimation function plots the individuals of the selected stages over time. Use plotsnapshot
+for plotting a single instant.
 }
 \examples{
 malth <- facilitation(2,3,c(5,1,.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0),radius=c(0,1,2,0))

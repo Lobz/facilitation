@@ -4,9 +4,10 @@
 \alias{community}
 \title{Runs a simulation with a structured population and a non-structured facilitator population}
 \usage{
-community(maxtime, numstages, parameters, dispersal, init, interactions,
-  height = 100, width = 100, boundary = c("reflexive", "absortive",
-  "periodic"), dispKernel = c("exponential", "random"), maxpop = 30000)
+community(maxtime, numstages, parameters, dispersal, init, interactionsD,
+  interactionsG, interactionsR, height = 100, width = 100,
+  boundary = c("reflexive", "absortive", "periodic"),
+  dispKernel = c("exponential", "random"), maxpop = 30000)
 }
 \arguments{
 \item{maxtime}{How long the simulation must run}
@@ -21,15 +22,20 @@ D,G,R,radius(optional),maxstressefect (optional)}
 \item{init}{Either an array of initial numbers for each stage of each population, or a
 data.frame with the history of a simulation}
 
-\item{interactions}{Optional. An array of effects of life stages over each other, where element
-[i+n*j] means the effect of stage i over stage j. Positive values equal facilitation, negative ones, competition.}
+\item{interactionsD}{Optional. An array of effects of life stages over each other, where element
+[i+n*j] means the effect of stage i over stage j. Positive values equal facilitation, negative
+ones, competition. Affects deathrates.}
+
+\item{interactionsG}{Same as above, but affecting growth rates.}
+
+\item{interactionsR}{Same as above, but affecting reproduction rates.}
 
 \item{height}{Arena height}
 
 \item{width}{Arena width}
 
 \item{boundary}{Type of boundary condition. Options are "reflexive", "absortive" and
-"periodic". Default os reflexive.}
+"periodic". Default is reflexive.}
 
 \item{dispKernel}{Type of dispersion kernel. Options are "exponential" and "random", in which
 seeds are dispersed randomly regarless of parent position (note: "random" option ignores
@@ -37,9 +43,6 @@ dispersal parameter)}
 
 \item{maxpop}{If the simulation reaches this many individuals total, it will stop. Default
 is 30000.}
-
-\item{maxstresseffects}{Optional (use for a stress gradient). Array of values for the slope
-of increase of environmental effect on each stage}
 }
 \description{
 All effects affect death rates. Effects are subtracted from death rates, meaning that positive
@@ -48,7 +51,7 @@ effects decrease death rates while negative ones increase death rates.
 \examples{
 init <- list(c(100,0,0),c(100,0))
 ###               D G R  D G R  ...
-param <- matrix(c(2,1,0, 1,1,0, .5,0,6, 1,1,0, .5,0,2), byrow=T, nrow=5) 
+param <- matrix(c(2,1,0, 1,1,0, .5,0,6, 1,1,0, .5,0,2), byrow=TRUE, nrow=5) 
 malth <- community(3,c(3,2),param,dispersal=2,init=init)
 times <- seq(0,3,by=0.1)
 ab <- abundance.matrix(malth,times)

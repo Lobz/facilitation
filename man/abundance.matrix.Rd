@@ -14,6 +14,8 @@ abundance.matrix(data, times = seq(0, data$maxtime, length.out = 50),
 
 \item{by.age}{T/F. Use this option to get the number of individuals to reach each age, instead of
 abundances for each time.}
+
+\item{\dots}{additional parameters to be passed to the \code{\link{age.data}} function}
 }
 \description{
 creates a matrix with abundances of each life stage/species over time

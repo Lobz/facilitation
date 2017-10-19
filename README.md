@@ -58,7 +58,7 @@ param <- matrix(c(2,1,0,0, 1,1,0,.1, .5,0,6,1, 1,1,0,.2, .5,0,2,2), byrow=T, nro
 ### interaction matrix: positive values represent facilitation, negative ones, competition
 interact <- matrix(c(0,0,0,0,0, 0,-.1,+.1,-.1,0, 0,0,-.1,0,-.2, ## effects over species 1
                                 0,-.2,+.2,-.1,0, 0,0,-.2,0,-.1),ncol=5) ## effects over species 2
-results <- community(maxt,nstages,param,dispersal,init,interactions=interact)
+results <- community(maxt,nstages,param,dispersal,init,interactionsD=interact)
 ```
 
 See the script `examples/test_community.R` for a few more examples.

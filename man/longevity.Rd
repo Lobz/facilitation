@@ -12,8 +12,3 @@ longevity(data)
 \description{
 calculates the lifespan of each individual
 }
-\examples{
-malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
-l <- longevity(malth)
-hist(l$longevity)
-}

@@ -10,8 +10,9 @@
 #' @param col Optional. A color vector
 #' @param legend Optional. An array of names
 #' @param log.y Logical. Should the y-axis be plotted in a logarithmic scale?
-#' @param \dots Further parameters to be passed to the lower level plot function
+#' @param perc Logical. If set to true, will output the y-axis as a percentage instead of the absolute numbers
 #' @param qt Optional. For distributions, show only up to quantile qt (percentage)
+#' @param \dots Further parameters to be passed to the lower level plot function
 #' @examples
 #' obj <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
 #' times <- seq(0,2,by=0.1)
@@ -83,19 +84,24 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
     }
 }
 
-#' function for ploting simulation as a gif
+#' Function for ploting simulation as a gif
+#'
+#' The spatialanimation function plots the individuals of the selected stages over time. Use plotsnapshot
+#' for plotting a single instant.
 #'
 #' @author Alexandre Adalardo de Oliveira - 16/03/2016
 #' @author M. Salles
 #' @param data	result of a simulation, created by \code{\link{facilitation}}
 #' @param times	array of times at which to plot
+#' @param interval a time length to wait between frames
+#' @param draw an array of stages id, to be drawn bottom to top. Absent stages will not be
+#' drawn.
 #' @param xlim	Optional. Limits to the x-axis
 #' @param ylim	Optional. Limits to the y-axis
 #' @param color 	Optional. A color vector
-#' @param interval a time length to wait between frames
-#' @param drawing.order an array of stages id, to be drawn bottom to top. Absent stages will not be
-#' drawn.
-#' \code{animation}
+#' @param radius Optional. Array representing the sizes in which the individuals will be drawn. 
+#' @param movie.name The filename of the gif that will be saved.
+#' If left blank, the individuals will be drawn with the radius defined by their stage.
 #' @examples
 #' malth <- facilitation(2,3,c(5,1,.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0),radius=c(0,1,2,0))
 #' times <- seq(0,2,by=0.1)
@@ -109,10 +115,10 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 spatialanimation = function(data, times=seq(0,data$maxtime,length.out=50), interval=0.1,
                             draw=data$num.total:1,
                             radius=data$radius[draw],
-                            color=colorRampPalette(c("darkred","lightgreen"))(length(drawing.order)),
+                            color=colorRampPalette(c("darkred","lightgreen"))(length(draw)),
                             movie.name="facilitationmovie.gif",
-                            xlim=c(0,data$w), ylim=c(0,data$h), 
-                            ...)
+                            xlim=c(0,data$w), ylim=c(0,data$h)
+                            )
 {
     # creates list of dataframes, one for each time
     d<-data$data
@@ -120,7 +126,7 @@ spatialanimation = function(data, times=seq(0,data$maxtime,length.out=50), inter
     maxst <- data$num.total
     # set minimum radius for stages with rad=0
     for(i in 1:length(radius)) if(radius[i] == 0) radius[i] = 0.05
-    saveGIF(spatialplot(dtlist,times=times,xlim=xlim,ylim=ylim,sp=draw,color,radius,...),interval=interval,movie.name=movie.name)
+    saveGIF(spatialplot(dtlist,times=times,xlim=xlim,ylim=ylim,sp=draw,color,radius),interval=interval,movie.name=movie.name)
 }
 
 
@@ -163,10 +169,9 @@ spatialplot = function(dtlist, times, xlim, ylim, sp,
     }
 }
 
-
-#' make a gif with a single frame
 #' @export
 #' @param t a single time at which to plot
+#' @param \dots additional parameters to be passed to spatialanimation
 #' @rdname spatialanimation
 plotsnapshot <- function(data,t,...) {
     spatialanimation(data,c(t,t),...)

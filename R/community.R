@@ -10,8 +10,6 @@
 #' @param init		Either an array of initial numbers for each stage of each population, or a
 #' data.frame with the history of a simulation
 #' @param dispersal	Average distance for seed dispersal
-#' @param maxstresseffects		Optional (use for a stress gradient). Array of values for the slope
-#' of increase of environmental effect on each stage
 #' @param interactionsD	Optional. An array of effects of life stages over each other, where element
 #' [i+n*j] means the effect of stage i over stage j. Positive values equal facilitation, negative
 #' ones, competition. Affects deathrates.
@@ -29,7 +27,7 @@
 #' @examples
 #' init <- list(c(100,0,0),c(100,0))
 #' ###               D G R  D G R  ...
-#' param <- matrix(c(2,1,0, 1,1,0, .5,0,6, 1,1,0, .5,0,2), byrow=T, nrow=5) 
+#' param <- matrix(c(2,1,0, 1,1,0, .5,0,6, 1,1,0, .5,0,2), byrow=TRUE, nrow=5) 
 #' malth <- community(3,c(3,2),param,dispersal=2,init=init)
 #' times <- seq(0,3,by=0.1)
 #' ab <- abundance.matrix(malth,times)
