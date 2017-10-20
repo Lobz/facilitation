@@ -1,39 +1,77 @@
-#' mat.model 
+#' matrix population model 
 #' 
-#' The \code{mat.model} function produces the interaction matrix for a structured
-#' population model where only the last life stage reproduces, to be applyed in a linear ODE
+#' Produces the mpm matrix for a continuous time structured
+#' population model, to be applied in a linear ODE
 #' @param n The number of life stages. Default is 3.
 #' @param Ds An n-array with death rates for each stage.
 #' @param Gs An (n-1)-array with growth rates for each stage but the last.
-#' @param R A n-array of reproduction rates for each stage.
+#' @param Rs A n-array of reproduction rates for each stage.
+#' matrices)
 #' @examples
-#'mat <- mat.model(5)
-#'mat2 <- mat.model(3,c(1,2,3),c(10,10),100)
+#' mat <- mat.model.base(5)
+#' mat2 <- mat.model.base(3,c(1,2,3),c(10,10),100)
 #' @export
 #' @import stats
-mat.model  <- function(n=3,Ds=runif(n,rep(.00001,n),c(rep(2,n-1),0.01)),Gs=runif(n-1,0.00001,2),R=rexp(n,1)){
-	Gs[n] <- 0
-	M <- diag(-Ds-Gs) + diag(Gs)[c(n,1:(n-1)),]
-	M[1,] <- M[1,] + R
-	M
+mat.model.base  <- function(n=3,Ds=runif(n,0,5),Gs=runif(n-1,0,5),Rs=runif(n,0,5)){
+    if(length(Rs)==1){Rs <- c(rep(0,n-1),Rs)}
+    Gs[n] <- 0
+    M <- diag(-Ds-Gs) + diag(Gs)[c(n,1:(n-1)),]
+    M[1,] <- M[1,] + Rs
+    M
 }
 
-#' Generate a matrix population model from the simulation parameters
-#' @param data the result of a simulation
+#' matrix population model 
+#' 
+#' Produces the mpm matrix for a continuous time structured
+#' population model, to be applied in a linear ODE
+#' @param data Either the result of a simulation, to extract the parameters from (obs: may return a list of
+#' matrices), or a data.frame containing the parameters
+#' @param ns an array of numbers of stages. Use for more than one population.
+#' @param combine.matrices Logical. Combine the matrices into a single, multi-population matrix?
+#' @examples
+#' # example 1
+#' mat.model(create.parameters(n=4))
+#' 
+#' # example 2 
+#' init <- list(c(100,0,0),c(100,0))
+#' ###               D G R  D G R  ...
+#' param <- matrix(c(2,1,0, 1,1,0, .5,0,6, 1,1,0, .5,0,2), byrow=TRUE, nrow=5) 
+#' malth <- community(0,c(3,2),param,dispersal=2,init=init)
+#' mat.model(malth,combine.matrice=T)
 #' @export
-simulation.to.mat.models <- function(data){
-    rates<-data.frame(data$rates.matrix[,1:3])
-    if(data$num.pop==1){
-        mat.model(data$num.stages,rates$D,rates$G,rates$R)
+#' @importFrom Matrix bdiag
+mat.model <- function(data, ns, combine.matrices=F){
+    if(class(data)=="data.frame"){
+        rates<-data
+        if(missing(ns)){
+            n<-1
+        }
+        else {
+            n <- length(ns)
+        }
     }
-    else{
+    else {
+        rates<-data$param
         n<-data$num.pop
         ns<-data$num.stages
+    }
+
+    if(n==1){
+        ns<-nrow(rates)
+        mat.model.base(ns,rates$D,rates$G,rates$R)
+    }
+    else{
         nstarts<-c(1,sapply(1:(n-1),function(i)sum(ns[1:i])+1))
-        lapply(1:n,function(i){
+        Ms <- lapply(1:n,function(i){
                    r<-rates[1:ns[i]+nstarts[i]-1,]
-                   mat.model(ns[i],r$D,r$G,r$R)
-        })
+                   mat.model.base(ns[i],r$D,r$G,r$R)
+})
+        if(combine.matrices){
+            Matrix::bdiag(Ms)
+        }
+        else {
+            Ms
+        }
     }
 }
 
@@ -46,6 +84,9 @@ simulation.to.mat.models <- function(data){
 #' @param times an array containing the times in which to calculate the solution
 #' @export
 #' @importFrom Matrix expm
+#' @examples
+#' mat <- mat.model.base(5)
+#' solution.matrix(c(1,0,0),mat)
 solution.matrix <- function(p0, M, times = c(1:10)){
     expm <- function(M) as.matrix(Matrix::expm(M))
 
@@ -57,7 +98,13 @@ solution.matrix <- function(p0, M, times = c(1:10)){
     t(S)
 }
 
-#' a function to calculate the dominant eigenvalue of a matrix
-#' @param mat a matrix
+#' Dominant eigenvalue
+#' 
+#' a function to calculate the per-capita growth rate of a mpm as t --> infinity, in other words,
+#' the real part of the dominant eigenvalue of a matrix
+#' @param mat a square matrix
 #' @export
+#' @examples
+#' mat <- mat.model.base(5)
+#' limiting.rate(mat)
 limiting.rate <- function(mat){tryCatch(max(Re(eigen(mat,symmetric=F)$values)),error=function(e) NA)}
