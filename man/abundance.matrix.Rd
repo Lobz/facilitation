@@ -2,13 +2,13 @@
 % Please edit documentation in R/utils.R
 \name{abundance.matrix}
 \alias{abundance.matrix}
-\title{creates a matrix with abundances of each life stage/species over time}
+\title{abundance matrix}
 \usage{
 abundance.matrix(data, times = seq(0, data$maxtime, length.out = 50),
   by.age = F, ...)
 }
 \arguments{
-\item{data}{result of a simulation, created by \code{\link{facilitation}}}
+\item{data}{result of a simulation, created by \code{\link{community}}}
 
 \item{times}{array of times at which the abundances will be calculated}
 
@@ -21,7 +21,7 @@ abundances for each time.}
 creates a matrix with abundances of each life stage/species over time
 }
 \examples{
-malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
+malth <- community(2,3,param,dispersal=2,init=c(100,0,0,0))
 times <- seq(0,2,by=0.1)
 ab <- abundance.matrix(malth,times)
 stackplot(ab[,1:3])

@@ -17,3 +17,7 @@ solution.matrix(p0, M, times = c(1:10))
 The \code{solution.matrix} function returns the solution to a linear ODE of the form P' = MP,
 which is merely P(t) = exp(Mt)p0 where p0 is the initial condition
 }
+\examples{
+mat <- mat.model.base(5)
+solution.matrix(c(1,0,0),mat)
+}

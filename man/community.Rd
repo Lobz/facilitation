@@ -2,7 +2,7 @@
 % Please edit documentation in R/community.R
 \name{community}
 \alias{community}
-\title{Runs a simulation with a structured population and a non-structured facilitator population}
+\title{community}
 \usage{
 community(maxtime, numstages, parameters, dispersal, init, interactionsD,
   interactionsG, interactionsR, height = 100, width = 100,
@@ -14,7 +14,7 @@ community(maxtime, numstages, parameters, dispersal, init, interactionsD,
 
 \item{numstages}{Array of number of stages for each population}
 
-\item{parameters}{Matrix with one row for each stage. Columns:
+\item{parameters}{Data.frame or matrix with one row for each stage. Columns:
 D,G,R,radius(optional),maxstressefect (optional)}
 
 \item{dispersal}{Average distance for seed dispersal}
@@ -22,13 +22,14 @@ D,G,R,radius(optional),maxstressefect (optional)}
 \item{init}{Either an array of initial numbers for each stage of each population, or a
 data.frame with the history of a simulation}
 
-\item{interactionsD}{Optional. An array of effects of life stages over each other, where element
-[i+n*j] means the effect of stage i over stage j. Positive values equal facilitation, negative
-ones, competition. Affects deathrates.}
+\item{interactionsD}{Optional. A square matrix of effects of life stages over each other, where element
+[i,j] is the effect of stage i over stage j. Positive values equal facilitation, negative
+ones, competition. The interactions occur only if the affected individual is within the affecting
+individual's radius, and are additive. Affects death rates (is subtracted from D).}
 
-\item{interactionsG}{Same as above, but affecting growth rates.}
+\item{interactionsG}{Same as above, but affecting growth rates (is added to G).}
 
-\item{interactionsR}{Same as above, but affecting reproduction rates.}
+\item{interactionsR}{Same as above, but affecting reproduction rates (is added to R) .}
 
 \item{height}{Arena height}
 
@@ -38,15 +39,14 @@ ones, competition. Affects deathrates.}
 "periodic". Default is reflexive.}
 
 \item{dispKernel}{Type of dispersion kernel. Options are "exponential" and "random", in which
-seeds are dispersed randomly regarless of parent position (note: "random" option ignores
+seeds are dispersed randomly regardless of parent position (note: "random" option ignores
 dispersal parameter)}
 
 \item{maxpop}{If the simulation reaches this many individuals total, it will stop. Default
 is 30000.}
 }
 \description{
-All effects affect death rates. Effects are subtracted from death rates, meaning that positive
-effects decrease death rates while negative ones increase death rates.
+Runs a simulation with any number of structured populations, for a limited time.
 }
 \examples{
 init <- list(c(100,0,0),c(100,0))

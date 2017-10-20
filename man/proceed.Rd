@@ -2,7 +2,7 @@
 % Please edit documentation in R/community.R
 \name{proceed}
 \alias{proceed}
-\title{proceed with a stopped simulation}
+\title{proceed}
 \usage{
 proceed(data, time)
 }
@@ -12,5 +12,5 @@ proceed(data, time)
 \item{time}{a number: for how long to extend the simulation}
 }
 \description{
-proceed with a stopped simulation
+Proceed with a stopped simulation.
 }

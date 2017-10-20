@@ -2,13 +2,18 @@
 % Please edit documentation in R/mat_model.R
 \name{limiting.rate}
 \alias{limiting.rate}
-\title{a function to calculate the dominant eigenvalue of a matrix}
+\title{Dominant eigenvalue}
 \usage{
 limiting.rate(mat)
 }
 \arguments{
-\item{mat}{a matrix}
+\item{mat}{a square matrix}
 }
 \description{
-a function to calculate the dominant eigenvalue of a matrix
+a function to calculate the per-capita growth rate of a mpm as t --> infinity, in other words,
+the real part of the dominant eigenvalue of a matrix
+}
+\examples{
+mat <- mat.model.base(5)
+limiting.rate(mat)
 }

@@ -2,25 +2,22 @@
 % Please edit documentation in R/mat_model.R
 \name{mat.model}
 \alias{mat.model}
-\title{mat.model}
+\title{matrix population model}
 \usage{
-mat.model(n = 3, Ds = runif(n, rep(1e-05, n), c(rep(2, n - 1), 0.01)),
-  Gs = runif(n - 1, 1e-05, 2), R = rexp(n, 1))
+mat.model(data, ns, combine.matrices = F)
 }
 \arguments{
-\item{n}{The number of life stages. Default is 3.}
+\item{data}{Either the result of a simulation, to extract the parameters from (obs: may return a list of
+matrices), or a data.frame containing the parameters}
 
-\item{Ds}{An n-array with death rates for each stage.}
+\item{ns}{an array of numbers of stages. Use for more than one population.}
 
-\item{Gs}{An (n-1)-array with growth rates for each stage but the last.}
-
-\item{R}{A n-array of reproduction rates for each stage.}
+\item{combine.matrices}{Logical. Combine the matrices into a single, multi-population matrix?}
 }
 \description{
-The \code{mat.model} function produces the interaction matrix for a structured
-population model where only the last life stage reproduces, to be applyed in a linear ODE
+Produces the mpm matrix for a continuous time structured
+population model, to be applied in a linear ODE
 }
 \examples{
-mat <- mat.model(5)
-mat2 <- mat.model(3,c(1,2,3),c(10,10),100)
+mat <- mat.model(malth)
 }
