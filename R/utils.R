@@ -1,93 +1,64 @@
-#' Runs a simulation with a structured population and a non-structured facilitator population
+#' Create Parameters 
 #'
-#' All effects affect death rates. Effects are subtracted from death rates, meaning that positive
-#' effects decrease death rates while negative ones increase death rates.
-#' 
-#' @param maxtime 	How long the simulation must run
-#' @param n 		Number of stages in the structured population
+#' Structures the parameters into the correct format for use in  \link{community}
+#'
 #' @param Ds		An array of death rates for the structured population, of length \code{n}
 #' @param Gs		An array of growth rates for the structured population, of length \code{n-1}
-#' @param fac		Optional. An array of effects of the facilitator over each stage of the beneficiary
-#' species, of length \code{n-1}. Positive values equal facilitation, negative ones, competition.
-#' @param R		Rate of seed production by adult of the structured population
-#' @param init		An array of initial numbers for each stage of the structured population, and
-#' the facilitator population. Length n+1.
-#' @param dispersal	Average distance for seed dispersal
-#' @param maxstresseffects		Optional (use for a stress gradient). Array of values for
-#' how much the environmental stress can increse death rate at maximum stress. Length n+1. Stress
-#' gradient is linear, being miminum a x=0 (left) and maximum at x=width (right).
-#' @param radius		Optional (use if there are any interactions). Array of interaction radiuses. Length n+1.
-#' @param interactions	Optional. An array of effects of life stages over each other, where element
-#' [i+n*j] means the effect of stage i over stage j. Positive values equal facilitation, negative ones, competition.
-#' @param height	Arena height
-#' @param width		Arena width
-#' @param boundary	Type of boundary condition. Options are "reflexive", "absortive" and
-#' "periodic". Default os reflexive.
-#' @param dispKernel	Type of dispersion kernel. Options are "exponential" and "random", in which
-#' seeds are dispersed randomly regarless of parent position (note: "random" option ignores
-#' dispersal parameter)
-#' @param maxpop	If the simulation reaches this many individuals total, it will stop. Default
-#' is 30000.
-#' @param facilitatorD	Facilitator death rate
-#' @param facilitatorR	Facilitator reproduction rate
-#' @param facilitatorI	Facilitator intraspecific effect
-#' @param facilitatorS	Facilitator maximum stress effect
+#' @param Rs		Either the seed production rate of adults in the population, or an array of seed production rates, of length \code{n}.
+#' @param radius		Optional (use if there are any interactions). Either one radius of
+#' interactions or an array of interaction radiuses, of length \code{n}.
+#' @param n         Number of stages in the population
 #' @export
 #' @examples
-#' malth <- facilitation(2,3,c(5,1.2,0.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0))
-#' times <- seq(0,2,by=0.1)
-#' ab <- abundance.matrix(malth,times)
-#' stackplot(ab[,1:3])
-facilitation <- function(maxtime, n, Ds, Gs, R, dispersal, init, # the main parameters
-                         maxstresseffects = rep(0,n), radius=rep(2,n+1), # stress gradient effects
-                         interactions=rep(0,n*n), fac=rep(0,n-1), # interactions
-                         height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
-                         facilitatorD=0,facilitatorR=0,facilitatorI=0, facilitatorS=0, # facilitator dynamics
-                         dispKernel=c("exponential","random"), # type of dispersal
-                         maxpop=30000){
+#' # create a sample parameters
+#' create.parameters(n=3)
+#'
+#' # structure parameters from arrays
+#' create.parameters(Ds=c(10,5,2),Gs=c(2,2),Rs=20,radius=2)
+#'
+create.parameters <- function(Ds, Gs, Rs, radius, n){
+    if(missing(n)) n=length(Ds)
+    else{
+        if(missing(Ds)) Ds = runif(n,0,5)
+        if(missing(Gs)) Gs = runif(n-1,0,5)
+        if(missing(Rs)) Rs = runif(n,0,5)
+    }
+    if(missing(radius)) radius=rep(0,n)
 
-    if(length(radius)==1){radius <- rep(radius,n+1)}
-	M <- matrix(c(
-			Ds,facilitatorD, #Ds
-			Gs, 0, 0, #Gs
-			rep(0, n-1),R,facilitatorR, #Rs
-			radius, #Rads
-			maxstresseffects, facilitatorS #effects
-		), nrow = n+1)
-
-	N <- matrix(interactions,nrow=n)
-	N <- rbind(N,c(fac,0))
-	N <- c(N,rep(0,n),facilitatorI)
-    N <- matrix(N,n+1)
-
-
-	# run simulation
-	community(maxtime,c(n,1),parameters=M,dispersal=dispersal,interactionsD=N,
-                    init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel,maxpop=maxpop)
-
-
+    if(length(radius)==1){radius <- rep(radius,n)}
+    if(length(Rs)==1){Rs <- c(rep(0,n-1),Rs)}
+    Gs[n]<-0
+	data.frame(D=Ds,G=Gs,R=Rs,radius=radius)
 }
-#dt <- facilitation(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w)
 
+#' abundance matrix
+#' 
 #' creates a matrix with abundances of each life stage/species over time
 #' 
-#' @param data	result of a simulation, created by \code{\link{facilitation}}
+#' @param data	result of a simulation, created by \code{\link{community}}
 #' @param times	array of times at which the abundances will be calculated
 #' @param by.age T/F. Use this option to get the number of individuals to reach each age, instead of
 #' abundances for each time.
-#' @param \dots additional parameters to be passed to the \code{\link{age.data}} function
+#' @param \dots additional parameters to be passed to the
+#' @param cap.living Logical. Use this option with by.age=T, to set the time of death of living individuals to max
+#' simulation time. Otherwise, living individuals are excluded from the data. Either way, this data
+#' will be more representative if only a small fraction of total individuals is living at the end of
+#' simulation.
 #' @examples
-#' malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
+#' nstages <- 3
+#' init <- c(0,0,10)
+#' ################# D G R
+#' param <- matrix(c(5,1,0, 1,1,0, .5,0,10),nrow=3,byrow=T)
+#' malth <- community(3,nstages,param,dispersal=2,init)
 #' times <- seq(0,2,by=0.1)
 #' ab <- abundance.matrix(malth,times)
-#' stackplot(ab[,1:3])
 #' @export
-abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age=F,...){
+abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age=F,cap.living=F){
     ## check if array of times is appropriate to simulation
 	if(max(times) > data$maxtime){ "Warning: array of times goes further than simulation maximum time" }
 
     ## check if by.age
-    if(by.age){d <- age.data(data,...)}
+    if(by.age){d <- age.data(data,cap.living)}
     else{d<-data$data}
 
     ## gather data from time points
@@ -127,14 +98,12 @@ abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age
     ab
 }
 
+#' longevity
+#' 
 #' calculates the lifespan of each individual
 #'
 #' @param data	result of a simulation, created by \code{\link{community}}
-#' @examples
 #' @export
-#' malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
-#' l <- longevity(malth)
-#' hist(l$longevity)
 longevity <- function(data){
     d <- data$data[with(data$data,order(-endtime)),] #orders by endtime, last to first
     ind.life <- function(i){c(i$sp[1],i$id[1],min(i$begintime),i$endtime[1])}
@@ -146,13 +115,11 @@ longevity <- function(data){
     r
 }
 
-#' lifehistory relative to birthdate of each individual (used by abundance.matrix with by.age)
-#' 
-#' @param data	result of a simulation, created by \code{\link{community}}
-#' @param cap.living T/F. Use this option to set the time of death of living individuals to max
-#' simulation time. Otherwise, living individuals are excluded from the data. Either way, this data
-#' will be more representative if only a small fraction of total individuals is living at the end of
-#' simulation.
+# age data
+# 
+# lifehistory relative to birthdate of each individual (used by abundance.matrix with by.age)
+# 
+# @param data	result of a simulation, created by \code{\link{community}}
 age.data <- function(data,cap.living=F){
     d <- data$data
     if(cap.living){
