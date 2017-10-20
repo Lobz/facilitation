@@ -26,16 +26,22 @@ numstages <- 3
 deathrates <- c(2, 0.2, 0.2)  # death rates for seed, sapling and adult
 growthrates <- c(1, 0.2)      # transition rates seed-->sapling and sapling-->adult
 reproductionrate <- 10        # reproduction rate (only adult)
+radius <- c(0,0.5,2)        # this are the distances up to which the individuals can have effect on others, by stage
+param<-create.parameters(deathrates,growthrates,reproductionrate,radius) #produce the parameter
+param <- rbind(param,c(0,0,0,2))   # parameters for facilitator (no dynamics, radius 2)
+
 dispersalradius <- 2	      # average distance a seed falls from the parent (distance is gaussian)
 init <- c(1,1,10,20)          # initial pop. sizes for the 3 stages plus the facilitator species
-facindex <- c(0,1)            # this will be the values by which facilitator decreases seeds and seedlings deathrates
-effects <- c(0,0,0, 0,-0.5,0, 0,0,-0.2) # the effects reducing deathrate (negative values increase deathrates)
-radius <- c(0,0.5,2,2)        # this are the distances up to which the individuals can have effect on others, by stage + facilitator
+effects <- c(0,0,0,0,       # effects over seeds (none)
+            0,-.5,0,+1,     # effects over seedlings (competition and facilitation)
+            0,0,-0.2,0,     # effects over adults (competition with adults)  
+            0,0,0,0)        # effects over facilitator (none)
 maxt <- 10                    # time up to which the simulation shall run
 h <- 50                       # arena height
 w <- 50                       # arena width
 
-results <- facilitation(maxtime=maxt, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, interactions=effects, fac=facindex, init=init, rad=radius, h=h, w=w)
+
+results <- community(maxt,numstages+1,param,dispersalradius,init,interactionsD=effects)
 ```
 
 The function `facilitation` is currently implemented as a wrapper to the more general function,
@@ -98,7 +104,7 @@ stackplot(abundance.matrix(results,seq(0,maxt,length.out=200))[,1:3])
 ```
 The package also includes functions to plot the expected abundances according to a linear differential model. To produce the matrix corresponding to the ODE and calculate the solution (that is, the matrix exponential), run the following:
 ```r
-mat <- mat.model(n=numstages,Ds=deathrates,Gs=growthrates,R=reproductionrate)
+mat <- mat.model(results)
 so <- solution.matrix(p0=init[1:3], M=mat, times=times)
 ```
 You can also plot the results (plot the whole matrix since there is only one species this time):
@@ -107,7 +113,6 @@ stackplot(so)
 ```
 Note that this is the analitical solution to the ODE model that corresponds to the structured population in the *absence of interactions*.
 
-There are some other functions implemented in the package, mostly to simplify analysis.
 
 ### Disclaimer
 
