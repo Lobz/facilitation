@@ -1,26 +1,26 @@
-#' Runs a simulation with a structured population and a non-structured facilitator population
+#' community
 #'
-#' All effects affect death rates. Effects are subtracted from death rates, meaning that positive
-#' effects decrease death rates while negative ones increase death rates.
+#' Runs a simulation with any number of structured populations, for a limited time.
 #' 
 #' @param maxtime 	How long the simulation must run
 #' @param numstages Array of number of stages for each population
-#' @param parameters 	Matrix with one row for each stage. Columns:
+#' @param parameters 	Data.frame or matrix with one row for each stage. Columns:
 #' D,G,R,radius(optional),maxstressefect (optional)
 #' @param init		Either an array of initial numbers for each stage of each population, or a
 #' data.frame with the history of a simulation
 #' @param dispersal	Average distance for seed dispersal
-#' @param interactionsD	Optional. An array of effects of life stages over each other, where element
-#' [i+n*j] means the effect of stage i over stage j. Positive values equal facilitation, negative
-#' ones, competition. Affects deathrates.
-#' @param interactionsG	Same as above, but affecting growth rates.
-#' @param interactionsR	Same as above, but affecting reproduction rates.
+#' @param interactionsD	Optional. A square matrix of effects of life stages over each other, where element
+#' [i,j] is the effect of stage i over stage j. Positive values equal facilitation, negative
+#' ones, competition. The interactions occur only if the affected individual is within the affecting
+#' individual's radius, and are additive. Affects death rates (is subtracted from D).
+#' @param interactionsG	Same as above, but affecting growth rates (is added to G).
+#' @param interactionsR	Same as above, but affecting reproduction rates (is added to R) .
 #' @param height	Arena height
 #' @param width		Arena width
 #' @param boundary	Type of boundary condition. Options are "reflexive", "absortive" and
 #' "periodic". Default is reflexive.
 #' @param dispKernel	Type of dispersion kernel. Options are "exponential" and "random", in which
-#' seeds are dispersed randomly regarless of parent position (note: "random" option ignores
+#' seeds are dispersed randomly regardless of parent position (note: "random" option ignores
 #' dispersal parameter)
 #' @param maxpop	If the simulation reaches this many individuals total, it will stop. Default
 #' is 30000.
@@ -63,7 +63,7 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
         interactionsR = matrix(rep(0,ntot*ntot),ntot)
     }
 
-    M <- parameters
+    M <- as.matrix(parameters)
     if(nrow(M) != ntot){
         stop("Total number of stages differs from number of rows in parameter matrix")
     }
@@ -117,13 +117,16 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
 	# prepare output
     rownames(M) <- 1:ntot
     colnames(M) <- c("D","G","R","radius","maxstresseffect")
+    inter <- list(D=matrix(interactionsD,ntot),G=matrix(interactionsG,ntot),R=matrix(interactionsR,ntot))
 
 	list(data = r,num.pop = npop, num.total = ntot, num.stages = numstages, maxtime=maxtime,
-	     dispersal=dispersal,interactions=list(D=interactionsD,G=interactionsG,R=interactionsR),rates.matrix=M,radius=M[,4],
+	     dispersal=dispersal,interactions=inter,param=data.frame(M),radius=M[,4],
 	     init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel)
 }
 
-#' proceed with a stopped simulation
+#' proceed
+#'
+#' Proceed with a stopped simulation.
 #'
 #' @param data result of a simulation, created by \code{\link{community}}
 #' @param time a number: for how long to extend the simulation
@@ -136,7 +139,7 @@ proceed <- function(data,time){
     past.hist<-subset(d,!is.na(d$endtime))
     
 	c <- community(init=current,numstages=data$num.stages, maxtime=data$maxtime+time,
-	     parameters=data$rates.matrix,dispersal=data$dispersal,
+	     parameters=data$param,dispersal=data$dispersal,
          interactionsD=data$interactions$D, 
          interactionsG=data$interactions$G, 
          interactionsR=data$interactions$R, 
