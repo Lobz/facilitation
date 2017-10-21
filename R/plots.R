@@ -93,7 +93,7 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 #'
 #' @author Alexandre Adalardo de Oliveira - 16/03/2016
 #' @author M. Salles
-#' @param data	result of a simulation, created by \code{\link{facilitation}}
+#' @param data	result of a simulation, created by \code{\link{community}}
 #' @param times	array of times at which to plot
 #' @param interval a time length to wait between frames
 #' @param draw an array of stages id, to be drawn bottom to top. Absent stages will not be
@@ -102,8 +102,8 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 #' @param ylim	Optional. Limits to the y-axis
 #' @param color 	Optional. A color vector
 #' @param radius Optional. Array representing the sizes in which the individuals will be drawn. 
+#' Defaults to interaction radius.
 #' @param movie.name The filename of the gif that will be saved.
-#' If left blank, the individuals will be drawn with the radius defined by their stage.
 #' @examples
 #' data(logistic)
 #' spatialanimation(logistic,interval=.1,movie.name="malthusian.gif")
