@@ -44,7 +44,7 @@ for plotting a single instant.
 }
 \examples{
 data(RandK)
-spatialanimation(RandK,interval=.1,movie.name="malthusian.gif")
+spatialanimation(RandK,draw=c(5,3),interval=.1,movie.name="malthusian.gif")
 data(RandK)
 plotsnapshot(RandK,t=10)
 }

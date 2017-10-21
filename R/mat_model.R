@@ -87,7 +87,7 @@ mat.model <- function(data, ns, combine.matrices=FALSE){
 #' @importFrom Matrix expm
 #' @examples
 #' mat <- mat.model.base(5)
-#' solution.matrix(c(1,0,0),mat)
+#' solution.matrix(c(1,0,0,0,0),mat)
 solution.matrix <- function(p0, M, times = c(1:10)){
     expm <- function(M) as.matrix(Matrix::expm(M))
 

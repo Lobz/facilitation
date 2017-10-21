@@ -4,7 +4,7 @@
 \alias{mat.model}
 \title{matrix population model}
 \usage{
-mat.model(data, ns, combine.matrices = F)
+mat.model(data, ns, combine.matrices = FALSE)
 }
 \arguments{
 \item{data}{Either the result of a simulation, to extract the parameters from (obs: may return a list of
@@ -28,5 +28,5 @@ mat.model(malthusian)
 
 # example 3
 data(RandK)
-mat.model(RandK,combine.matrices=T)
+mat.model(RandK,combine.matrices=TRUE)
 }

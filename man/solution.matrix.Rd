@@ -19,5 +19,5 @@ which is merely P(t) = exp(Mt)p0 where p0 is the initial condition
 }
 \examples{
 mat <- mat.model.base(5)
-solution.matrix(c(1,0,0),mat)
+solution.matrix(c(1,0,0,0,0),mat)
 }
