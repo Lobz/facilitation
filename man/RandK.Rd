@@ -11,17 +11,13 @@ RandK
 \description{
 A simulation result with two very different species
 }
-\section{Generating code}{
-
-}
-
 \examples{
 ### Two species competition with growth limitation
 nstages <- c(3,2)
 init <- list(c(100,0,10),c(100,30))
-param <- matrix(c(2,1,0,0, 1,1,0,.1, .5,0,6,1, 1,1,0,.2, .5,0,2,2), byrow=T, nrow=5) 
+param <- matrix(c(2,1,0,0, 1,1,0,.1, .5,0,6,1, 1,1,0,.2, .5,0,2,2), byrow=TRUE, nrow=5) 
 interD <- matrix(c(0,0,0,0,0, 0,-1,0,0,0, 0,0,-2,0,-1, 0,0,0,0,0, 0,0,-1,0,-2),ncol=5)
 interG <- matrix(c(0,0,0,0,0, 0,0,0,0,-.5, 0,0,0,0,-.5, 0,0,0,0,-.5, 0,0,-2,0,-1),ncol=5)
-RandK <- community(10,nstages,param,dispersal,init,interactionsD=interD,interactionsG=interG)
+RandK <- community(10,nstages,param,dispersal=5,init,interactionsD=interD,interactionsG=interG)
 }
 \keyword{datasets}
