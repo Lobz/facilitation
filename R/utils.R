@@ -49,10 +49,10 @@ create.parameters <- function(Ds, Gs, Rs, radius, n){
 #' times <- seq(0,malthusian$maxtime,by=0.1)
 #' ab <- abundance.matrix(malthusian,times)
 #' 
-#' ab.by.age <- abundance.matrix(malthusian,times,by.age=T)
+#' ab.by.age <- abundance.matrix(malthusian,times,by.age=TRUE)
 #' 
 #' @export
-abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age=F,cap.living=F){
+abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age=FALSE,cap.living=FALSE){
     ## check if array of times is appropriate to simulation
 	if(max(times) > data$maxtime){ "Warning: array of times goes further than simulation maximum time" }
 

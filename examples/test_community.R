@@ -30,12 +30,13 @@ param <- matrix(c(2,1,0,0, 1,1,0,.1, .5,0,6,1, 1,1,0,.2, .5,0,2,2), byrow=T, nro
 interact <- matrix(c(0,0,0,0,0, 0,0,0,0,0, 0,0,-.05,0,-.2, 0,0,0,0,0, 0,0,-.05,0,-.1),ncol=5)
 results$compet2diff <- community(maxt,nstages,param,dispersal,init,interactionsD=interact)
 
-### Two species competition (same is better)
+### Two species competition with growth limitation
 nstages <- c(3,2)
 init <- list(c(100,0,10),c(100,30))
 param <- matrix(c(2,1,0,0, 1,1,0,.1, .5,0,6,1, 1,1,0,.2, .5,0,2,2), byrow=T, nrow=5) 
-interact <- matrix(c(0,0,0,0,0, 0,0,0,0,0, 0,0,-1,0,-2, 0,0,0,0,0, 0,0,-2,0,-1),ncol=5)
-results$compet2same <- community(maxt,nstages,param,dispersal,init,interactionsD=interact)
+interD <- matrix(c(0,0,0,0,0, 0,-1,0,0,0, 0,0,-2,0,-1, 0,0,0,0,0, 0,0,-1,0,-2),ncol=5)
+interG <- matrix(c(0,0,0,0,0, 0,0,0,0,-.5, 0,0,0,0,-.5, 0,0,0,0,-.5, 0,0,-2,0,-1),ncol=5)
+results$compet2same <- community(maxt,nstages,param,dispersal,init,interactionsD=interD,interactionsG=interG)
 
 ### Two species competition facilitation
 nstages <- c(3,2)

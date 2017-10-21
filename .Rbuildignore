@@ -1,2 +1,6 @@
 examples/
 pseudocode.md
+*.gif
+*.png
+*.out
+src/Makevars

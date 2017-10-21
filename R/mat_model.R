@@ -38,10 +38,10 @@ mat.model.base  <- function(n=3,Ds=runif(n,0,5),Gs=runif(n-1,0,5),Rs=runif(n,0,5
 #' 
 #' # example 3
 #' data(RandK)
-#' mat.model(RandK,combine.matrices=T)
+#' mat.model(RandK,combine.matrices=TRUE)
 #' @export
 #' @importFrom Matrix bdiag
-mat.model <- function(data, ns, combine.matrices=F){
+mat.model <- function(data, ns, combine.matrices=FALSE){
     if(class(data)=="data.frame"){
         rates<-data
         if(missing(ns)){

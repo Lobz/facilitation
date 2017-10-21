@@ -105,8 +105,8 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 #' Defaults to interaction radius.
 #' @param movie.name The filename of the gif that will be saved.
 #' @examples
-#' data(logistic)
-#' spatialanimation(logistic,interval=.1,movie.name="malthusian.gif")
+#' data(RandK)
+#' spatialanimation(RandK,interval=.1,movie.name="malthusian.gif")
 #' @export
 #' @import grDevices 
 #' @import graphics
@@ -174,8 +174,8 @@ spatialplot = function(dtlist, times, xlim, ylim, sp,
 #' @param \dots additional parameters to be passed to spatialanimation
 #' @rdname spatialanimation
 #' @examples
-#' data(logistic)
-#' plotsnapshot(logistic,t=10)
+#' data(RandK)
+#' plotsnapshot(RandK,t=10)
 plotsnapshot <- function(data,t,...) {
     spatialanimation(data,c(t,t),...)
 }

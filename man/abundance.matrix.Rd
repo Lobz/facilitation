@@ -5,7 +5,7 @@
 \title{abundance matrix}
 \usage{
 abundance.matrix(data, times = seq(0, data$maxtime, length.out = 50),
-  by.age = F, cap.living = F)
+  by.age = FALSE, cap.living = FALSE)
 }
 \arguments{
 \item{data}{result of a simulation, created by \code{\link{community}}}
@@ -30,6 +30,6 @@ data(malthusian)
 times <- seq(0,malthusian$maxtime,by=0.1)
 ab <- abundance.matrix(malthusian,times)
 
-ab.by.age <- abundance.matrix(malthusian,times,by.age=T)
+ab.by.age <- abundance.matrix(malthusian,times,by.age=TRUE)
 
 }

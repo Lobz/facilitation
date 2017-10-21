@@ -14,7 +14,7 @@ spatialanimation(data, times = seq(0, data$maxtime, length.out = 50),
 plotsnapshot(data, t, ...)
 }
 \arguments{
-\item{data}{result of a simulation, created by \code{\link{facilitation}}}
+\item{data}{result of a simulation, created by \code{\link{community}}}
 
 \item{times}{array of times at which to plot}
 
@@ -23,12 +23,12 @@ plotsnapshot(data, t, ...)
 \item{draw}{an array of stages id, to be drawn bottom to top. Absent stages will not be
 drawn.}
 
-\item{radius}{Optional. Array representing the sizes in which the individuals will be drawn.}
+\item{radius}{Optional. Array representing the sizes in which the individuals will be drawn. 
+Defaults to interaction radius.}
 
 \item{color}{Optional. A color vector}
 
-\item{movie.name}{The filename of the gif that will be saved.
-If left blank, the individuals will be drawn with the radius defined by their stage.}
+\item{movie.name}{The filename of the gif that will be saved.}
 
 \item{xlim}{Optional. Limits to the x-axis}
 
@@ -43,10 +43,10 @@ The spatialanimation function plots the individuals of the selected stages over 
 for plotting a single instant.
 }
 \examples{
-data(logistic)
-spatialanimation(logistic,interval=.1,movie.name="malthusian.gif")
-data(logistic)
-plotsnapshot(logistic,t=10)
+data(RandK)
+spatialanimation(RandK,interval=.1,movie.name="malthusian.gif")
+data(RandK)
+plotsnapshot(RandK,t=10)
 }
 \author{
 Alexandre Adalardo de Oliveira - 16/03/2016
