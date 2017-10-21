@@ -130,25 +130,54 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
 #'
 #' @param data result of a simulation, created by \code{\link{community}}
 #' @param time a number: for how long to extend the simulation
-#'
-#'
 #' @export
 proceed <- function(data,time){
     d<-data$data
     current<-subset(d,is.na(d$endtime))
     past.hist<-subset(d,!is.na(d$endtime))
-    
-	c <- community(init=current,numstages=data$num.stages, maxtime=data$maxtime+time,
-	     parameters=data$param,dispersal=data$dispersal,
-         interactionsD=data$interactions$D, 
-         interactionsG=data$interactions$G, 
-         interactionsR=data$interactions$R, 
-         height=data$height,width=data$width,
-         boundary=data$boundary,dispKernel=data$dispKernel)
+
+    c <- community(init=current,numstages=data$num.stages, maxtime=data$maxtime+time,
+                   parameters=data$param,dispersal=data$dispersal,
+                   interactionsD=data$interactions$D, 
+                   interactionsG=data$interactions$G, 
+                   interactionsR=data$interactions$R, 
+                   height=data$height,width=data$width,
+                   boundary=data$boundary,dispKernel=data$dispKernel)
 
     r<-c$data
     b<-rbind(r,past.hist)
     c$data<-b
     c
+}
+
+#' restart
+#'
+#' Turn back time and restart a simulation from time t
+#'
+#' @param data result of a simulation, created by \code{\link{community}}
+#' @param time a number: for how long to extend the simulation
+#' @param start a number: an instant in time to begin from
+#'
+#'
+#' @export
+restart <- function(data,time,start=0){
+    d<-data$data
+    if(start>0){
+        d<-subset(d,d$begintime<=start & (d$endtime > start | is.na(d$endtime)))
+        d$begintime<-0
+    }
+    else{
+        d<-subset(d,d$begintime==0)
+    }
+    d$endtime<-NA
+
+    community(init=d,numstages=data$num.stages, maxtime=time,
+              parameters=data$param,dispersal=data$dispersal,
+              interactionsD=data$interactions$D, 
+              interactionsG=data$interactions$G, 
+              interactionsR=data$interactions$R, 
+              height=data$height,width=data$width,
+              boundary=data$boundary,dispKernel=data$dispKernel)
+
 }
 
