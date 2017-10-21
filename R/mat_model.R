@@ -33,11 +33,12 @@ mat.model.base  <- function(n=3,Ds=runif(n,0,5),Gs=runif(n-1,0,5),Rs=runif(n,0,5
 #' mat.model(create.parameters(n=4))
 #' 
 #' # example 2 
-#' init <- list(c(100,0,0),c(100,0))
-#' ###               D G R  D G R  ...
-#' param <- matrix(c(2,1,0, 1,1,0, .5,0,6, 1,1,0, .5,0,2), byrow=TRUE, nrow=5) 
-#' malth <- community(0,c(3,2),param,dispersal=2,init=init)
-#' mat.model(malth,combine.matrice=T)
+#' data(malthusian)
+#' mat.model(malthusian)
+#' 
+#' # example 3
+#' data(RandK)
+#' mat.model(RandK,combine.matrices=T)
 #' @export
 #' @importFrom Matrix bdiag
 mat.model <- function(data, ns, combine.matrices=F){

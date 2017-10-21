@@ -45,13 +45,12 @@ create.parameters <- function(Ds, Gs, Rs, radius, n){
 #' will be more representative if only a small fraction of total individuals is living at the end of
 #' simulation.
 #' @examples
-#' nstages <- 3
-#' init <- c(0,0,10)
-#' ################# D G R
-#' param <- matrix(c(5,1,0, 1,1,0, .5,0,10),nrow=3,byrow=T)
-#' malth <- community(3,nstages,param,dispersal=2,init)
-#' times <- seq(0,2,by=0.1)
-#' ab <- abundance.matrix(malth,times)
+#' data(malthusian)
+#' times <- seq(0,malthusian$maxtime,by=0.1)
+#' ab <- abundance.matrix(malthusian,times)
+#' 
+#' ab.by.age <- abundance.matrix(malthusian,times,by.age=T)
+#' 
 #' @export
 abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age=F,cap.living=F){
     ## check if array of times is appropriate to simulation
@@ -104,6 +103,9 @@ abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age
 #'
 #' @param data	result of a simulation, created by \code{\link{community}}
 #' @export
+#' @examples
+#' data(malthusian)
+#' longevity(malthusian)
 longevity <- function(data){
     d <- data$data[with(data$data,order(-endtime)),] #orders by endtime, last to first
     ind.life <- function(i){c(i$sp[1],i$id[1],min(i$begintime),i$endtime[1])}

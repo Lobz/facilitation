@@ -14,10 +14,12 @@
 #' @param qt Optional. For distributions, show only up to quantile qt (percentage)
 #' @param \dots Further parameters to be passed to the lower level plot function
 #' @examples
-#' obj <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
-#' times <- seq(0,2,by=0.1)
-#' ab <- abundance.matrix(obj,times)
+#' data(RandK)
+#' ab <- abundance.matrix(RandK,seq(0,RandK$maxtime,by=1))
+#' # species 1
 #' stackplot(ab[,1:3])
+#' # species 2
+#' stackplot(ab[,4:5])
 #' @export
 #' @import grDevices 
 #' @import graphics
@@ -103,10 +105,8 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 #' @param movie.name The filename of the gif that will be saved.
 #' If left blank, the individuals will be drawn with the radius defined by their stage.
 #' @examples
-#' malth <- facilitation(2,3,c(5,1,.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0),radius=c(0,1,2,0))
-#' times <- seq(0,2,by=0.1)
-#' # plot
-#' spatialanimation(malth,times,interval=.1,movie.name="malthusian.gif")
+#' data(logistic)
+#' spatialanimation(logistic,interval=.1,movie.name="malthusian.gif")
 #' @export
 #' @import grDevices 
 #' @import graphics
@@ -173,6 +173,9 @@ spatialplot = function(dtlist, times, xlim, ylim, sp,
 #' @param t a single time at which to plot
 #' @param \dots additional parameters to be passed to spatialanimation
 #' @rdname spatialanimation
+#' @examples
+#' data(logistic)
+#' plotsnapshot(logistic,t=10)
 plotsnapshot <- function(data,t,...) {
     spatialanimation(data,c(t,t),...)
 }

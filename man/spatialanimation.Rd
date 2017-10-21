@@ -43,10 +43,10 @@ The spatialanimation function plots the individuals of the selected stages over 
 for plotting a single instant.
 }
 \examples{
-malth <- facilitation(2,3,c(5,1,.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0),radius=c(0,1,2,0))
-times <- seq(0,2,by=0.1)
-# plot
-spatialanimation(malth,times,interval=.1,movie.name="malthusian.gif")
+data(logistic)
+spatialanimation(logistic,interval=.1,movie.name="malthusian.gif")
+data(logistic)
+plotsnapshot(logistic,t=10)
 }
 \author{
 Alexandre Adalardo de Oliveira - 16/03/2016

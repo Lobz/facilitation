@@ -20,7 +20,7 @@ results$malth2 <- community(maxt,nstages,param,dispersal,init)
 nstages <- 3
 init <- c(0,0,100)
 param <- matrix(c(5,1,0,0, 1,1,0,0, .5,0,10,2),nrow=3,byrow=T)
-interact <- matrix(c(0,0,0,0,0,0,0,0,-.1),ncol=3)
+interact <- matrix(c(0,0,0,0,0,0,0,0,-1),ncol=3)
 results$compet1 <- community(maxt,nstages,param,dispersal,init,interactionsD=interact)
 
 ### Two species competition (different is better)
@@ -34,7 +34,7 @@ results$compet2diff <- community(maxt,nstages,param,dispersal,init,interactionsD
 nstages <- c(3,2)
 init <- list(c(100,0,10),c(100,30))
 param <- matrix(c(2,1,0,0, 1,1,0,.1, .5,0,6,1, 1,1,0,.2, .5,0,2,2), byrow=T, nrow=5) 
-interact <- matrix(c(0,0,0,0,0, 0,0,0,0,0, 0,0,-.1,0,-.2, 0,0,0,0,0, 0,0,-.2,0,-.1),ncol=5)
+interact <- matrix(c(0,0,0,0,0, 0,0,0,0,0, 0,0,-1,0,-2, 0,0,0,0,0, 0,0,-2,0,-1),ncol=5)
 results$compet2same <- community(maxt,nstages,param,dispersal,init,interactionsD=interact)
 
 ### Two species competition facilitation

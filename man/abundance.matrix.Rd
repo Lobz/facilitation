@@ -5,7 +5,7 @@
 \title{abundance matrix}
 \usage{
 abundance.matrix(data, times = seq(0, data$maxtime, length.out = 50),
-  by.age = F, ...)
+  by.age = F, cap.living = F)
 }
 \arguments{
 \item{data}{result of a simulation, created by \code{\link{community}}}
@@ -15,14 +15,21 @@ abundance.matrix(data, times = seq(0, data$maxtime, length.out = 50),
 \item{by.age}{T/F. Use this option to get the number of individuals to reach each age, instead of
 abundances for each time.}
 
-\item{\dots}{additional parameters to be passed to the \code{\link{age.data}} function}
+\item{cap.living}{Logical. Use this option with by.age=T, to set the time of death of living individuals to max
+simulation time. Otherwise, living individuals are excluded from the data. Either way, this data
+will be more representative if only a small fraction of total individuals is living at the end of
+simulation.}
+
+\item{\dots}{additional parameters to be passed to the}
 }
 \description{
 creates a matrix with abundances of each life stage/species over time
 }
 \examples{
-malth <- community(2,3,param,dispersal=2,init=c(100,0,0,0))
-times <- seq(0,2,by=0.1)
-ab <- abundance.matrix(malth,times)
-stackplot(ab[,1:3])
+data(malthusian)
+times <- seq(0,malthusian$maxtime,by=0.1)
+ab <- abundance.matrix(malthusian,times)
+
+ab.by.age <- abundance.matrix(malthusian,times,by.age=T)
+
 }

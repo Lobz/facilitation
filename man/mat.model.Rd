@@ -19,5 +19,14 @@ Produces the mpm matrix for a continuous time structured
 population model, to be applied in a linear ODE
 }
 \examples{
-mat <- mat.model(malth)
+# example 1
+mat.model(create.parameters(n=4))
+
+# example 2 
+data(malthusian)
+mat.model(malthusian)
+
+# example 3
+data(RandK)
+mat.model(RandK,combine.matrices=T)
 }
