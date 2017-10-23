@@ -1,0 +1,74 @@
+---
+title: "facilitation:introduction"
+author: "M. Salles"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The package `facilitation` was created to simulate the population dynamics of plant species that
+receive facilitation from other species on the early stages of development. The package evolved to allow simulations with a larger
+number of species, and varied types of interactions. Currently, it allows for any number of species,
+each with any number of life stages, where each stage has it's own death rate, growth rate (except
+for the last stage of each species, of course), reproduction rates, and interaction radius,
+and where each stage can affect each other stage affecting death, growth or reproduction
+rates positively or negatively, with any value.
+
+In addition to the simulation proper, this package includes functions for extracting and
+plotting relevant information from the simulation results, as well as a few basic functions
+to produce matrix population models that can be compared with the simplest simulations.
+
+The main function in this package is `community`, the function used to run the simulations.
+The simulation was implemented in c++ using the package Rcpp, and is acessible from R only through this one function. 
+
+## Running simulations
+
+# Example 1 - the simplest example
+
+The simplest simulation you can run would be of a single population with only one stage.
+Still, the individuals of this populations should be able to die, and to reproduce. 
+
+## Vignette Info
+
+Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+
+## Styles
+
+The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+
+    output: 
+      rmarkdown::html_vignette:
+        css: mystyles.css
+
+## Figures
+
+The figure sizes have been customised so that you can easily put two images side-by-side. 
+
+```{r, fig.show='hold'}
+plot(1:10)
+plot(10:1)
+```
+
+You can enable figure captions by `fig_caption: yes` in YAML:
+
+    output:
+      rmarkdown::html_vignette:
+        fig_caption: yes
+
+Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+
+## More Examples
+
+You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(head(mtcars, 10))
+```
+
+Also a quote using `>`:
+
+> "He who gives up [code] safety for [code] speed deserves neither."
+([via](https://twitter.com/hadleywickham/status/504368538874703872))
