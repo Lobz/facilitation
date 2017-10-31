@@ -10,6 +10,7 @@ library(devtools)
 ```
 Install this version from github and load it:
 ```r
-install_github(repo = 'Lobz/facilitation')
+install_github(repo = 'Lobz/facilitation', build_vignettes = TRUE)
 library(facilitation)
+vignette("facilitation")
 ```
