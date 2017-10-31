@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // simulation
 Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num_stages, Rcpp::NumericVector parameters, double dispersal, Rcpp::NumericVector interactionsD, Rcpp::NumericVector interactionsG, Rcpp::NumericVector interactionsR, Rcpp::IntegerVector init, Rcpp::DataFrame history, bool restore, double w, double h, int bcond, int dkernel, int maxpop);
-RcppExport SEXP facilitation_simulation(SEXP maxtimeSEXP, SEXP num_popsSEXP, SEXP num_stagesSEXP, SEXP parametersSEXP, SEXP dispersalSEXP, SEXP interactionsDSEXP, SEXP interactionsGSEXP, SEXP interactionsRSEXP, SEXP initSEXP, SEXP historySEXP, SEXP restoreSEXP, SEXP wSEXP, SEXP hSEXP, SEXP bcondSEXP, SEXP dkernelSEXP, SEXP maxpopSEXP) {
+RcppExport SEXP _facilitation_simulation(SEXP maxtimeSEXP, SEXP num_popsSEXP, SEXP num_stagesSEXP, SEXP parametersSEXP, SEXP dispersalSEXP, SEXP interactionsDSEXP, SEXP interactionsGSEXP, SEXP interactionsRSEXP, SEXP initSEXP, SEXP historySEXP, SEXP restoreSEXP, SEXP wSEXP, SEXP hSEXP, SEXP bcondSEXP, SEXP dkernelSEXP, SEXP maxpopSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -33,7 +33,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"facilitation_simulation", (DL_FUNC) &facilitation_simulation, 16},
+    {"_facilitation_simulation", (DL_FUNC) &_facilitation_simulation, 16},
     {NULL, NULL, 0}
 };
 

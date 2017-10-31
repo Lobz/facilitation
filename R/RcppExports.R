@@ -2,6 +2,6 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 simulation <- function(maxtime, num_pops, num_stages, parameters, dispersal, interactionsD, interactionsG, interactionsR, init, history, restore = FALSE, w = 100, h = 100, bcond = 1L, dkernel = 1L, maxpop = 30000L) {
-    .Call('facilitation_simulation', PACKAGE = 'facilitation', maxtime, num_pops, num_stages, parameters, dispersal, interactionsD, interactionsG, interactionsR, init, history, restore, w, h, bcond, dkernel, maxpop)
+    .Call('_facilitation_simulation', PACKAGE = 'facilitation', maxtime, num_pops, num_stages, parameters, dispersal, interactionsD, interactionsG, interactionsR, init, history, restore, w, h, bcond, dkernel, maxpop)
 }
 
