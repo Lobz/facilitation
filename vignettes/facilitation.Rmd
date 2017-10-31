@@ -93,7 +93,7 @@ interact <- matrix(c(0,0,0,0,0, 0,-.1,+.1,-.1,0, 0,0,-.1,0,-.2, ## effects over 
 results <- community(maxt,nstages,param,dispersal,init,interactionsD=interact)
 ```
 
-See the scripts in the examples directory (available on (GitHub)[https://github.com/Lobz/facilitation/tree/master/examples]) for a few more examples.
+See the scripts in the examples directory (available on [GitHub](https://github.com/Lobz/facilitation/tree/master/examples)) for a few more examples.
 
 # Showing the results
 
