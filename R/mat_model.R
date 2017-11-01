@@ -14,11 +14,16 @@
 #' @export
 #' @import stats
 mat.model.base  <- function(n=3,Ds=runif(n,0,5),Gs=runif(n-1,0,5),Rs=runif(n,0,5)){
-    if(length(Rs)==1){Rs <- c(rep(0,n-1),Rs)}
-    Gs[n] <- 0
-    M <- diag(-Ds-Gs) + diag(Gs)[c(n,1:(n-1)),]
-    M[1,] <- M[1,] + Rs
-    M
+    if(n==1){
+        Rs-Ds
+    }
+    else{
+        if(length(Rs)==1){Rs <- c(rep(0,n-1),Rs)}
+        Gs[n] <- 0
+        M <- diag(-Ds-Gs) + diag(Gs)[c(n,1:(n-1)),]
+        M[1,] <- M[1,] + Rs
+        M
+    }
 }
 
 #' matrix population model 
@@ -67,9 +72,10 @@ mat.model <- function(data, ns, combine.matrices=FALSE){
     else{
         nstarts<-c(1,sapply(1:(n-1),function(i)sum(ns[1:i])+1))
         Ms <- lapply(1:n,function(i){
-                   r<-rates[1:ns[i]+nstarts[i]-1,]
-                   mat.model.base(ns[i],r$D,r$G,r$R)
-})
+                            r<-rates[1:ns[i]+nstarts[i]-1,]
+                            mat.model.base(ns[i],r$D,r$G,r$R)
+                        }
+                    )
         if(combine.matrices){
             Matrix::bdiag(Ms)
         }
