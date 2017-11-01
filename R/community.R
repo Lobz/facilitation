@@ -62,6 +62,7 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
 	if(missing(interactionsR)){
         interactionsR = matrix(rep(0,ntot*ntot),ntot)
     }
+    inter <- list(D=matrix(interactionsD,ntot),G=matrix(interactionsG,ntot),R=matrix(interactionsR,ntot))
 
     M <- as.matrix(parameters)
     if(nrow(M) != ntot){
@@ -78,6 +79,7 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
         stop("Parameter matrix must have 3-5 columns")
     }
 
+    # check if growth rates for last stages are 0
     idold<-0
     for(i in 1:npop){
         idold <- idold+numstages[i]
@@ -85,7 +87,6 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
             stop("Invalid input: positive growth rate for last stage of population")
         }
     }
-
 
     # generate init parameter
     restore=F
@@ -98,6 +99,9 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
     }
     else {
         initial=unlist(init)
+        if(length(initial)!=ntot){
+            stop("Invalid input: length of initial population array is not the same as number of stages")
+        }
         hist=data.frame()
         restore=F
     }
@@ -117,7 +121,6 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
 	# prepare output
     rownames(M) <- 1:ntot
     colnames(M) <- c("D","G","R","radius","maxstresseffect")
-    inter <- list(D=matrix(interactionsD,ntot),G=matrix(interactionsG,ntot),R=matrix(interactionsR,ntot))
 
 	list(data = r,num.pop = npop, num.total = ntot, num.stages = numstages, maxtime=maxtime,
 	     dispersal=dispersal,interactions=inter,param=data.frame(M),radius=M[,4],
