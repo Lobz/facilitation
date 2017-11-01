@@ -1,6 +1,6 @@
 #' matrix population model 
 #' 
-#' Produces the mpm matrix for a continuous time structured
+#' Produces the Matrix Population Model matrix for a continuous time structured
 #' population model, to be applied in a linear ODE
 #' @param n The number of life stages. Default is 3.
 #' @param Ds An n-array with death rates for each stage.
@@ -22,7 +22,7 @@ mat.model.base  <- function(n=3,Ds=runif(n,0,5),Gs=runif(n-1,0,5),Rs=runif(n,0,5
 
 #' matrix population model 
 #' 
-#' Produces the mpm matrix for a continuous time structured
+#' Produces the Matrix Population Model matrix for a continuous time structured
 #' population model, to be applied in a linear ODE
 #' @param data Either the result of a simulation, to extract the parameters from (obs: may return a list of
 #' matrices), or a data.frame containing the parameters
@@ -99,10 +99,18 @@ solution.matrix <- function(p0, M, times = c(1:10)){
     t(S)
 }
 
-#' Dominant eigenvalue
+#' Limiting Rate
 #' 
-#' a function to calculate the per-capita growth rate of a mpm as t --> infinity, in other words,
-#' the real part of the dominant eigenvalue of a matrix
+#' This function returns the real dominant eigenvalue of a Matrix Population Model matrix. 
+#' That is a real number that corresponds to the per-capita growth rate that a population
+#' approaches as time passes, in a model with no interactions.
+#'
+#' A structured population can grow at exactly this rate if the
+#' distribution between stages corresponds exactly to the distribution of the dominant
+#' eigenvector. The models that can be simulated by this package are of a class that always
+#' has a real dominant eigenvector. Note that these are continuous-time models, in which r >
+#' 0 means the population will grow, and r < 0 means it will decrease. 
+#' 
 #' @param mat a square matrix
 #' @export
 #' @examples
