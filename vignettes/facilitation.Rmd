@@ -62,7 +62,7 @@ radius <- c(0,0.5,2)             # interaction radii per stage
 param <- create.parameters(deathrates,growthrates,reproductionrate,radius) # create the parameter object
 param <- rbind(param,c(0,0,0,2)) # parameters for facilitator (no dynamics, radius 2)
 
-dispersalradius <- 2	         # average distance a seed falls from the parent (distance is gaussian)
+dispersalradius <- 2	         # average distance a seed falls from the parent (distance is exponentially distributed)
 init <- c(1,1,10,20)             # initial pop. sizes for the 3 stages plus the facilitator species
 effects <- c(0,0,0,0,            # effects over seeds (none)
             0,-.5,0,+1,          # effects over seedlings (competition and facilitation)
@@ -72,7 +72,8 @@ maxt <- 10                       # time up to which the simulation shall run
 h <- 50                          # arena height
 w <- 50                          # arena width
 
-results <- community(maxt,numstages+1,param,dispersalradius,init,interactionsD=effects)
+results <-
+community(maxt,numstages+1,param,dispersalradius,init,interactionsD=effects,height=h,width=w)
 ```
 ## Example 3: more species
 The below code creates a simulation with two species, with 3 and 2 lifestages respectively, with facilitation reducing the death rate of the juvenile stages, and intra and inter-specific competition; runs it up to time 10, and stores the result in the `results` variable.
