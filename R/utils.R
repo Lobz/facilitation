@@ -7,6 +7,9 @@
 #' @param Rs		Either the seed production rate of adults in the population, or an array of seed production rates, of length \code{n}.
 #' @param radius		Optional (use if there are any interactions). Either one radius of
 #' interactions or an array of interaction radiuses, of length \code{n}.
+#' @param stress	Optional (use to create a stress gradient). An array of
+#' values of stress gradient slope. The full value will be added to death rate at the right
+#' of the plot, half value at the middle of the plot, and so on, proportionally.
 #' @param n         Number of stages in the population
 #' @export
 #' @examples
@@ -16,19 +19,20 @@
 #' # structure parameters from arrays
 #' create.parameters(Ds=c(10,5,2),Gs=c(2,2),Rs=20,radius=2)
 #'
-create.parameters <- function(Ds, Gs, Rs, radius, n){
+create.parameters <- function(Ds, Gs, Rs, radius, stress, n){
     if(missing(n)) n=length(Ds)
     else{
         if(missing(Ds)) Ds = runif(n,0,5)
         if(missing(Gs)) Gs = runif(n-1,0,5)
         if(missing(Rs)) Rs = runif(n,0,5)
+        if(missing(stress)) stress = runif(n,0,5)
     }
     if(missing(radius)) radius=rep(0,n)
 
     if(length(radius)==1){radius <- rep(radius,n)}
     if(length(Rs)==1){Rs <- c(rep(0,n-1),Rs)}
     Gs[n]<-0
-	data.frame(D=Ds,G=Gs,R=Rs,radius=radius)
+	data.frame(D=Ds,G=Gs,R=Rs,radius=radius,stress=stress)
 }
 
 #' abundance matrix
