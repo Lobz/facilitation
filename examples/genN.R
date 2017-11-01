@@ -13,7 +13,7 @@ h <- 40                       # arena height
 w <- 40                       # arena width
 
 dt1 <- facilitation(times=times, n=numstages, Ds=deathrates, Gs=growthrates, dispersal=dispersalradius, R=reproductionrate, 
-		 interactions=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w,facilitatorD=.1,facilitatorR=.3,facilitatorC=.3)
+		 interactionsD=effects, fac=facindex, init=initialpop, rad=radius, h=h, w=w,facilitatorD=.1,facilitatorR=.3,facilitatorC=.3)
 ab1 <- abundance.matrix(dt1$data)
 stackplot(ab1[,1:n])
 savePlot("moarstages.png")
