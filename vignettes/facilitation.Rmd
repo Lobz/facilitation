@@ -89,11 +89,36 @@ init <- list(c(100,0,10),c(100,30))
 ###               D G R Rad
 param <- matrix(c(2,1,0,0, 1,1,0,.1, .5,0,6,1, 1,1,0,.2, .5,0,2,2), byrow=T, nrow=5) 
 ### interaction matrix: positive values represent facilitation, negative ones, competition
-interact <- matrix(c(0,0,0,0,0, 0,-.1,+.1,-.1,0, 0,0,-.1,0,-.2, ## effects over species 1
+interactD <- matrix(c(0,0,0,0,0, 0,-.1,+.1,-.1,0, 0,0,-.1,0,-.2, ## effects over species 1
                                 0,-.2,+.2,-.1,0, 0,0,-.2,0,-.1),ncol=5) ## effects over species 2
-results <- community(maxt,nstages,param,dispersal,init,interactionsD=interact)
+### let's also add effects over growth rates: adults limit growth
+interactG <- matrix(c(0,0,0,0,0, 0,0,-.2,0,-.5, 0,0,0,0,0, ## effects over species 1
+                                0,0,-.2,0,-.5, 0,0,0,0,0),ncol=5) ## effects over species 2
+results <-
+community(maxt,nstages,param,dispersal,init,interactionsD=interactD,interactionsG=interactG)
 ```
 
+## Example 4: stress gradient
+
+The script below ilustrates the use of stress gradient effects. The fifth parameter in the
+parameter matrix corresponds to the maximum stress effect, that is, the maximum value by
+which the individuals death rates will be increased. The death rate will increase linearly
+from 0 to the max stress effect value, from left to right in the arena.
+
+In this example we have one species with three stages, and the death rates of juveniles 
+varies from 0 when x=0 to 4 when x=100. 
+Mathematically, in the exact middle where death rate is 2, about one third of seedlings would become juveniles, and one half of those would become adults, 
+and each adult would produce on average 6 new seedlings, so that the population would 
+neither grow nor diminish (r=0)[1]. So on the left half of the plot the population is 
+viable, and on the right half, it's not. Notice that adults are not affected neither by 
+stress nor competition.
+
+
+```r
+rates <- matrix(c(0,1,0,.7,4, 1,1,0,1.2,0, 1,0,6,2,0),nrow=3,byrow=T) # maximum stress effect is 4 for stage 1 and 0 for stages 2 and 3
+results5 <- community(maxtime=40,numstages=3,parameters=rates,dispersal=10,init=c(40,0,0),
+                      interactionsD=matrix(c(-2,0,0, 0,0,0, 0,0,0),3)) # competition is only between seedlings
+```
 See the scripts in the examples directory (available on [GitHub](https://github.com/Lobz/facilitation/tree/master/examples)) for a few more examples.
 
 # Showing the results
@@ -101,7 +126,7 @@ See the scripts in the examples directory (available on [GitHub](https://github.
 You can plot the actual individuals in space in an animation with `spatialanimation`, which invokes
 package `animation`.
 ```r
-times <- seq(0,maxt,.2)         # array of times of interest
+times <- seq(0,results$maxtime,length.out=100)         # array of times of interest
 spatialanimation(results,times,interval=0.1,movie.name="sim.gif") 
 ```
 
@@ -112,7 +137,7 @@ plotsnapshot(results,t=6.25)
 
 You may calculate the abundances through time:
 ```r
-times <- seq(0,maxt,.2)         # array of times of interest
+times <- seq(0,results$maxtime,length.out=100)         # array of times of interest
 ab <- abundance.matrix(results,times)
 ```
 
