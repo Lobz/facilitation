@@ -1,12 +1,13 @@
 #' matrix population model 
 #' 
 #' Produces the Matrix Population Model matrix for a continuous time structured
-#' population model, to be applied in a linear ODE
+#' population model, to be applied in a linear ODE. Unlike \code{\link{mat.model.base}}, only
+#' works with a single population. If only the number of stages is provided, returns a ramdom
+#' population matrix.
 #' @param n The number of life stages. Default is 3.
 #' @param Ds An n-array with death rates for each stage.
 #' @param Gs An (n-1)-array with growth rates for each stage but the last.
-#' @param Rs A n-array of reproduction rates for each stage.
-#' matrices)
+#' @param Rs Either a single reproduction rate for the oldest stage, or an n-array of reproduction rates for each stage.
 #' @examples
 #' mat <- mat.model.base(5)
 #' mat2 <- mat.model.base(3,c(1,2,3),c(10,10),100)
@@ -23,10 +24,12 @@ mat.model.base  <- function(n=3,Ds=runif(n,0,5),Gs=runif(n-1,0,5),Rs=runif(n,0,5
 #' matrix population model 
 #' 
 #' Produces the Matrix Population Model matrix for a continuous time structured
-#' population model, to be applied in a linear ODE
-#' @param data Either the result of a simulation, to extract the parameters from (obs: may return a list of
-#' matrices), or a data.frame containing the parameters
-#' @param ns an array of numbers of stages. Use for more than one population.
+#' population model, to be applied in a linear ODE. If there is more than one population,
+#' returns a list of matrices, or one block-diagonal matrix created by the combination.
+#' @param data Either the result of a simulation, to extract the parameters from, or a
+#' data.frame containing the parameters.
+#' @param ns an array of numbers of stages. Use when \code{data} is a data.frame and the is
+#' more than one population.
 #' @param combine.matrices Logical. Combine the matrices into a single, multi-population matrix?
 #' @examples
 #' # example 1
@@ -109,7 +112,8 @@ solution.matrix <- function(p0, M, times = c(1:10)){
 #' distribution between stages corresponds exactly to the distribution of the dominant
 #' eigenvector. The models that can be simulated by this package are of a class that always
 #' has a real dominant eigenvector. Note that these are continuous-time models, in which r >
-#' 0 means the population will grow, and r < 0 means it will decrease. 
+#' 0 means the population will grow, and r < 0 means it will decrease. This function doesn't
+#' throw errors, instead it returns 'NA'.
 #' 
 #' @param mat a square matrix
 #' @export

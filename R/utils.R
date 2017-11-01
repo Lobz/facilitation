@@ -33,13 +33,14 @@ create.parameters <- function(Ds, Gs, Rs, radius, n){
 
 #' abundance matrix
 #' 
-#' creates a matrix with abundances of each life stage/species over time
-#' 
+#' Returns a matrix with abundances of each life stage/species over time
+#'
+#' The rows in the matrix are the lifestages/species id. The times are in the row names. To
+#' visualize the abundance matrix data we recomment the function \code{\link{stackplot}}.
 #' @param data	result of a simulation, created by \code{\link{community}}
 #' @param times	array of times at which the abundances will be calculated
 #' @param by.age T/F. Use this option to get the number of individuals to reach each age, instead of
 #' abundances for each time.
-#' @param \dots additional parameters to be passed to the
 #' @param cap.living Logical. Use this option with by.age=T, to set the time of death of living individuals to max
 #' simulation time. Otherwise, living individuals are excluded from the data. Either way, this data
 #' will be more representative if only a small fraction of total individuals is living at the end of
@@ -99,7 +100,9 @@ abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age
 
 #' longevity
 #' 
-#' calculates the lifespan of each individual
+#' Calculates the lifespan of each individual. Returns a data.frame with the individual's id,
+#' the last stage reached by that individual, the time of birth, time of death (if dead), and
+#' longevity (if dead).
 #'
 #' @param data	result of a simulation, created by \code{\link{community}}
 #' @export

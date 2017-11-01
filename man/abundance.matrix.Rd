@@ -19,11 +19,13 @@ abundances for each time.}
 simulation time. Otherwise, living individuals are excluded from the data. Either way, this data
 will be more representative if only a small fraction of total individuals is living at the end of
 simulation.}
-
-\item{\dots}{additional parameters to be passed to the}
 }
 \description{
-creates a matrix with abundances of each life stage/species over time
+Returns a matrix with abundances of each life stage/species over time
+}
+\details{
+The rows in the matrix are the lifestages/species id. The times are in the row names. To
+visualize the abundance matrix data we recomment the function \code{\link{stackplot}}.
 }
 \examples{
 data(malthusian)

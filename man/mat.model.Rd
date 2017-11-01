@@ -7,16 +7,18 @@
 mat.model(data, ns, combine.matrices = FALSE)
 }
 \arguments{
-\item{data}{Either the result of a simulation, to extract the parameters from (obs: may return a list of
-matrices), or a data.frame containing the parameters}
+\item{data}{Either the result of a simulation, to extract the parameters from, or a
+data.frame containing the parameters.}
 
-\item{ns}{an array of numbers of stages. Use for more than one population.}
+\item{ns}{an array of numbers of stages. Use when \code{data} is a data.frame and the is
+more than one population.}
 
 \item{combine.matrices}{Logical. Combine the matrices into a single, multi-population matrix?}
 }
 \description{
-Produces the mpm matrix for a continuous time structured
-population model, to be applied in a linear ODE
+Produces the Matrix Population Model matrix for a continuous time structured
+population model, to be applied in a linear ODE. If there is more than one population,
+returns a list of matrices, or one block-diagonal matrix created by the combination.
 }
 \examples{
 # example 1

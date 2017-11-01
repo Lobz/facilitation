@@ -14,12 +14,13 @@ mat.model.base(n = 3, Ds = runif(n, 0, 5), Gs = runif(n - 1, 0, 5),
 
 \item{Gs}{An (n-1)-array with growth rates for each stage but the last.}
 
-\item{Rs}{A n-array of reproduction rates for each stage.
-matrices)}
+\item{Rs}{Either a single reproduction rate for the oldest stage, or an n-array of reproduction rates for each stage.}
 }
 \description{
-Produces the mpm matrix for a continuous time structured
-population model, to be applied in a linear ODE
+Produces the Matrix Population Model matrix for a continuous time structured
+population model, to be applied in a linear ODE. Unlike \code{\link{mat.model.base}}, only
+works with a single population. If only the number of stages is provided, returns a ramdom
+population matrix.
 }
 \examples{
 mat <- mat.model.base(5)

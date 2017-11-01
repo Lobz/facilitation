@@ -10,7 +10,9 @@ longevity(data)
 \item{data}{result of a simulation, created by \code{\link{community}}}
 }
 \description{
-calculates the lifespan of each individual
+Calculates the lifespan of each individual. Returns a data.frame with the individual's id,
+the last stage reached by that individual, the time of birth, time of death (if dead), and
+longevity (if dead).
 }
 \examples{
 data(malthusian)

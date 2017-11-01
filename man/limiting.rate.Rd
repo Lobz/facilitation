@@ -2,7 +2,7 @@
 % Please edit documentation in R/mat_model.R
 \name{limiting.rate}
 \alias{limiting.rate}
-\title{Dominant eigenvalue}
+\title{Limiting Rate}
 \usage{
 limiting.rate(mat)
 }
@@ -10,8 +10,17 @@ limiting.rate(mat)
 \item{mat}{a square matrix}
 }
 \description{
-a function to calculate the per-capita growth rate of a mpm as t --> infinity, in other words,
-the real part of the dominant eigenvalue of a matrix
+This function returns the real dominant eigenvalue of a Matrix Population Model matrix. 
+That is a real number that corresponds to the per-capita growth rate that a population
+approaches as time passes, in a model with no interactions.
+}
+\details{
+A structured population can grow at exactly this rate if the
+distribution between stages corresponds exactly to the distribution of the dominant
+eigenvector. The models that can be simulated by this package are of a class that always
+has a real dominant eigenvector. Note that these are continuous-time models, in which r >
+0 means the population will grow, and r < 0 means it will decrease. This function doesn't
+throw errors, instead it returns 'NA'.
 }
 \examples{
 mat <- mat.model.base(5)
