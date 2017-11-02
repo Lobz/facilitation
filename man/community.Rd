@@ -4,10 +4,10 @@
 \alias{community}
 \title{community}
 \usage{
-community(maxtime, numstages, parameters, dispersal, init, interactionsD,
-  interactionsG, interactionsR, height = 100, width = 100,
-  boundary = c("reflexive", "absortive", "periodic"),
-  dispKernel = c("exponential", "random"), maxpop = 30000)
+community(maxtime, numstages, parameters, init, interactionsD, interactionsG,
+  interactionsR, height = 100, width = 100, boundary = c("reflexive",
+  "absortive", "periodic"), dispKernel = c("exponential", "random"),
+  maxpop = 30000)
 }
 \arguments{
 \item{maxtime}{How long the simulation must run}
@@ -15,9 +15,7 @@ community(maxtime, numstages, parameters, dispersal, init, interactionsD,
 \item{numstages}{Array of number of stages for each population}
 
 \item{parameters}{Data.frame or matrix with one row for each stage. Columns:
-D,G,R,radius(optional),maxstressefect (optional)}
-
-\item{dispersal}{Average distance for seed dispersal}
+D,G,R,dispersal distance,radius(optional),maxstressefect (optional)}
 
 \item{init}{Either an array of initial numbers for each stage of each population, or a
 data.frame with the history of a simulation}
@@ -50,9 +48,9 @@ Runs a simulation with any number of structured populations, for a limited time.
 }
 \examples{
 init <- list(c(100,0,0),c(100,0))
-###               D G R  D G R  ...
-param <- matrix(c(2,1,0, 1,1,0, .5,0,6, 1,1,0, .5,0,2), byrow=TRUE, nrow=5) 
-malth <- community(3,c(3,2),param,dispersal=2,init=init)
+###               D G R d  D G R d ...
+param <- matrix(c(2,1,0,0, 1,1,0,0, .5,0,6,2, 1,1,0,0, .5,0,2,2), byrow=TRUE, nrow=5) 
+malth <- community(3,c(3,2),param,init=init)
 times <- seq(0,3,by=0.1)
 ab <- abundance.matrix(malth,times)
 stackplot(ab[,1:3]) # species 1

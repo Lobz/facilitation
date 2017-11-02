@@ -5,7 +5,7 @@
 #' @param maxtime 	How long the simulation must run
 #' @param numstages Array of number of stages for each population
 #' @param parameters 	Data.frame or matrix with one row for each stage. Columns:
-#' D,G,R,radius(optional),maxstressefect (optional)
+#' D,G,R,dispersal distance,radius(optional),maxstressefect (optional)
 #' @param init		Either an array of initial numbers for each stage of each population, or a
 #' data.frame with the history of a simulation
 #' @param interactionsD	Optional. A square matrix of effects of life stages over each other, where element
@@ -25,9 +25,9 @@
 #' is 30000.
 #' @examples
 #' init <- list(c(100,0,0),c(100,0))
-#' ###               D G R  D G R  ...
-#' param <- matrix(c(2,1,0, 1,1,0, .5,0,6, 1,1,0, .5,0,2), byrow=TRUE, nrow=5) 
-#' malth <- community(3,c(3,2),param,dispersal=2,init=init)
+#' ###               D G R  D G R ...
+#' param <- matrix(c(2,1,0, 1,1,0, .5,0,6,2, 1,1,0,0, .5,0,2,2), byrow=TRUE, nrow=5) 
+#' malth <- community(3,c(3,2),param,init=init)
 #' times <- seq(0,3,by=0.1)
 #' ab <- abundance.matrix(malth,times)
 #' stackplot(ab[,1:3]) # species 1
@@ -35,7 +35,7 @@
 #' @export
 #' @useDynLib facilitation
 #' @import Rcpp
-community <- function(maxtime, numstages, parameters, dispersal,init, # the main parameters
+community <- function(maxtime, numstages, parameters, init, # the main parameters
                          interactionsD, interactionsG, interactionsR, # interactions
                          height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
                          dispKernel=c("exponential","random"), # type of dispersal
@@ -50,6 +50,40 @@ community <- function(maxtime, numstages, parameters, dispersal,init, # the main
     ntot <- sum(numstages)
     npop <- length(numstages)
 
+    # main parameter
+    M <- as.matrix(parameters)
+    if(nrow(M) != ntot){
+        stop("Total number of stages differs from number of rows in parameter matrix")
+    }
+
+    if(ncol(M) < 3 | ncol(M) > 7){
+        stop("Parameter matrix must have 3-7 columns")
+    }
+    if(ncol(M)==3){ # assume dispersal is missing
+        M <- cbind(M,rep(1,ntot))
+    }
+    if(ncol(M)==4){ # assume radius is missing
+        M <- cbind(M,rep(1,ntot))
+        if(!missing(interactionsD) | !missing(interactionsG) | !missing(interactionsR)){
+            stop("To use interactions please set the values of dispersal and radius in parameters")
+        }
+    }
+    if(ncol(M)==5){ # assume maxstresseffect is missing
+        M <- cbind(M,rep(0,ntot))
+    }
+    if(ncol(M)==6){
+        M <- cbind(M,rep(disp,ntot))
+    }
+
+    # check if growth rates for last stages are 0
+    idold<-0
+    for(i in 1:npop){
+        idold <- idold+numstages[i]
+        if(M[idold,2] != 0){ # eldest stage with a growth rate
+            stop("Invalid input: positive growth rate for last stage of population")
+        }
+    }
+
 	if(missing(interactionsD)){
         interactionsD = matrix(rep(0,ntot*ntot),ntot)
     }
@@ -62,32 +96,6 @@ community <- function(maxtime, numstages, parameters, dispersal,init, # the main
         interactionsR = matrix(rep(0,ntot*ntot),ntot)
     }
     inter <- list(D=matrix(interactionsD,ntot),G=matrix(interactionsG,ntot),R=matrix(interactionsR,ntot))
-
-    M <- as.matrix(parameters)
-    if(nrow(M) != ntot){
-        stop("Total number of stages differs from number of rows in parameter matrix")
-    }
-    M <- cbind(M,rep(dispersal,ntot))
-    if(ncol(M)==5){ # assume maxstresseffect is missing
-        M <- cbind(M,rep(0,ntot))
-    }
-    else if(ncol(M)==4){ # assume radius and maxstress effect are missing
-        M <- cbind(M,rep(1,ntot))
-        M <- cbind(M,rep(0,ntot))
-    }
-    else if(ncol(M)!=6){
-        stop("Parameter matrix must have 4-6 columns")
-    }
-    M <- cbind(M,rep(disp,ntot))
-
-    # check if growth rates for last stages are 0
-    idold<-0
-    for(i in 1:npop){
-        idold <- idold+numstages[i]
-        if(M[idold,2] != 0){ # eldest stage with a growth rate
-            stop("Invalid input: positive growth rate for last stage of population")
-        }
-    }
 
     # generate init parameter
     restore=F
@@ -141,7 +149,7 @@ proceed <- function(data,time){
     past.hist<-subset(d,!is.na(d$endtime))
 
     c <- community(init=current,numstages=data$num.stages, maxtime=data$maxtime+time,
-                   parameters=data$param,dispersal=data$dispersal,
+                   parameters=data$param,
                    interactionsD=data$interactions$D, 
                    interactionsG=data$interactions$G, 
                    interactionsR=data$interactions$R, 
@@ -176,7 +184,7 @@ restart <- function(data,time,start=0){
     d$endtime<-NA
 
     community(init=d,numstages=data$num.stages, maxtime=time,
-              parameters=data$param,dispersal=data$dispersal,
+              parameters=data$param,
               interactionsD=data$interactions$D, 
               interactionsG=data$interactions$G, 
               interactionsR=data$interactions$R, 

@@ -4,7 +4,7 @@
 \alias{create.parameters}
 \title{Create Parameters}
 \usage{
-create.parameters(Ds, Gs, Rs, radius, n)
+create.parameters(Ds, Gs, Rs, radius, stress, n)
 }
 \arguments{
 \item{Ds}{An array of death rates for the structured population, of length \code{n}}
@@ -15,6 +15,10 @@ create.parameters(Ds, Gs, Rs, radius, n)
 
 \item{radius}{Optional (use if there are any interactions). Either one radius of
 interactions or an array of interaction radiuses, of length \code{n}.}
+
+\item{stress}{Optional (use to create a stress gradient). An array of
+values of stress gradient slope. The full value will be added to death rate at the right
+of the plot, half value at the middle of the plot, and so on, proportionally.}
 
 \item{n}{Number of stages in the population}
 }

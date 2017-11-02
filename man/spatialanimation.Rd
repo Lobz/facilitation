@@ -6,10 +6,10 @@
 \title{Function for ploting simulation as a gif}
 \usage{
 spatialanimation(data, times = seq(0, data$maxtime, length.out = 50),
-  interval = 0.1, draw = data$num.total:1, radius = data$radius[draw],
-  color = colorRampPalette(c("darkred", "lightgreen"))(length(draw)),
-  movie.name = "facilitationmovie.gif", xlim = c(0, data$w), ylim = c(0,
-  data$h))
+  interval = 0.1, draw = data$num.total:1,
+  radius = data$param$radius[draw], color = colorRampPalette(c("darkred",
+  "lightgreen"))(length(draw)), movie.name = "facilitationmovie.gif",
+  xlim = c(0, data$w), ylim = c(0, data$h))
 
 plotsnapshot(data, t, ...)
 }
