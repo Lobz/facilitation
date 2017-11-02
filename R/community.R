@@ -123,7 +123,7 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
     colnames(M) <- c("D","G","R","radius","maxstresseffect")
 
 	list(data = r,num.pop = npop, num.total = ntot, num.stages = numstages, maxtime=maxtime,
-	     dispersal=dispersal,interactions=inter,param=data.frame(M),radius=M[,4],
+	     dispersal=dispersal,interactions=inter,param=data.frame(M),
 	     init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel)
 }
 
