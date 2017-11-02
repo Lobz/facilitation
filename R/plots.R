@@ -114,7 +114,7 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 #' @import grid
 spatialanimation = function(data, times=seq(0,data$maxtime,length.out=50), interval=0.1,
                             draw=data$num.total:1,
-                            radius=data$radius[draw],
+                            radius=data$param$radius[draw],
                             color=colorRampPalette(c("darkred","lightgreen"))(length(draw)),
                             movie.name="facilitationmovie.gif",
                             xlim=c(0,data$w), ylim=c(0,data$h)

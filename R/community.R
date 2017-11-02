@@ -124,7 +124,7 @@ community <- function(maxtime, numstages, parameters, dispersal,init, # the main
     colnames(M) <- c("D","G","R","dispersal","radius","maxstresseffect","dkernel")
 
 	list(data = r,num.pop = npop, num.total = ntot, num.stages = numstages, maxtime=maxtime,
-	     interactions=inter,param=data.frame(M),radius=M[,4],
+	     interactions=inter,param=data.frame(M),
 	     init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel)
 }
 
