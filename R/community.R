@@ -8,7 +8,6 @@
 #' D,G,R,radius(optional),maxstressefect (optional)
 #' @param init		Either an array of initial numbers for each stage of each population, or a
 #' data.frame with the history of a simulation
-#' @param dispersal	Average distance for seed dispersal
 #' @param interactionsD	Optional. A square matrix of effects of life stages over each other, where element
 #' [i,j] is the effect of stage i over stage j. Positive values equal facilitation, negative
 #' ones, competition. The interactions occur only if the affected individual is within the affecting
@@ -36,7 +35,7 @@
 #' @export
 #' @useDynLib facilitation
 #' @import Rcpp
-community <- function(maxtime, numstages, parameters, dispersal, init, # the main parameters
+community <- function(maxtime, numstages, parameters, dispersal,init, # the main parameters
                          interactionsD, interactionsG, interactionsR, # interactions
                          height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
                          dispKernel=c("exponential","random"), # type of dispersal
@@ -68,16 +67,18 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
     if(nrow(M) != ntot){
         stop("Total number of stages differs from number of rows in parameter matrix")
     }
-    if(ncol(M)==4){ # assume maxstresseffect is missing
+    M <- cbind(M,rep(dispersal,ntot))
+    if(ncol(M)==5){ # assume maxstresseffect is missing
         M <- cbind(M,rep(0,ntot))
     }
-    else if(ncol(M)==3){ # assume radius and maxstress effect are missing
+    else if(ncol(M)==4){ # assume radius and maxstress effect are missing
         M <- cbind(M,rep(1,ntot))
         M <- cbind(M,rep(0,ntot))
     }
-    else if(ncol(M)!=5){
-        stop("Parameter matrix must have 3-5 columns")
+    else if(ncol(M)!=6){
+        stop("Parameter matrix must have 4-6 columns")
     }
+    M <- cbind(M,rep(disp,ntot))
 
     # check if growth rates for last stages are 0
     idold<-0
@@ -107,9 +108,9 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
     }
 
 	# run simulation
-	r <- simulation(maxtime,num_pops=npop,num_stages=numstages,parameters=c(t(M)),dispersal=dispersal,
+	r <- simulation(maxtime,num_pops=npop,num_stages=numstages,parameters=c(t(M)),
                     interactionsD=interactionsD,interactionsG=interactionsG,interactionsR=interactionsR,
-                    init=initial,history=hist,restore=restore,h=height,w=width,bcond=bound,dkernel=disp,maxpop=maxpop)
+                    init=initial,history=hist,restore=restore,h=height,w=width,bcond=bound,maxpop=maxpop)
 
 
     # obs: the object returned by function simulation, defined in main.cpp, is a data.frame with
@@ -120,10 +121,10 @@ community <- function(maxtime, numstages, parameters, dispersal, init, # the mai
 	
 	# prepare output
     rownames(M) <- 1:ntot
-    colnames(M) <- c("D","G","R","radius","maxstresseffect")
+    colnames(M) <- c("D","G","R","dispersal","radius","maxstresseffect","dkernel")
 
 	list(data = r,num.pop = npop, num.total = ntot, num.stages = numstages, maxtime=maxtime,
-	     dispersal=dispersal,interactions=inter,param=data.frame(M),radius=M[,4],
+	     interactions=inter,param=data.frame(M),radius=M[,4],
 	     init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel)
 }
 

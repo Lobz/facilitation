@@ -5,12 +5,12 @@
 #include<Rcpp.h>
 
 // [[Rcpp::export]]
-Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num_stages,Rcpp::NumericVector parameters, double dispersal,
+Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num_stages,Rcpp::NumericVector parameters,
         Rcpp::NumericVector interactionsD, 
         Rcpp::NumericVector interactionsG, 
         Rcpp::NumericVector interactionsR, 
         Rcpp::IntegerVector init, Rcpp::DataFrame history,
-        bool restore=false, double w=100, double h=100, int bcond=1, int dkernel=1, int maxpop=30000){
+        bool restore=false, double w=100, double h=100, int bcond=1, int maxpop=30000){
 	int *in, i,n, n_total=0,*nsts;
     double *par, *inter;
 	bool test=true,populated;
@@ -39,12 +39,12 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
     for(i=0,n=1; i<num_pops; i++){
         if(nsts[i] == 1){
             // create sigle-stage species
-            arena->createSimpleSpecies(n,dispersal,dkernel);
+            arena->createSimpleSpecies(n);
             n++;
         }
         else {
             // create structured species
-            arena->createStructuredSpecies(n,n+nsts[i]-1,dispersal,dkernel);
+            arena->createStructuredSpecies(n,n+nsts[i]-1);
             n+=nsts[i];
         }
     }

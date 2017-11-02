@@ -6,11 +6,11 @@
 class Species {
 	private:
 	int id;
+	double D, G, R, dispersalRadius, Rad, maxStressEffect;
 	int spnum, kernelType;
-	double D, G, R, Rad, dispersalRadius, maxStressEffect;
 	double totalRate;
 
-	Arena *arena;
+    Arena *arena;
 	std::list<Individual*> population;
 	Species *nextStage, *seedStage;
 	/* array of interaction coeficients (affecting D,G,R) */
@@ -18,7 +18,7 @@ class Species {
 
 	public:
 	Species(Arena *ar,int id, double *par);
-	Species(Arena *ar,int id, double D, double G, double R, double Rad, double maxStressEffect);
+	Species(Arena *ar,int id, double D, double G, double R, double dispersal, double Rad, double maxStressEffect, int dkernel);
 	~Species();
 	/* BASIC RUN ACTION */
 	void act();
@@ -40,7 +40,7 @@ class Species {
 
 	/* SETS */
 	void setNextStage(Species *st);
-	void setSeedStage(Species *st, double dispersal, int kernel = 1);
+	void setSeedStage(Species *st);
 	void setInteractionD(int s, double effect);
 	void setInteractionG(int s, double effect);
 	void setInteractionR(int s, double effect);

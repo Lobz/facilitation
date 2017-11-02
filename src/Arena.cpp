@@ -16,19 +16,19 @@ Arena::Arena(int maxspid, double *parameters, double w, double h, int bc) :maxsp
 	history = new History();
 }
 
-void Arena::createStructuredSpecies(int minId, int maxId, double dispersal, int dkernel) {
+void Arena::createStructuredSpecies(int minId, int maxId) {
 	int i;
 
 	for(i=minId;i<maxId;i++){
 		species[i]->setNextStage(species[i+1]);
-		species[i]->setSeedStage(species[minId], dispersal, dkernel);
+		species[i]->setSeedStage(species[minId]);
 	}
 	// last stage doesn't have next stage
-	species[i]->setSeedStage(species[minId], dispersal, dkernel);
+	species[i]->setSeedStage(species[minId]);
 }
 
-void Arena::createSimpleSpecies(int id, double dispersal, int dkernel){
-	species[id]->setSeedStage(species[id], dispersal, dkernel);
+void Arena::createSimpleSpecies(int id){
+	species[id]->setSeedStage(species[id]);
 }
 
 History * Arena::finalStatus(){

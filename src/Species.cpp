@@ -2,15 +2,14 @@
 #include"Random.h"
 #include<cstdio>
 
-Species::Species(Arena *ar,int myid, double *par) : Species(ar,myid,par[0],par[1],par[2],par[3],par[4]){}
+Species::Species(Arena *ar,int myid, double *par) : Species(ar,myid,par[0],par[1],par[2],par[3],par[4],par[5],par[6]){}
 
-Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, double radius=0, double maxEf=0)
-    :id(myid),G(growth),D(death),R(rep),Rad(radius),maxStressEffect(maxEf)
+Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, double dispersal=0, double radius=0, double maxEf=0, int dkernel=1)
+    :id(myid),D(death),G(growth),R(rep),dispersalRadius(dispersal),Rad(radius),maxStressEffect(maxEf),kernelType(dkernel)
 {
     int i;
     nextStage = NULL;
     seedStage = NULL;
-    dispersalRadius = 0;
 
     arena = ar;
     spnum = ar->getSpNum();
@@ -149,10 +148,8 @@ void Species::act(){
 }
 
 void Species::setNextStage(Species *st) {nextStage = st;}
-void Species::setSeedStage(Species *st, double dispersal, int kernel) {
+void Species::setSeedStage(Species *st) {
     seedStage = st;
-    dispersalRadius = dispersal;
-    kernelType=kernel;
 }
 
 void Species::remove(std::list<Individual*>::iterator i){
