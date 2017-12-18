@@ -82,15 +82,16 @@ void Species::disperseIndividual(double x, double y){
 
 void Species::disperseIndividual(Position p){
     if(kernelType==0){ /* Fully random on the arena */
-        addIndividual(Position(Random(arena->getWidth()),Random(arena->getHeight())));
+        seedStage->addIndividual(Position(Random(arena->getWidth()),Random(arena->getHeight())));
     }
     else{
-        addIndividual(p + dispersalKernel());
+        seedStage->addIndividual(p + dispersalKernel());
     }
 }
 
 Position Species::dispersalKernel(){
     Position p;
+    std::cout << "sp " << id << "d " << dispersalRadius << "\n";
     switch(kernelType){
         case 1: /* EXPONENTIAL */
         default:

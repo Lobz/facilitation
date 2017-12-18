@@ -101,7 +101,7 @@ void 	Individual::grow(){
 }
 
 void	Individual::reproduce(){
-	seedStage->disperseIndividual(p);
+	species->disperseIndividual(p);
 }
 
 void 	Individual::die(){

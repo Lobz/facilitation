@@ -48,8 +48,8 @@ Runs a simulation with any number of structured populations, for a limited time.
 }
 \examples{
 init <- list(c(100,0,0),c(100,0))
-###               D G R d  D G R d ...
-param <- matrix(c(2,1,0,0, 1,1,0,0, .5,0,6,2, 1,1,0,0, .5,0,2,2), byrow=TRUE, nrow=5) 
+###               D G R  D G R ...
+param <- matrix(c(2,1,0, 1,1,0, .5,0,6,2, 1,1,0,0, .5,0,2,2), byrow=TRUE, nrow=5) 
 malth <- community(3,c(3,2),param,init=init)
 times <- seq(0,3,by=0.1)
 ab <- abundance.matrix(malth,times)
