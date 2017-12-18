@@ -91,7 +91,6 @@ void Species::disperseIndividual(Position p){
 
 Position Species::dispersalKernel(){
     Position p;
-    std::cout << "sp " << id << "d " << dispersalRadius << "\n";
     switch(kernelType){
         case 1: /* EXPONENTIAL */
         default:

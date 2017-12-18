@@ -28,8 +28,8 @@
 #' malth <- community(2,c(2,2),param,init=rep(10,4))
 #' times <- seq(0,3,by=0.1)
 #' ab <- abundance.matrix(malth,times)
-#' stackplot(ab[,1:3]) # species 1
-#' stackplot(ab[,4:5]) # species 2
+#' stackplot(ab[,1:2]) # species 1
+#' stackplot(ab[,3:4]) # species 2
 #' @export
 #' @useDynLib facilitation
 #' @import Rcpp
