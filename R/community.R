@@ -123,7 +123,6 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
     # columns [sp, id, x, y, begintime, endtime]
     # the following adjustments are made on this side because of the limits of c++ data types
 	r[r==-1]=NA
-	r$sp <- factor(r$sp)
 	
 	# prepare output
     rownames(M) <- 1:ntot
