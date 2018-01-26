@@ -45,8 +45,8 @@ mat.model.base  <- function(n=3,Ds=runif(n,0,5),Gs=runif(n-1,0,5),Rs=runif(n,0,5
 #' mat.model(malthusian)
 #' 
 #' # example 3
-#' data(RandK)
-#' mat.model(RandK,combine.matrices=TRUE)
+#' data(twospecies)
+#' mat.model(twospecies,combine.matrices=TRUE)
 #' @export
 #' @importFrom Matrix bdiag
 mat.model <- function(data, ns, combine.matrices=FALSE){

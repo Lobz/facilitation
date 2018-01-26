@@ -4,9 +4,9 @@
 #' @examples
 #' ## Simple mathusian one species
 #' init <- c(0,0,100)
-#' ################# D G R
-#' param <- matrix(c(5,1,0, 1,1,0, .5,0,10),nrow=3,byrow=TRUE)
-#' malthusian <- community(10,3,param,dispersal=5,init)
+#' ################# D G R disp
+#' param <- matrix(c(5,1,0,5, 1,1,0,5, .5,0,10,5),nrow=3,byrow=TRUE)
+#' malthusian <- community(10,3,param,init)
 "malthusian"
 
 #' A simulation result with two very different species
@@ -19,5 +19,5 @@
 #' param <- matrix(c(2,1,0,0, 1,1,0,.1, .5,0,6,1, 1,1,0,.2, .5,0,2,2), byrow=TRUE, nrow=5) 
 #' interD <- matrix(c(0,0,0,0,0, 0,-1,0,0,0, 0,0,-2,0,-1, 0,0,0,0,0, 0,0,-1,0,-2),ncol=5)
 #' interG <- matrix(c(0,0,0,0,0, 0,0,0,0,-.5, 0,0,0,0,-.5, 0,0,0,0,-.5, 0,0,-2,0,-1),ncol=5)
-#' RandK <- community(10,nstages,param,dispersal=5,init,interactionsD=interD,interactionsG=interG)
-"RandK"
+#' twospecies <- community(10,nstages,param,dispersal=5,init,interactionsD=interD,interactionsG=interG)
+"twospecies"

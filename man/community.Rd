@@ -47,12 +47,10 @@ is 30000.}
 Runs a simulation with any number of structured populations, for a limited time.
 }
 \examples{
-init <- list(c(100,0,0),c(100,0))
-###               D G R  D G R ...
-param <- matrix(c(2,1,0, 1,1,0, .5,0,6,2, 1,1,0,0, .5,0,2,2), byrow=TRUE, nrow=5) 
-malth <- community(3,c(3,2),param,init=init)
+param <- data.frame(D=c(2,1,2,1),G=c(2,0,2,0),R=c(0,3,0,3),disp=c(0,2,0,20))
+malth <- community(2,c(2,2),param,init=rep(10,4))
 times <- seq(0,3,by=0.1)
 ab <- abundance.matrix(malth,times)
-stackplot(ab[,1:3]) # species 1
-stackplot(ab[,4:5]) # species 2
+stackplot(ab[,1:2]) # species 1
+stackplot(ab[,3:4]) # species 2
 }

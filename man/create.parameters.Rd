@@ -4,7 +4,7 @@
 \alias{create.parameters}
 \title{Create Parameters}
 \usage{
-create.parameters(Ds, Gs, Rs, radius, stress, n)
+create.parameters(Ds, Gs, Rs, dispersal, radius, stress, n)
 }
 \arguments{
 \item{Ds}{An array of death rates for the structured population, of length \code{n}}
@@ -12,6 +12,8 @@ create.parameters(Ds, Gs, Rs, radius, stress, n)
 \item{Gs}{An array of growth rates for the structured population, of length \code{n-1}}
 
 \item{Rs}{Either the seed production rate of adults in the population, or an array of seed production rates, of length \code{n}.}
+
+\item{dispersal}{Dispersal distances}
 
 \item{radius}{Optional (use if there are any interactions). Either one radius of
 interactions or an array of interaction radiuses, of length \code{n}.}

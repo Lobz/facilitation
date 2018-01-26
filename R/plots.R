@@ -14,8 +14,8 @@
 #' @param qt Optional. For distributions, show only up to quantile qt (percentage)
 #' @param \dots Further parameters to be passed to the lower level plot function
 #' @examples
-#' data(RandK)
-#' ab <- abundance.matrix(RandK,seq(0,RandK$maxtime,by=1))
+#' data(twospecies)
+#' ab <- abundance.matrix(twospecies,seq(0,twospecies$maxtime,by=1))
 #' # species 1
 #' stackplot(ab[,1:3])
 #' # species 2
@@ -105,8 +105,8 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 #' Defaults to interaction radius.
 #' @param movie.name The filename of the gif that will be saved.
 #' @examples
-#' data(RandK)
-#' spatialanimation(RandK,draw=c(5,3),interval=.1,movie.name="malthusian.gif")
+#' data(twospecies)
+#' spatialanimation(twospecies,draw=c(5,3),interval=.1,movie.name="malthusian.gif")
 #' @export
 #' @import grDevices 
 #' @import graphics
@@ -174,8 +174,8 @@ spatialplot = function(dtlist, times, xlim, ylim, sp,
 #' @param \dots additional parameters to be passed to spatialanimation
 #' @rdname spatialanimation
 #' @examples
-#' data(RandK)
-#' plotsnapshot(RandK,t=10)
+#' data(twospecies)
+#' plotsnapshot(twospecies,t=10)
 plotsnapshot <- function(data,t,...) {
     spatialanimation(data,c(t,t),...)
 }
