@@ -42,7 +42,7 @@ corresponds to a simple malthusian (exponential) growth of rate r=1.
 ```r
 ### parameter are D G R
 rates <- matrix(c(1,0,2),nrow=1) # parameters must be in a matrix
-results <- community(maxtime=2,numstages=1,parameters=rates,dispersal=1,init=10)
+results <- community(maxtime=2,numstages=1,parameters=rates,init=10)
 ```
 The return value is a list containing all the parameters used and the data resulting from the simulation, with one line per individual at each life stage, with their (x,y) position, id, time at which they were born or grew to that stage and time at which they died or grew to the next stage.
 
@@ -59,10 +59,10 @@ deathrates <- c(2, 0.2, 0.2)     # death rates for seed, sapling and adult
 growthrates <- c(1, 0.2)         # transition rates seed-->sapling and sapling-->adult
 reproductionrate <- 10           # reproduction rate (only adult)
 radius <- c(0,0.5,2)             # interaction radii per stage
-param <- create.parameters(deathrates,growthrates,reproductionrate,radius) # create the parameter object
-param <- rbind(param,c(0,0,0,2)) # parameters for facilitator (no dynamics, radius 2)
-
 dispersalradius <- 2	         # average distance a seed falls from the parent (distance is exponentially distributed)
+param <- create.parameters(D=deathrates,G=growthrates,R=reproductionrate,dispersal=dispersalradius,radius=radius) # create the parameter object
+param <- rbind(param,c(0,0,0,0,2)) # parameters for facilitator (no dynamics, radius 2)
+
 init <- c(1,1,10,20)             # initial pop. sizes for the 3 stages plus the facilitator species
 effects <- c(0,0,0,0,            # effects over seeds (none)
             0,-.5,0,+1,          # effects over seedlings (competition and facilitation)
@@ -73,7 +73,7 @@ h <- 50                          # arena height
 w <- 50                          # arena width
 
 results <-
-community(maxt,c(numstages,1),param,dispersalradius,init,interactionsD=effects,height=h,width=w)
+community(maxt,c(numstages,1),param,init,interactionsD=effects,height=h,width=w)
 ```
 ## Example 3: more species
 The below code creates a simulation with two species, with 3 and 2 lifestages respectively, with facilitation reducing the death rate of the juvenile stages, and intra and inter-specific competition; runs it up to time 10, and stores the result in the `results` variable.
@@ -81,13 +81,12 @@ The below code creates a simulation with two species, with 3 and 2 lifestages re
 ```r
 ### Two species competition+facilitation
 maxt <- 10
-dispersal<-2
 
 nstages <- c(3,2)
 init <- list(c(100,0,10),c(100,30))
 ### parameter matrix has one stage per row
-###               D G R Rad
-param <- matrix(c(2,1,0,0, 1,1,0,.1, .5,0,6,1, 1,1,0,.2, .5,0,2,2), byrow=T, nrow=5) 
+###               D G R d r
+param <- matrix(c(2,1,0,0,0, 1,1,0,0,.1, .5,0,6,2,1, 1,1,0,0,.2, .5,0,2,2,2), byrow=T, nrow=5) 
 ### interaction matrix: positive values represent facilitation, negative ones, competition
 interactD <- matrix(c(0,0,0,0,0, 0,-.1,+.1,-.1,0, 0,0,-.1,0,-.2, ## effects over species 1
                                 0,-.2,+.2,-.1,0, 0,0,-.2,0,-.1),ncol=5) ## effects over species 2
@@ -95,7 +94,7 @@ interactD <- matrix(c(0,0,0,0,0, 0,-.1,+.1,-.1,0, 0,0,-.1,0,-.2, ## effects over
 interactG <- matrix(c(0,0,0,0,0, 0,0,-.2,0,-.5, 0,0,0,0,0, ## effects over species 1
                                 0,0,-.2,0,-.5, 0,0,0,0,0),ncol=5) ## effects over species 2
 results <-
-community(maxt,nstages,param,dispersal,init,interactionsD=interactD,interactionsG=interactG)
+community(maxt,nstages,param,init,interactionsD=interactD,interactionsG=interactG)
 ```
 
 ## Example 4: stress gradient
@@ -116,8 +115,8 @@ stress nor competition.
 
 ```r
 maxt<-40 # this is gonna take a while
-rates <- matrix(c(0,1,0,.7,4, 1,1,0,1.2,0, 1,0,6,2,0),nrow=3,byrow=T) # maximum stress effect is 4 for stage 1 and 0 for stages 2 and 3
-results5 <- community(maxtime=maxt,numstages=3,parameters=rates,dispersal=10,init=c(40,0,0),
+rates <- matrix(c(0,1,0,2,.7,4, 1,1,0,2,1.2,0, 1,0,6,2,2,0),nrow=3,byrow=T) # maximum stress effect is 4 for stage 1 and 0 for stages 2 and 3
+results5 <- community(maxtime=maxt,numstages=3,parameters=rates,init=c(40,0,0),
                       interactionsD=matrix(c(-2,0,0, 0,0,0, 0,0,0),3)) # competition is only between seedlings
 ```
 See the scripts in the examples directory (available on [GitHub](https://github.com/Lobz/facilitation/tree/master/examples)) for a few more examples.
