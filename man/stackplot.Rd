@@ -7,13 +7,16 @@
 stackplot(mat, col, legend, log.y = FALSE, perc = F, qt = 100, ...)
 }
 \arguments{
-\item{mat}{A population matrix, as produced by \code{\link{abundance.matrix}}}
+\item{mat}{A population matrix, as produced by \code{\link{abundance.matrix}} or something that
+can be coerced to matrix}
 
 \item{col}{Optional. A color vector}
 
 \item{legend}{Optional. An array of names}
 
 \item{log.y}{Logical. Should the y-axis be plotted in a logarithmic scale?}
+
+\item{perc}{Logical. If set to true, will output the y-axis as a percentage instead of the absolute numbers}
 
 \item{qt}{Optional. For distributions, show only up to quantile qt (percentage)}
 
@@ -27,8 +30,10 @@ The \code{stackplot} function produces a stacked plot of the population over tim
 Notice that the population should have at least two stages for this function to work.
 }
 \examples{
-obj <- facilitation(maxtime=2,n=3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
-times <- seq(0,2,by=0.1)
-ab <- abundance.matrix(obj,times)
+data(twospecies)
+ab <- abundance.matrix(twospecies,seq(0,twospecies$maxtime,by=1))
+# species 1
 stackplot(ab[,1:3])
+# species 2
+stackplot(ab[,4:5])
 }

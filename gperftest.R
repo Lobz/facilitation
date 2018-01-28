@@ -17,7 +17,7 @@ idealsim <- function(nind){
     nstages <- rep(nst,nsp)
     totstages <- nst*nsp
     init <- rep(list(init),nsp)
-    par <- c(2,1,0,1, 1,0,5,2)
+    par <- c(2,1,0,0,1, 1,0,5,dispersal,2)
     param <- matrix(rep(par,nsp)
                     , byrow=T, nrow=sum(nstages)) 
     sapsap <- -1
@@ -28,7 +28,7 @@ idealsim <- function(nind){
     interadu <- rep(c(sapadu,aduadu),nsp)
     interact <- matrix(c(rep(c(intersap,interadu),nsp)),ncol=totstages)
 
-    neutral <- community(maxt,nstages,param,dispersal,init,interactions=interact,h=h,w=w)
+    neutral <- community(maxt,nstages,param,init,interactionsD=interact,h=h,w=w)
 
     save(neutral,file="test.RData")
 }

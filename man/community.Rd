@@ -2,56 +2,54 @@
 % Please edit documentation in R/community.R
 \name{community}
 \alias{community}
-\title{Runs a simulation with a structured population and a non-structured facilitator population}
+\title{community}
 \usage{
-community(maxtime, numstages, parameters, dispersal, init, interactions,
-  height = 100, width = 100, boundary = c("reflexive", "absortive",
-  "periodic"), dispKernel = c("exponential", "random"), maxpop = 30000)
+community(maxtime, numstages, parameters, init, interactionsD, interactionsG,
+  interactionsR, height = 100, width = 100, boundary = c("reflexive",
+  "absortive", "periodic"), dispKernel = c("exponential", "random"),
+  maxpop = 30000)
 }
 \arguments{
 \item{maxtime}{How long the simulation must run}
 
 \item{numstages}{Array of number of stages for each population}
 
-\item{parameters}{Matrix with one row for each stage. Columns:
-D,G,R,radius(optional),maxstressefect (optional)}
-
-\item{dispersal}{Average distance for seed dispersal}
+\item{parameters}{Data.frame or matrix with one row for each stage. Columns:
+D,G,R,dispersal distance,radius(optional),maxstressefect (optional)}
 
 \item{init}{Either an array of initial numbers for each stage of each population, or a
 data.frame with the history of a simulation}
 
-\item{interactions}{Optional. An array of effects of life stages over each other, where element
-[i+n*j] means the effect of stage i over stage j. Positive values equal facilitation, negative ones, competition.}
+\item{interactionsD}{Optional. A square matrix of effects of life stages over each other, where element
+[i,j] is the effect of stage i over stage j. Positive values equal facilitation, negative
+ones, competition. The interactions occur only if the affected individual is within the affecting
+individual's radius, and are additive. Affects death rates (is subtracted from D).}
+
+\item{interactionsG}{Same as above, but affecting growth rates (is added to G).}
+
+\item{interactionsR}{Same as above, but affecting reproduction rates (is added to R) .}
 
 \item{height}{Arena height}
 
 \item{width}{Arena width}
 
 \item{boundary}{Type of boundary condition. Options are "reflexive", "absortive" and
-"periodic". Default os reflexive.}
+"periodic". Default is reflexive.}
 
 \item{dispKernel}{Type of dispersion kernel. Options are "exponential" and "random", in which
-seeds are dispersed randomly regarless of parent position (note: "random" option ignores
+seeds are dispersed randomly regardless of parent position (note: "random" option ignores
 dispersal parameter)}
 
 \item{maxpop}{If the simulation reaches this many individuals total, it will stop. Default
 is 30000.}
-
-\item{maxstresseffects}{Optional (use for a stress gradient). Array of values for the slope
-of increase of environmental effect on each stage}
 }
 \description{
-All effects affect death rates. Effects are subtracted from death rates, meaning that positive
-effects decrease death rates while negative ones increase death rates.
+Runs a simulation with any number of structured populations, for a limited time.
 }
 \examples{
-init <- list(c(100,0,0),c(100,0))
-###               D G R  D G R  ...
-param <- matrix(c(2,1,0, 1,1,0, .5,0,6, 1,1,0, .5,0,2), byrow=T, nrow=5) 
-malth <- community(3,c(3,2),param,dispersal=2,init=init)
-times <- seq(0,3,by=0.1)
-ab <- abundance.matrix(malth,times)
-stackplot(ab[,1:3]) # species 1
-stackplot(ab[,4:5]) # species 2
+param <- data.frame(D=c(2,1,2,1),G=c(2,0,2,0),R=c(0,3,0,3),dispersal=c(0,2,0,20))
+malth <- community(2,c(2,2),param,init=c(10,10,10,10))
+ab <- abundance.matrix(malth)
+stackplot(ab[,1:2]) # species 1
+stackplot(ab[,3:4]) # species 2
 }

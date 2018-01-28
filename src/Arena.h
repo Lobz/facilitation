@@ -1,6 +1,6 @@
 #ifndef ARENA_H
 #define ARENA_H
-#define FACILITATION_NUMPARAMETERS 5
+#define FACILITATION_NUMPARAMETERS 7
 
 #include<list>
 #include<cstdlib>
@@ -33,7 +33,6 @@ class Arena {
 	double width, height;
 	double totalRate, *ratesList, totalTime;
 	Species **species;
-	Species *facilitator;
 	int bcond;
 	History * history;
 
@@ -41,12 +40,14 @@ class Arena {
 	Arena(int numsp, double * baserates, double width, double height, int bcond);
 
 	/* high level functions */
-	void createStructuredSpecies(int minId, int maxId, double dispersal, int dkernel);
-	void createSimpleSpecies(int id, double dispersal, int dkernel);
+	void createStructuredSpecies(int minId, int maxId);
+	void createSimpleSpecies(int id);
 	bool populate(Rcpp::DataFrame init);
 	bool populate(int *stagesinit);
 	bool turn();
-	void setInteractions(double *interactions, double slope);
+	void setInteractionsD(double *interactions);
+	void setInteractionsG(double *interactions);
+	void setInteractionsR(double *interactions);
 
 	/* acessors for Species and Individuals */
 	bool findPresent(int species_id, Position p);

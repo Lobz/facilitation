@@ -2,35 +2,51 @@
 % Please edit documentation in R/plots.R
 \name{spatialanimation}
 \alias{spatialanimation}
-\title{function for ploting simulation frames}
+\alias{plotsnapshot}
+\title{Function for ploting simulation as a gif}
 \usage{
 spatialanimation(data, times = seq(0, data$maxtime, length.out = 50),
-  interval = 0.1, movie.name = "facilitationmovie.gif", xlim = c(0,
-  data$w), ylim = c(0, data$h), col = c(colorRampPalette(c("darkred",
-  "pink"))(data$num.total - 1), "lightgreen"), ...)
+  interval = 0.1, draw = data$num.total:1,
+  radius = data$param$radius[draw], color = colorRampPalette(c("darkred",
+  "lightgreen"))(length(draw)), movie.name = "facilitationmovie.gif",
+  xlim = c(0, data$w), ylim = c(0, data$h))
+
+plotsnapshot(data, t, ...)
 }
 \arguments{
-\item{data}{result of a simulation, created by \code{\link{facilitation}}}
+\item{data}{result of a simulation, created by \code{\link{community}}}
 
 \item{times}{array of times at which to plot}
+
+\item{interval}{a time length to wait between frames}
+
+\item{draw}{an array of stages id, to be drawn bottom to top. Absent stages will not be
+drawn.}
+
+\item{radius}{Optional. Array representing the sizes in which the individuals will be drawn. 
+Defaults to interaction radius.}
+
+\item{color}{Optional. A color vector}
+
+\item{movie.name}{The filename of the gif that will be saved.}
 
 \item{xlim}{Optional. Limits to the x-axis}
 
 \item{ylim}{Optional. Limits to the y-axis}
 
-\item{col}{Optional. A color vector}
+\item{t}{a single time at which to plot}
 
-\item{tframe}{a time length to wait between frames. Do not use if using this with
-\code{animation}}
+\item{\dots}{additional parameters to be passed to spatialanimation}
 }
 \description{
-function for ploting simulation frames
+The spatialanimation function plots the individuals of the selected stages over time. Use plotsnapshot
+for plotting a single instant.
 }
 \examples{
-malth <- facilitation(2,3,c(5,1,.1),c(1,.5),10,dispersal=2,init=c(100,0,0,0),radius=c(0,1,2,0))
-times <- seq(0,2,by=0.1)
-# plot
-spatialanimation(malth,times,interval=.1,movie.name="malthusian.gif")
+data(twospecies)
+spatialanimation(twospecies,draw=c(5,3),interval=.1,movie.name="malthusian.gif")
+data(twospecies)
+plotsnapshot(twospecies,t=10)
 }
 \author{
 Alexandre Adalardo de Oliveira - 16/03/2016

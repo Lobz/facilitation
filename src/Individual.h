@@ -28,8 +28,8 @@ class Individual {
 	Position p;
 	const unsigned long id;
 	int spnum;
-	double R, D, G, Rad, SqRad;
-	double currentD, updateD();
+	double baseD, baseG, baseR, Rad, SqRad; /* these are set at birth/growth */
+	double D, G, R; /* these are the current rates */
 	double totalRate;
 	Species *species, *seedStage;
 	Arena *arena;
@@ -39,6 +39,7 @@ class Individual {
 	std::vector<std::list<Individual*>> affectingMeNeighbours;
 	std::vector<std::list<Individual*>> affectedByMeNeighbours;
 	void initNeighbours();
+    void updateRates();
 
 	public:
 	Individual(Arena *ar, Species *sp, double x, double y);

@@ -2,18 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{longevity}
 \alias{longevity}
-\title{calculates the lifespan of each individual}
+\title{longevity}
 \usage{
 longevity(data)
 }
 \arguments{
-\item{data}{result of a simulation, created by \code{\link{facilitation}}}
+\item{data}{result of a simulation, created by \code{\link{community}}}
 }
 \description{
-calculates the lifespan of each individual
+Calculates the lifespan of each individual. Returns a data.frame with the individual's id,
+the last stage reached by that individual, the time of birth, time of death (if dead), and
+longevity (if dead).
 }
 \examples{
-malth <- facilitation(2,3,Ds=c(5,1.2,0.1),Gs=c(1,.5),R=10,dispersal=2,init=c(100,0,0,0))
-l <- longevity(malth)
-hist(l$longevity)
+data(malthusian)
+longevity(malthusian)
 }
