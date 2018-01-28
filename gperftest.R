@@ -2,7 +2,7 @@
 Sys.setenv("PKG_LIBS"="-lprofiler")
 
 load_all()
-maxt<-60
+maxt<-10
 dispersal<-10
 
 ### n species two stages competition 

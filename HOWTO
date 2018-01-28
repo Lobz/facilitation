@@ -1,0 +1,8 @@
+
+    Install gperftools (I installed from extra/gperftools with pacman)
+    include gperftools/profiler.h on the C++ header
+    Add ProfilerStart("myprof.log") and ProfilerStop() in the C++ code around what I want to profile
+    Add "PKG_LIBS +=  -lprofiler" to Makevars
+    $ CPUPROFILE="myprof.log" R -f gperftest.R
+    $ pprof --text /usr/lib/R/bin/exec/R myprof.log | head
+
