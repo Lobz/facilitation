@@ -29,6 +29,6 @@ data(malthusian)
 mat.model(malthusian)
 
 # example 3
-data(RandK)
-mat.model(RandK,combine.matrices=TRUE)
+data(twospecies)
+mat.model(twospecies,combine.matrices=TRUE)
 }

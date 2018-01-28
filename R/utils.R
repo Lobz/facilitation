@@ -29,6 +29,7 @@ create.parameters <- function(Ds, Gs, Rs, dispersal, radius, stress, n){
     }
     if(missing(radius)) radius=rep(0,n)
     if(missing(stress)) stress=rep(0,n)
+    if(missing(dispersal)) dispersal=rep(1,n)
 
     if(length(radius)==1){radius <- rep(radius,n)}
     if(length(dispersal)==1){dispersal <- rep(dispersal,n)}

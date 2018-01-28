@@ -14,8 +14,8 @@ A single species, 3 stages, no interactions simulation result
 \examples{
 ## Simple mathusian one species
 init <- c(0,0,100)
-################# D G R
-param <- matrix(c(5,1,0, 1,1,0, .5,0,10),nrow=3,byrow=TRUE)
-malthusian <- community(10,3,param,dispersal=5,init)
+################# D G R disp
+param <- matrix(c(5,1,0,5, 1,1,0,5, .5,0,10,5),nrow=3,byrow=TRUE)
+malthusian <- community(10,3,param,init)
 }
 \keyword{datasets}

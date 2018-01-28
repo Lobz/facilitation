@@ -30,8 +30,8 @@ The \code{stackplot} function produces a stacked plot of the population over tim
 Notice that the population should have at least two stages for this function to work.
 }
 \examples{
-data(RandK)
-ab <- abundance.matrix(RandK,seq(0,RandK$maxtime,by=1))
+data(twospecies)
+ab <- abundance.matrix(twospecies,seq(0,twospecies$maxtime,by=1))
 # species 1
 stackplot(ab[,1:3])
 # species 2

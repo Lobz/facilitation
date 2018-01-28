@@ -43,10 +43,10 @@ The spatialanimation function plots the individuals of the selected stages over 
 for plotting a single instant.
 }
 \examples{
-data(RandK)
-spatialanimation(RandK,draw=c(5,3),interval=.1,movie.name="malthusian.gif")
-data(RandK)
-plotsnapshot(RandK,t=10)
+data(twospecies)
+spatialanimation(twospecies,draw=c(5,3),interval=.1,movie.name="malthusian.gif")
+data(twospecies)
+plotsnapshot(twospecies,t=10)
 }
 \author{
 Alexandre Adalardo de Oliveira - 16/03/2016
