@@ -30,7 +30,6 @@ class Individual {
 	int spnum;
 	double baseD, baseG, baseR, Rad, SqRad; /* these are set at birth/growth */
 	double D, G, R; /* these are the current rates */
-	double totalRate;
 	Species *species, *seedStage;
 	Arena *arena;
 	std::list<Individual*>::iterator ref;
