@@ -23,6 +23,7 @@ Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, 
         interactionsG[i]=0;
         interactionsR[i]=0;
     }
+    totalRate = 0;
 }
 
 Species::~Species(){
@@ -101,13 +102,14 @@ Position Species::dispersalKernel(){
 }
 
 double Species::getTotalRate(){
+    /*
     totalRate = 0;
     std::list<Individual*>::iterator i;
 
     for(i=population.begin();i!=population.end();i++){
         totalRate += (*i)->getTotalRate();
     }
-
+*/
     return totalRate;
 }
 
@@ -144,7 +146,8 @@ void Species::act(){
         }
     }
     /* if the below code is executed, it's becase no individual was selected */
-    Rcpp::warning ("No individual selected on Species::act");
+    Rcpp::warning ("No individual selected on Species::act.");
+    std::cout << "Warning: "<< id << "\t" << totalRate << "\t" << arena->getTotalTime() << "\t" << getAbundance() << "\n";
 }
 
 void Species::setNextStage(Species *st) {nextStage = st;}
@@ -185,4 +188,10 @@ bool Species::affectedBy(int s) {
 
 int Species::getAbundance(){
     return population.size();
+}
+
+
+void Species::updateTotalRate(double change){
+    totalRate+=change;
+    std::cout << id << "\t" << totalRate << "\t" << arena->getTotalTime() << "\t" << getAbundance() << "\n";
 }

@@ -13,7 +13,7 @@ neutralsimD <- function(nads){
     nstages <- rep(nst,nsp)
     totstages <- nst*nsp
     init <- rep(list(init),nsp)
-    par <- c(4,1,0,1, 1,0,5.5,2)
+    par <- c(4,1,0,0,1, 1,0,5.5,dispersal,2)
     param <- matrix(rep(par,nsp)
                     , byrow=T, nrow=sum(nstages))
     sapsap <- -2
@@ -24,7 +24,7 @@ neutralsimD <- function(nads){
     interadu <- rep(c(sapadu,aduadu),nsp)
     interact <- matrix(c(rep(c(intersap,interadu),nsp)),ncol=totstages)
 
-    neutral <- community(maxt,nstages,param,dispersal,init,interactionsD=interact,h=h,w=w)
+    neutral <- community(maxt,nstages,param,init,interactionsD=interact,h=h,w=w)
 
     save(neutral,file="test.RData")
 

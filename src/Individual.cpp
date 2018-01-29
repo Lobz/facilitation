@@ -15,6 +15,7 @@ Individual::Individual(Arena *ar, Species *sp, Position pos, unsigned long resto
 
     if(id_MAX <= id) id_MAX = id+1;
 	p = ar->boundaryCondition(pos), 
+    D = G = R = 0; /* this sets totalRate to 0 so that the update works fine */
 	spnum = arena->getSpNum();
 	setSpecies(sp);
 	info  = new IndividualStatus(sp->getId(),id,p.x,p.y,bTime);
@@ -53,7 +54,7 @@ const unsigned long Individual::getId(){return id;}
 
 void Individual::updateRates(){
 	int sp, num;
-	double effect;
+	double effect, oldTotalRate = getTotalRate();
     D=baseD,G=baseG,R=baseR;
 	for(sp = 1; sp <= spnum; sp++){
         num = affectingMeNeighbours[sp].size();/* note that effect is LINEAR on number of affecting neighbours */
@@ -72,6 +73,7 @@ void Individual::updateRates(){
 	if(D < 0) D = 0;
 	if(G < 0) G = 0;
 	if(R < 0) R = 0;
+    species->updateTotalRate(getTotalRate() - oldTotalRate);
 }
 
 double Individual::getTotalRate(){
@@ -108,6 +110,7 @@ void 	Individual::die(){
 	species->remove(this->ref);
 	info->setDeath(arena->getTotalTime());
 	clearNeighbours();
+    species->updateTotalRate(-getTotalRate());
 	delete(this);
 }
 
