@@ -168,26 +168,24 @@ void 	Individual::addAffectedByMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	if(i==this){return;}
 	affectedByMeNeighbours[s].push_back(i);
-    updateRates();
 }
 
 void 	Individual::addAffectingMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	if(i==this){return;}
 	affectingMeNeighbours[s].push_back(i);
-    updateRates();
+    updateRates(); /* update rates because affecting neighbour will affect me */
 }
 
 void 	Individual::removeAffectedByMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	affectedByMeNeighbours[s].remove(i);
-    updateRates();
 }
 
 void 	Individual::removeAffectingMeNeighbour(Individual *i){
 	int s = i->getSpeciesId();
 	affectingMeNeighbours[s].remove(i);
-    updateRates();
+    updateRates(); /* update rates because affecting neighbour will stop affecting me */
 }
 
 bool 	Individual::noAffectingMeNeighbours(int i){
