@@ -147,7 +147,6 @@ void Species::act(){
     }
     /* if the below code is executed, it's becase no individual was selected */
     Rcpp::warning ("No individual selected on Species::act.");
-    std::cout << "Warning: "<< id << "\t" << totalRate << "\t" << arena->getTotalTime() << "\t" << getAbundance() << "\n";
 }
 
 void Species::setNextStage(Species *st) {nextStage = st;}
@@ -193,5 +192,4 @@ int Species::getAbundance(){
 
 void Species::updateTotalRate(double change){
     totalRate+=change;
-    std::cout << id << "\t" << totalRate << "\t" << arena->getTotalTime() << "\t" << getAbundance() << "\n";
 }
