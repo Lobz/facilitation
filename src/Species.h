@@ -45,6 +45,7 @@ class Species {
 	void setInteractionG(int s, double effect);
 	void setInteractionR(int s, double effect);
 
+    void updateTotalRate(double change);
 
 	/* GETS */
 	double getTotalRate();
