@@ -25,7 +25,7 @@ Individual::Individual(Arena *ar, Species *sp, Position pos, unsigned long resto
 
 
 void	Individual::setSpecies(Species *sp) {
-	clearNeighbours();
+    D = G = R = 0; /* this sets totalRate to 0 so that the update works fine */
 
 	species = sp;
 	baseG = species->getG();
@@ -97,9 +97,13 @@ void   Individual::act(){
 }
 
 void 	Individual::grow(){
-	species->remove(this->ref);
-	setSpecies(species->getNextStage()); /* note: setSpecies clears and re-inits the neighbours */
 	info->setGrowth(arena->getTotalTime());
+
+	species->remove(this->ref);
+	clearNeighbours();
+    species->updateTotalRate(-getTotalRate());
+
+	setSpecies(species->getNextStage()); /* note: setSpecies inits the neighbours */
 }
 
 void	Individual::reproduce(){
@@ -107,10 +111,12 @@ void	Individual::reproduce(){
 }
 
 void 	Individual::die(){
-	species->remove(this->ref);
 	info->setDeath(arena->getTotalTime());
+
+	species->remove(this->ref);
 	clearNeighbours();
     species->updateTotalRate(-getTotalRate());
+
 	delete(this);
 }
 
