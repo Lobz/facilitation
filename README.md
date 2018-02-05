@@ -8,7 +8,7 @@ Install and load devtools:
 install.packages("devtools")
 library(devtools)
 ```
-Install this version from github and load it:
+Install this version from GitHub and load it:
 ```r
 install_github(repo = 'Lobz/facilitation', build_vignettes = TRUE)
 library(facilitation)
