@@ -97,12 +97,12 @@ bool Arena::populate(Rcpp::DataFrame init){
     std::vector<unsigned long> id;
     std::vector<double> x,y,beginTime,endTime;
 
-    sp = Rcpp::as<std::vector<int>>(init["sp"]);
-    id = Rcpp::as<std::vector<unsigned long>>(init["id"]);
-    x = Rcpp::as<std::vector<double>>(init["x"]);
-    y = Rcpp::as<std::vector<double>>(init["y"]);
-    beginTime = Rcpp::as<std::vector<double>>(init["begintime"]);
-    endTime = Rcpp::as<std::vector<double>>(init["endtime"]);
+    sp = Rcpp::as<std::vector<int> >(init["sp"]);
+    id = Rcpp::as<std::vector<unsigned long> >(init["id"]);
+    x = Rcpp::as<std::vector<double> >(init["x"]);
+    y = Rcpp::as<std::vector<double> >(init["y"]);
+    beginTime = Rcpp::as<std::vector<double> >(init["begintime"]);
+    endTime = Rcpp::as<std::vector<double> >(init["endtime"]);
 
 	for(i=0;i<init.nrows();i++){
 			try{

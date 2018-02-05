@@ -35,8 +35,8 @@ class Individual {
 	std::list<Individual*>::iterator ref;
 	IndividualStatus *info;
 	/* array of lists of neighbours by species */
-	std::vector<std::list<Individual*>> affectingMeNeighbours;
-	std::vector<std::list<Individual*>> affectedByMeNeighbours;
+	std::vector<std::list<Individual*> > affectingMeNeighbours;
+	std::vector<std::list<Individual*> > affectedByMeNeighbours;
 	void initNeighbours();
     void updateRates();
 
