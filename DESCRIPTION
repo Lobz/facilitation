@@ -3,8 +3,9 @@ Title: A C++ Framework for Species Interaction IBMs
 Version: 0.5.0
 Authors@R: c(person("Mali", "Salles", email = "marinacs@gmail.com", role = c("aut", "cre")),
              person("Andre", "Chalom", email="andrechalom@gmail.com", role=c("aut")),
-             person("Alexandre", "Adalardo", role="ctb"))
-Description: A C++ framework for species interaction IBMs.
+             person("Alexandre", "Adalardo", email="aleadalardo@gmail.com", role="aut"),
+             person("Camila", "Castanho", role="ctb"))
+Description: A tool for simulating a variety of spatial individual-based models of plant-plant interactions. User-created models can include any number of species, each of which can be structured in any number of life-stages, where each life-stage has specific death, growth and reproduction rates, as well as specific interaction radius, dispersal radius, and interaction effects over each other species/life-stage. Interactions be positive (facilitation) or negative (competition) and can affect death rates, growth rates or reproduction rates. All models work in continuous time and space.
 LinkingTo: Rcpp
 Imports:
     Rcpp,

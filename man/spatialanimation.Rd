@@ -44,7 +44,7 @@ for plotting a single instant.
 }
 \examples{
 data(twospecies)
-spatialanimation(twospecies,draw=c(5,3),interval=.1,movie.name="malthusian.gif")
+spatialanimation(twospecies,draw=c(5,3),times=seq(0,10,1),movie.name="ts.gif")
 data(twospecies)
 plotsnapshot(twospecies,t=10)
 }

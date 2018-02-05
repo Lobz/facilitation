@@ -106,7 +106,7 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 #' @param movie.name The filename of the gif that will be saved.
 #' @examples
 #' data(twospecies)
-#' spatialanimation(twospecies,draw=c(5,3),interval=.1,movie.name="malthusian.gif")
+#' spatialanimation(twospecies,draw=c(5,3),times=seq(0,10,1),movie.name="ts.gif")
 #' @export
 #' @import grDevices 
 #' @import graphics
