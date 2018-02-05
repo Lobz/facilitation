@@ -1,3 +1,4 @@
 examples/
 pseudocode.md
 src/Makevars
+\.travis\.yml
