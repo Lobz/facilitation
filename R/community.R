@@ -102,6 +102,9 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
         restore=T
         hist=init
         initial=c(1)
+        if(nrow(hist)==0){
+            stop("Attempting to create simulation with zero individuals")
+        }
     }
     else {
         initial=unlist(init)
