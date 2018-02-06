@@ -5,7 +5,6 @@
 #include<list>
 #include<cstdlib>
 #include<iostream>
-#include<array>
 #include"Position.h"
 #include<Rcpp.h>
 
