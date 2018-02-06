@@ -1,3 +1,5 @@
+[![Travis-CI Build Status](https://travis-ci.org/Lobz/facilitation.svg?branch=master)](https://travis-ci.org/Lobz/facilitation)
+
 # facilitation
 A Rcpp framework for plant-plant interactions IBMs
 
