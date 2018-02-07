@@ -2,3 +2,5 @@ examples/
 pseudocode.md
 src/Makevars
 \.travis\.yml
+*.gif
+test.R
