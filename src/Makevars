@@ -1,4 +1,1 @@
-PKG_CFLAGS = 
-PKG_CXXFLAGS += -Wall -pedantic  # -g -ggdb -fno-inline-small-functions
 CXX_STD = CXX11
-

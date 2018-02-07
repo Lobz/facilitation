@@ -6,17 +6,18 @@ Authors@R: c(person("Mali", "Salles", email = "marinacs@gmail.com", role = c("au
              person("Alexandre", "Adalardo", email="aleadalardo@gmail.com", role="aut"),
              person("Camila", "Castanho", role="ctb"))
 Description: A tool for simulating a variety of spatial individual-based models of plant-plant interactions. User-created models can include any number of species, each of which can be structured in any number of life-stages, where each life-stage has specific death, growth and reproduction rates, as well as specific interaction radius, dispersal radius, and interaction effects over each other species/life-stage. Interactions be positive (facilitation) or negative (competition) and can affect death rates, growth rates or reproduction rates. All models work in continuous time and space.
-LinkingTo: Rcpp
 Imports:
-    Rcpp,
+    Rcpp (>= 0.12.14),
     Matrix,
     grid,
     animation
+LinkingTo: Rcpp
 Suggests:
     knitr,
     rmarkdown
 Depends:
     R (>= 3.1.0)
+SystemRequirements: C++11
 License: GPL-2
 LazyData: true
 RoxygenNote: 6.0.1
