@@ -102,14 +102,6 @@ Position Species::dispersalKernel(){
 }
 
 double Species::getTotalRate(){
-    /*
-    totalRate = 0;
-    std::list<Individual*>::iterator i;
-
-    for(i=population.begin();i!=population.end();i++){
-        totalRate += (*i)->getTotalRate();
-    }
-*/
     return totalRate;
 }
 
@@ -192,4 +184,15 @@ int Species::getAbundance(){
 
 void Species::updateTotalRate(double change){
     totalRate+=change;
+
+    /* recalculate rate if it's close to 0 */
+    if (totalRate < 0.000000000000001){
+        totalRate = 0;
+        std::list<Individual*>::iterator i;
+
+        for(i=population.begin();i!=population.end();i++){
+            totalRate += (*i)->getTotalRate();
+        }
+    }
 }
+
