@@ -1,6 +1,6 @@
 Package: facilitation
 Title: A C++ Framework for Plant-Plant Interaction IBMs
-Version: 0.5.0
+Version: 0.5.1
 Authors@R: c(person("Mali", "Salles", email = "marinacs@gmail.com", role = c("aut", "cre")),
              person("Andre", "Chalom", email="andrechalom@gmail.com", role=c("aut")),
              person("Alexandre", "Adalardo", email="aleadalardo@gmail.com", role="aut"),
