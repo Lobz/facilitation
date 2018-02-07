@@ -68,21 +68,14 @@ void Arena::setInteractionsR(double *interactions){
 	}
 }
 
-bool Arena::populate(int *speciesinit){
+void Arena::populate(int *speciesinit){
 	int i,j;
 
 	for(i=1;i<=maxsp;i++){
 		for(j=0;j<speciesinit[i-1];j++){
-			try{
-				species[i]->addIndividual(Random(width),Random(height));
-			}
-			catch(int e){
-				Rcpp::warning("Unable to populate");
-				return false;
-			}
+            species[i]->addIndividual(Random(width),Random(height));
 		}
 	}
-	return true;
 }
 
 double History::globalEndTime(){
@@ -91,36 +84,29 @@ double History::globalEndTime(){
 
 int History::size(){ return sp_list.size(); }
 
-bool Arena::populate(Rcpp::DataFrame init){
-	int i;
+void Arena::populate(Rcpp::DataFrame init){
+    int i;
     std::vector<int> sp;
     std::vector<unsigned long> id;
     std::vector<double> x,y,beginTime,endTime;
 
-    try{
-        if(init.nrows()==0){
-            totalTime = history->globalBeginTime = 0;
-        }
-        else {
-            sp = Rcpp::as<std::vector<int> >(init["sp"]);
-            id = Rcpp::as<std::vector<unsigned long> >(init["id"]);
-            x = Rcpp::as<std::vector<double> >(init["x"]);
-            y = Rcpp::as<std::vector<double> >(init["y"]);
-            beginTime = Rcpp::as<std::vector<double> >(init["begintime"]);
-            endTime = Rcpp::as<std::vector<double> >(init["endtime"]);
-
-            for(i=0;i<init.nrows();i++){
-                if(Rcpp::NumericVector::is_na(endTime[i])){
-                    new Individual(this,species[sp[i]],Position(x[i],y[i]),id[i],beginTime[i]);
-                }
-            }
-            totalTime = history->globalBeginTime = std::max(*std::max_element(beginTime.begin(),beginTime.end()),*std::max_element(endTime.begin(),endTime.end()));
-        }
-        return true;
+    if(init.nrows()==0){
+        totalTime = history->globalBeginTime = 0;
     }
-    catch(int e){
-        Rcpp::warning("Unable to populate");
-        return false;
+    else {
+        sp = Rcpp::as<std::vector<int> >(init["sp"]);
+        id = Rcpp::as<std::vector<unsigned long> >(init["id"]);
+        x = Rcpp::as<std::vector<double> >(init["x"]);
+        y = Rcpp::as<std::vector<double> >(init["y"]);
+        beginTime = Rcpp::as<std::vector<double> >(init["begintime"]);
+        endTime = Rcpp::as<std::vector<double> >(init["endtime"]);
+
+        for(i=0;i<init.nrows();i++){
+            if(Rcpp::NumericVector::is_na(endTime[i])){
+                new Individual(this,species[sp[i]],Position(x[i],y[i]),id[i],beginTime[i]);
+            }
+        }
+        totalTime = history->globalBeginTime = std::max(*std::max_element(beginTime.begin(),beginTime.end()),*std::max_element(endTime.begin(),endTime.end()));
     }
 }
 

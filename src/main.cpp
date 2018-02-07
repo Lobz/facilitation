@@ -13,7 +13,7 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
         bool restore=false, double w=100, double h=100, int bcond=1, int maxpop=30000){
 	int *in, i,n, n_total=0,*nsts;
     double *par, *inter;
-	bool test=true,populated;
+	bool test=true;
 	Arena *arena;
 	int numturns=0;
 	History * ret;
@@ -49,26 +49,30 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
         }
     }
 
-    if(restore){
-        populated = arena->populate(history);
+    try {
+        if(restore){
+            arena->populate(history);
+        }
+        else{
+            arena->populate(in);
+        }
     }
-    else{
-        populated = arena->populate(in);
+    catch (int e) {
+        Rcpp::stop("Unable to populate");
     }
-    if(!populated) Rcpp::stop("Unable to populate");
 
-	while(arena->getTotalTime() < maxtime && test){
-		test = arena->turn();
-		numturns++;
-		if(arena->getTotalAbundance() > maxpop) {
-			Rcpp::warning("Maximum population reached. Stopping...");
-			test = false;
-		}
-	}
+    while(arena->getTotalTime() < maxtime && test){
+        test = arena->turn();
+        numturns++;
+        if(arena->getTotalAbundance() > maxpop) {
+            Rcpp::warning("Maximum population reached. Stopping...");
+            test = false;
+        }
+    }
 
-	ret = arena->finalStatus();
+    ret = arena->finalStatus();
 
-	return Rcpp::DataFrame::create(Rcpp::Named("sp")=ret->sp_list,Rcpp::Named("id")=ret->id_list,
-			Rcpp::Named("x")=ret->x_list,Rcpp::Named("y")=ret->y_list,
-			Rcpp::Named("begintime")=ret->beginTime_list,Rcpp::Named("endtime")=ret->endTime_list);
+    return Rcpp::DataFrame::create(Rcpp::Named("sp")=ret->sp_list,Rcpp::Named("id")=ret->id_list,
+            Rcpp::Named("x")=ret->x_list,Rcpp::Named("y")=ret->y_list,
+            Rcpp::Named("begintime")=ret->beginTime_list,Rcpp::Named("endtime")=ret->endTime_list);
 }
