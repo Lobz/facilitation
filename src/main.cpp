@@ -55,7 +55,7 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
     else{
         populated = arena->populate(in);
     }
-    if(!populated) return NULL;
+    if(!populated) Rcpp::stop("Unable to populate");
 
 	while(arena->getTotalTime() < maxtime && test){
 		test = arena->turn();
