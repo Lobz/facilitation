@@ -7,7 +7,7 @@
 community(maxtime, numstages, parameters, init, interactionsD, interactionsG,
   interactionsR, height = 100, width = 100, boundary = c("reflexive",
   "absortive", "periodic"), dispKernel = c("exponential", "random"),
-  maxpop = 30000)
+  starttime = 0, maxpop = 30000)
 }
 \arguments{
 \item{maxtime}{How long the simulation must run}
@@ -39,6 +39,8 @@ individual's radius, and are additive. Affects death rates (is subtracted from D
 \item{dispKernel}{Type of dispersion kernel. Options are "exponential" and "random", in which
 seeds are dispersed randomly regardless of parent position (note: "random" option ignores
 dispersal parameter)}
+
+\item{starttime}{use for proceeding simulations. Time when simulation begins.}
 
 \item{maxpop}{If the simulation reaches this many individuals total, it will stop. Default
 is 30000.}

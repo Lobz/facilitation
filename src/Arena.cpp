@@ -1,7 +1,7 @@
 #include"Individual.h"
 #include"Random.h"
 
-Arena::Arena(int maxspid, double *parameters, double w, double h, int bc) :maxsp(maxspid),width(w),height(h),bcond(bc) {
+Arena::Arena(int maxspid, double *parameters, double w, double h, int bc, double starttime) :maxsp(maxspid),width(w),height(h),bcond(bc) {
 	int i;
     /* allocates vector of size n+1 so that we can ignore number 0 */
 	species = (Species**)malloc((1+maxsp)*(sizeof(Species*)));
@@ -11,7 +11,7 @@ Arena::Arena(int maxspid, double *parameters, double w, double h, int bc) :maxsp
 		species[i] = new Species(this,i,parameters+FACILITATION_NUMPARAMETERS*(i-1));
 	}
 
-	totalTime = 0.0;
+	totalTime = starttime;
 
 	history = new History();
 }
@@ -86,12 +86,12 @@ int History::size(){ return sp_list.size(); }
 
 void Arena::populate(Rcpp::DataFrame init){
     int i;
+    double t;
     std::vector<int> sp;
     std::vector<unsigned long> id;
     std::vector<double> x,y,beginTime,endTime;
 
     if(init.nrows()==0){
-        totalTime = history->globalBeginTime = 0;
     }
     else {
         sp = Rcpp::as<std::vector<int> >(init["sp"]);
@@ -106,8 +106,12 @@ void Arena::populate(Rcpp::DataFrame init){
                 new Individual(this,species[sp[i]],Position(x[i],y[i]),id[i],beginTime[i]);
             }
         }
-        totalTime = history->globalBeginTime = std::max(*std::max_element(beginTime.begin(),beginTime.end()),*std::max_element(endTime.begin(),endTime.end()));
+        t = std::max(*std::max_element(beginTime.begin(),beginTime.end()),*std::max_element(endTime.begin(),endTime.end()));
+        if(t>totalTime){
+            totalTime = t;
+        }
     }
+    history->globalBeginTime = totalTime;
 }
 
 bool Arena::turn() {

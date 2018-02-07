@@ -10,13 +10,14 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
         Rcpp::NumericVector interactionsG, 
         Rcpp::NumericVector interactionsR, 
         Rcpp::IntegerVector init, Rcpp::DataFrame history,
-        bool restore=false, double w=100, double h=100, int bcond=1, int maxpop=30000){
-	int *in, i,n, n_total=0,*nsts;
+        bool restore=false, double w=100, double h=100, int bcond=1,
+        double starttime=0, int maxpop=30000){
+    int *in, i,n, n_total=0,*nsts;
     double *par, *inter;
-	bool test=true;
-	Arena *arena;
-	int numturns=0;
-	History * ret;
+    bool test=true;
+    Arena *arena;
+    int numturns=0;
+    History * ret;
 
     in = init.begin();
     nsts=num_stages.begin();
@@ -27,14 +28,14 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
         n_total+=nsts[i];
     }
 
-	arena = new Arena(n_total,par,w,h,bcond);
+    arena = new Arena(n_total,par,w,h,bcond,starttime);
 
     inter = interactionsD.begin();
-	arena->setInteractionsD(inter); 
+    arena->setInteractionsD(inter); 
     inter = interactionsG.begin();
-	arena->setInteractionsG(inter); 
+    arena->setInteractionsG(inter); 
     inter = interactionsR.begin();
-	arena->setInteractionsR(inter); 
+    arena->setInteractionsR(inter); 
 
     for(i=0,n=1; i<num_pops; i++){
         if(nsts[i] == 1){

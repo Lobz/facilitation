@@ -36,7 +36,7 @@ class Arena {
 	History * history;
 
 	public:
-	Arena(int numsp, double * baserates, double width, double height, int bcond);
+	Arena(int numsp, double * baserates, double width, double height, int bcond, double starttime);
 
 	/* high level functions */
 	void createStructuredSpecies(int minId, int maxId);

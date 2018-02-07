@@ -21,6 +21,7 @@
 #' @param dispKernel	Type of dispersion kernel. Options are "exponential" and "random", in which
 #' seeds are dispersed randomly regardless of parent position (note: "random" option ignores
 #' dispersal parameter)
+#' @param starttime use for proceeding simulations. Time when simulation begins.
 #' @param maxpop	If the simulation reaches this many individuals total, it will stop. Default
 #' is 30000.
 #' @examples
@@ -36,6 +37,7 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
                          interactionsD, interactionsG, interactionsR, # interactions
                          height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
                          dispKernel=c("exponential","random"), # type of dispersal
+                         starttime=0,
                          maxpop=30000){
 
 	# generate parameters for simulation
@@ -118,7 +120,8 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
 	# run simulation
 	r <- simulation(maxtime,num_pops=npop,num_stages=numstages,parameters=c(t(M)),
                     interactionsD=interactionsD,interactionsG=interactionsG,interactionsR=interactionsR,
-                    init=initial,history=hist,restore=restore,h=height,w=width,bcond=bound,maxpop=maxpop)
+                    init=initial,history=hist,restore=restore,h=height,w=width,bcond=bound,
+                    starttime=starttime,maxpop=maxpop)
 
 
     # obs: the object returned by function simulation, defined in main.cpp, is a data.frame with
@@ -146,6 +149,7 @@ proceed <- function(data,time){
     d<-data$data
     current<-subset(d,is.na(d$endtime))
     past.hist<-subset(d,!is.na(d$endtime))
+    last.event.time<-max(c(d$endtime,d$begintime))
 
     c <- community(init=current,numstages=data$num.stages, maxtime=data$maxtime+time,
                    parameters=data$param,
@@ -153,7 +157,8 @@ proceed <- function(data,time){
                    interactionsG=data$interactions$G, 
                    interactionsR=data$interactions$R, 
                    height=data$height,width=data$width,
-                   boundary=data$boundary,dispKernel=data$dispKernel)
+                   boundary=data$boundary,dispKernel=data$dispKernel,
+                   starttime=last.event.time)
 
     r<-c$data
     b<-rbind(r,past.hist)

@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // simulation
-Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num_stages, Rcpp::NumericVector parameters, Rcpp::NumericVector interactionsD, Rcpp::NumericVector interactionsG, Rcpp::NumericVector interactionsR, Rcpp::IntegerVector init, Rcpp::DataFrame history, bool restore, double w, double h, int bcond, int maxpop);
-RcppExport SEXP _facilitation_simulation(SEXP maxtimeSEXP, SEXP num_popsSEXP, SEXP num_stagesSEXP, SEXP parametersSEXP, SEXP interactionsDSEXP, SEXP interactionsGSEXP, SEXP interactionsRSEXP, SEXP initSEXP, SEXP historySEXP, SEXP restoreSEXP, SEXP wSEXP, SEXP hSEXP, SEXP bcondSEXP, SEXP maxpopSEXP) {
+Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num_stages, Rcpp::NumericVector parameters, Rcpp::NumericVector interactionsD, Rcpp::NumericVector interactionsG, Rcpp::NumericVector interactionsR, Rcpp::IntegerVector init, Rcpp::DataFrame history, bool restore, double w, double h, int bcond, double starttime, int maxpop);
+RcppExport SEXP _facilitation_simulation(SEXP maxtimeSEXP, SEXP num_popsSEXP, SEXP num_stagesSEXP, SEXP parametersSEXP, SEXP interactionsDSEXP, SEXP interactionsGSEXP, SEXP interactionsRSEXP, SEXP initSEXP, SEXP historySEXP, SEXP restoreSEXP, SEXP wSEXP, SEXP hSEXP, SEXP bcondSEXP, SEXP starttimeSEXP, SEXP maxpopSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -24,14 +24,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type w(wSEXP);
     Rcpp::traits::input_parameter< double >::type h(hSEXP);
     Rcpp::traits::input_parameter< int >::type bcond(bcondSEXP);
+    Rcpp::traits::input_parameter< double >::type starttime(starttimeSEXP);
     Rcpp::traits::input_parameter< int >::type maxpop(maxpopSEXP);
-    rcpp_result_gen = Rcpp::wrap(simulation(maxtime, num_pops, num_stages, parameters, interactionsD, interactionsG, interactionsR, init, history, restore, w, h, bcond, maxpop));
+    rcpp_result_gen = Rcpp::wrap(simulation(maxtime, num_pops, num_stages, parameters, interactionsD, interactionsG, interactionsR, init, history, restore, w, h, bcond, starttime, maxpop));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_facilitation_simulation", (DL_FUNC) &_facilitation_simulation, 14},
+    {"_facilitation_simulation", (DL_FUNC) &_facilitation_simulation, 15},
     {NULL, NULL, 0}
 };
 
