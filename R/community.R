@@ -113,6 +113,9 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
         if(length(initial)!=ntot){
             stop("Invalid input: length of initial population array is not the same as number of stages")
         }
+        if(any(initial < 0) | sum(initial) ==0){
+            stop("Invalid input: attempting to create simulation with zero or negative number of individuals")
+        }
         hist=data.frame()
         restore=F
     }
