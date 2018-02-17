@@ -149,7 +149,7 @@ proceed <- function(data,time){
     d<-data$data
     current<-subset(d,is.na(d$endtime))
     past.hist<-subset(d,!is.na(d$endtime))
-    last.event.time<-max(c(d$endtime,d$begintime))
+    last.event.time<-max(c(d$endtime,d$begintime),na.rm=T)
 
     c <- community(init=current,numstages=data$num.stages, maxtime=data$maxtime+time,
                    parameters=data$param,
