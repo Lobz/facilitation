@@ -51,6 +51,9 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
 
     # main parameter
     M <- as.matrix(parameters)
+    if (any(M < 0)) {
+	    stop("Parameters should not be negative")
+    }
     if(nrow(M) != ntot){
         stop("Total number of stages differs from number of rows in parameter matrix")
     }

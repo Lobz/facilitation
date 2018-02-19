@@ -25,11 +25,17 @@ test_that("Basic community usage", {
   expect_equal(results$maxtime, 2.45) 
   expect_equal(as.numeric(results$param[1:3]), as.numeric(rates)) #kinda wobbly?
   expect_equal(results$init, 11)
+})
 
+test_that("Community should not allow incorrect parameters", {
   # Community function should not allow incorrect specifications
   expect_error(community(maxtime=2,numstages=1,parameters=rates,init=0)) #zero individuals
   expect_error(community(maxtime=2,numstages=2,parameters=matrix(c(0,0,0,1,0,0), nrow=2),init=10)) # positive growth on last stage
 #  expect_error(community(maxtime=2,numstages=1,parameters=matrix(c(0,0,0),nrow=1),init=10)) # zero total rate
   expect_error(community(maxtime=2,numstages=2,parameters=rates,init=10)) # incompatible rate / numstages
   expect_error(community(maxtime=2,numstages=2,parameters=matrix(c(1,0,2,0,1,1), nrow=2),init=c(-5,10))) # negative population
+  expect_error(community(maxtime=2,numstages=2,parameters=matrix(c(-1,0,-2,0,1,1), nrow=2),init=c(5,10))) # negative rates
+
 })
+
+# TODO: test multiple stages / populations / interactions
