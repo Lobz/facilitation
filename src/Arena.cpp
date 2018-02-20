@@ -68,8 +68,10 @@ void Arena::setInteractionsR(double *interactions){
 	}
 }
 
-void Arena::populate(int *speciesinit){
+void Arena::populate(int *speciesinit, int maxid){
 	int i,j;
+	// New population, so we reset the individuals counter
+	Individual::setIdMax(maxid);
 
 	for(i=1;i<=maxsp;i++){
 		for(j=0;j<speciesinit[i-1];j++){
@@ -84,7 +86,7 @@ double History::globalEndTime(){
 
 int History::size(){ return sp_list.size(); }
 
-void Arena::populate(Rcpp::DataFrame init){
+void Arena::populate(Rcpp::DataFrame init, int maxid){
     int i;
     double t;
     std::vector<int> sp;
@@ -112,6 +114,7 @@ void Arena::populate(Rcpp::DataFrame init){
         }
     }
     history->globalBeginTime = totalTime;
+    Individual::setIdMax(maxid);
 }
 
 bool Arena::turn() {

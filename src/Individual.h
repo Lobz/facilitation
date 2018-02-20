@@ -55,7 +55,11 @@ class Individual {
 	double getRadius();
 	bool isPresent(Position p, double radius = 0);
 
-
+	/* Resets the indivual counter */
+	static void setIdMax(int i = 0)
+	{
+		Individual::id_MAX = i;
+	}
 
 	/* INTERACTIONS */
 	/** adds a neighbour list and cross-adds yourself to everyone in that list */
