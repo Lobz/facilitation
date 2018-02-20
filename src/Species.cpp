@@ -40,9 +40,6 @@ Species::~Species(){
 }
 
 void Species::setInteractionD(int s, double effect){
-    if(effect > D){
-        Rcpp::warning("Interaction parameter set to be bigger than rate.");
-    }
     interactionsD[s] = effect;
 }
 
