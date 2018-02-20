@@ -7,7 +7,7 @@
 community(maxtime, numstages, parameters, init, interactionsD, interactionsG,
   interactionsR, height = 100, width = 100, boundary = c("reflexive",
   "absortive", "periodic"), dispKernel = c("exponential", "random"),
-  starttime = 0, maxpop = 30000)
+  starttime = 0, maxpop = 30000, maxid = 0)
 }
 \arguments{
 \item{maxtime}{How long the simulation must run}
@@ -40,10 +40,12 @@ individual's radius, and are additive. Affects death rates (is subtracted from D
 seeds are dispersed randomly regardless of parent position (note: "random" option ignores
 dispersal parameter)}
 
-\item{starttime}{use for proceeding simulations. Time when simulation begins.}
+\item{starttime}{Use for proceeding simulations. Time when simulation begins.}
 
 \item{maxpop}{If the simulation reaches this many individuals total, it will stop. Default
 is 30000.}
+
+\item{maxid}{Use for proceeding simulations. Maximum id used by the current simulation. Should probably never be set explicitly.}
 }
 \description{
 Runs a simulation with any number of structured populations, for a limited time.
