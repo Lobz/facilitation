@@ -21,9 +21,10 @@
 #' @param dispKernel	Type of dispersion kernel. Options are "exponential" and "random", in which
 #' seeds are dispersed randomly regardless of parent position (note: "random" option ignores
 #' dispersal parameter)
-#' @param starttime use for proceeding simulations. Time when simulation begins.
+#' @param starttime 	Use for proceeding simulations. Time when simulation begins.
 #' @param maxpop	If the simulation reaches this many individuals total, it will stop. Default
 #' is 30000.
+#' @param maxid		Use for proceeding simulations. Maximum id used by the current simulation. Should probably never be set explicitly.
 #' @examples
 #' param <- data.frame(D=c(2,1,2,1),G=c(2,0,2,0),R=c(0,3,0,3),dispersal=c(0,2,0,20))
 #' malth <- community(2,c(2,2),param,init=c(10,10,10,10))
@@ -38,7 +39,8 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
                          height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
                          dispKernel=c("exponential","random"), # type of dispersal
                          starttime=0,
-                         maxpop=30000){
+                         maxpop=30000,
+			 maxid = 0){
 
 	# generate parameters for simulation
 	dispKernel <- match.arg(dispKernel)
@@ -51,6 +53,9 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
 
     # main parameter
     M <- as.matrix(parameters)
+    if (any(M < 0)) {
+	    stop("Parameters should not be negative")
+    }
     if(nrow(M) != ntot){
         stop("Total number of stages differs from number of rows in parameter matrix")
     }
@@ -113,15 +118,21 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
         if(length(initial)!=ntot){
             stop("Invalid input: length of initial population array is not the same as number of stages")
         }
+        if(any(initial < 0) | sum(initial) ==0){
+            stop("Invalid input: attempting to create simulation with zero or negative number of individuals")
+        }
         hist=data.frame()
         restore=F
+    }
+    if (!is.numeric(maxid) | length(maxid) > 1 | maxid < 0 | (!restore & maxid != 0)) {
+	    stop("Invalid value for maxid parameter")
     }
 
 	# run simulation
 	r <- simulation(maxtime,num_pops=npop,num_stages=numstages,parameters=c(t(M)),
                     interactionsD=interactionsD,interactionsG=interactionsG,interactionsR=interactionsR,
                     init=initial,history=hist,restore=restore,h=height,w=width,bcond=bound,
-                    starttime=starttime,maxpop=maxpop)
+                    starttime=starttime,maxpop=maxpop, maxid=maxid)
 
 
     # obs: the object returned by function simulation, defined in main.cpp, is a data.frame with
@@ -147,9 +158,11 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
 #' @export
 proceed <- function(data,time){
     d<-data$data
+    last.event.time<-max(c(d$endtime,d$begintime),na.rm=T)
+    maxid = max(d$id)
+
     current<-subset(d,is.na(d$endtime))
     past.hist<-subset(d,!is.na(d$endtime))
-    last.event.time<-max(c(d$endtime,d$begintime),na.rm=T)
 
     c <- community(init=current,numstages=data$num.stages, maxtime=data$maxtime+time,
                    parameters=data$param,
@@ -158,7 +171,7 @@ proceed <- function(data,time){
                    interactionsR=data$interactions$R, 
                    height=data$height,width=data$width,
                    boundary=data$boundary,dispKernel=data$dispKernel,
-                   starttime=last.event.time)
+                   starttime=last.event.time, maxid = maxid)
 
     r<-c$data
     b<-rbind(r,past.hist)
@@ -186,6 +199,7 @@ restart <- function(data,time,start=0){
         d<-subset(d,d$begintime==0)
     }
     d$endtime<-NA
+    maxid = max(d$id)
 
     community(init=d,numstages=data$num.stages, maxtime=time,
               parameters=data$param,
@@ -193,7 +207,7 @@ restart <- function(data,time,start=0){
               interactionsG=data$interactions$G, 
               interactionsR=data$interactions$R, 
               height=data$height,width=data$width,
-              boundary=data$boundary,dispKernel=data$dispKernel)
-
+              boundary=data$boundary,dispKernel=data$dispKernel,
+	      maxid=maxid)
 }
 

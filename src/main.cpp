@@ -11,7 +11,7 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
         Rcpp::NumericVector interactionsR, 
         Rcpp::IntegerVector init, Rcpp::DataFrame history,
         bool restore=false, double w=100, double h=100, int bcond=1,
-        double starttime=0, int maxpop=30000){
+        double starttime=0, int maxpop=30000, int maxid = 0){
     int *in, i,n, n_total=0,*nsts;
     double *par, *inter;
     bool test=true;
@@ -52,10 +52,10 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
 
     try {
         if(restore){
-            arena->populate(history);
+            arena->populate(history, maxid);
         }
         else{
-            arena->populate(in);
+            arena->populate(in, maxid);
         }
     }
     catch (int e) {
