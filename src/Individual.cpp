@@ -216,3 +216,4 @@ void IndividualStatus::addToHistory(Arena *ar){
 	}
 	ar->addToHistory(sp,id,x,y,time1,deathTime);
 }
+

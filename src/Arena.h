@@ -41,8 +41,8 @@ class Arena {
 	/* high level functions */
 	void createStructuredSpecies(int minId, int maxId);
 	void createSimpleSpecies(int id);
-	void populate(Rcpp::DataFrame init);
-	void populate(int *stagesinit);
+	void populate(Rcpp::DataFrame init, int maxid);
+	void populate(int *stagesinit, int maxid);
 	bool turn();
 	void setInteractionsD(double *interactions);
 	void setInteractionsG(double *interactions);

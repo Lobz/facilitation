@@ -11,7 +11,6 @@ test_that("Basic community usage", {
   # Some general expectations from this simulation
   expect(all(results$data$sp ==1), "Wrong sp labels")
   expect(all(results$data$id >=0), "Wrong id labels")
-#  expect(any(results$data$id ==0), "Not reseting id labels") # See issue #25
   # See issue #24
   expect(all(results$data$x >= 0 & results$data$x <= results$width), "Individuals outside arena")
   expect(all(results$data$y >= 0 & results$data$y < results$height), "Individuals outside arena")
@@ -19,17 +18,25 @@ test_that("Basic community usage", {
   # Passed arguments should be returned
   expect_equal(results$width, 91.1)
   expect_equal(results$height, 189.9)
-  expect_equal(results$num.stages, 1)
-  expect_equal(results$num.total, 1) #what is this?
-  expect_equal(results$num.pop, 1) #what is this?
+  expect_equal(results$num.stages, 1) # Vector with stage structure
+  expect_equal(results$num.total, 1) # Sum of num.stages
+  expect_equal(results$num.pop, 1) # Length of num.stages
   expect_equal(results$maxtime, 2.45) 
   expect_equal(as.numeric(results$param[1:3]), as.numeric(rates)) #kinda wobbly?
   expect_equal(results$init, 11)
+  # See issue #25
+  results2 <- community(maxtime=2.45,numstages=1,parameters=rates/10,init=11, height=189.9, width=91.1)
+  expect(any(results2$data$id ==0), "Not reseting id labels") 
+})
 
+test_that("Community should not allow incorrect parameters", {
   # Community function should not allow incorrect specifications
   expect_error(community(maxtime=2,numstages=1,parameters=rates,init=0)) #zero individuals
   expect_error(community(maxtime=2,numstages=2,parameters=matrix(c(0,0,0,1,0,0), nrow=2),init=10)) # positive growth on last stage
-#  expect_error(community(maxtime=2,numstages=1,parameters=matrix(c(0,0,0),nrow=1),init=10)) # zero total rate
   expect_error(community(maxtime=2,numstages=2,parameters=rates,init=10)) # incompatible rate / numstages
   expect_error(community(maxtime=2,numstages=2,parameters=matrix(c(1,0,2,0,1,1), nrow=2),init=c(-5,10))) # negative population
+  expect_error(community(maxtime=2,numstages=2,parameters=matrix(c(-1,0,-2,0,1,1), nrow=2),init=c(5,10))) # negative rates
+
 })
+
+# TODO: test multiple stages / populations / interactions
