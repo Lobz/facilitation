@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{abundance.matrix}
 \alias{abundance.matrix}
-\title{abundance matrix}
+\title{Abundance Matrix from a simulation}
 \usage{
 abundance.matrix(data, times = seq(0, data$maxtime, length.out = 50),
   by.age = FALSE, cap.living = FALSE)
@@ -12,7 +12,7 @@ abundance.matrix(data, times = seq(0, data$maxtime, length.out = 50),
 
 \item{times}{array of times at which the abundances will be calculated}
 
-\item{by.age}{T/F. Use this option to get the number of individuals to reach each age, instead of
+\item{by.age}{Logical. Use this option to get the number of individuals to reach each age, instead of
 abundances for each time.}
 
 \item{cap.living}{Logical. Use this option with by.age=T, to set the time of death of living individuals to max
@@ -21,9 +21,7 @@ will be more representative if only a small fraction of total individuals is liv
 simulation.}
 }
 \description{
-Returns a matrix with abundances of each life stage/species over time
-}
-\details{
+This function returns a matrix with abundances of each life stage/species over time.
 The rows in the matrix are the lifestages/species id. The times are in the row names. To
 visualize the abundance matrix data we recomment the function \code{\link{stackplot}}.
 }

@@ -1,11 +1,12 @@
-#' community
+#' Main simulation function
 #'
 #' Runs a simulation with any number of structured populations, for a limited time.
+#' See the vignette for a detailed explanation of each parameter and use cases.
 #' 
 #' @param maxtime 	How long the simulation must run
 #' @param numstages Array of number of stages for each population
 #' @param parameters 	Data.frame or matrix with one row for each stage. Columns:
-#' D,G,R,dispersal distance,radius(optional),maxstressefect (optional)
+#' D, G, R, dispersal distance, radius (optional), maxstressefect (optional). See \code{\link{create.parameters}}
 #' @param init		Either an array of initial numbers for each stage of each population, or a
 #' data.frame with the history of a simulation
 #' @param interactionsD	Optional. A square matrix of effects of life stages over each other, where element
@@ -149,12 +150,13 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
 	     init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel)
 }
 
-#' proceed
+#' Proceeding / restarting a simulation
 #'
-#' Proceed with a stopped simulation.
+#' The function \code{proceed} proceeds with a stopped simulation. The function \code{restart} 
+#' turns back time and restarts a simulation from time t.
 #'
 #' @param data result of a simulation, created by \code{\link{community}}
-#' @param time a number: for how long to extend the simulation
+#' @param time numeric: for how long to extend the simulation
 #' @export
 proceed <- function(data,time){
     d<-data$data
@@ -179,16 +181,9 @@ proceed <- function(data,time){
     c
 }
 
-#' restart
-#'
-#' Turn back time and restart a simulation from time t
-#'
-#' @param data result of a simulation, created by \code{\link{community}}
-#' @param time a number: for how long to extend the simulation
-#' @param start a number: an instant in time to begin from
-#'
-#'
+#' @param start numeric: an instant in time to begin from
 #' @export
+#' @rdname proceed
 restart <- function(data,time,start=0){
     d<-data$data
     if(start>0){

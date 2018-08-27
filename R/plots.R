@@ -1,6 +1,4 @@
-#' Plots 
-#' 
-#' Plotting functions.
+#' Function for plotting the result of a simulation over time
 #' 
 #' The \code{stackplot} function produces a stacked plot of the population over time.
 #' Notice that the population should have at least two stages for this function to work.

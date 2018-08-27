@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{longevity}
 \alias{longevity}
-\title{longevity}
+\title{Individual longevity}
 \usage{
 longevity(data)
 }

@@ -1,6 +1,6 @@
-#' Create Parameters 
+#' Helper for creating parameters 
 #'
-#' Structures the parameters into the correct format for use in  \link{community}
+#' Structures the parameters into the correct format for use in the function \code{\link{community}}
 #'
 #' @param Ds		An array of death rates for the structured population, of length \code{n}
 #' @param Gs		An array of growth rates for the structured population, of length \code{n-1}
@@ -38,15 +38,15 @@ create.parameters <- function(Ds, Gs, Rs, dispersal, radius, stress, n){
 	data.frame(D=Ds,G=Gs,R=Rs,dispersal=dispersal,radius=radius,stress=stress)
 }
 
-#' abundance matrix
+#' Abundance Matrix from a simulation
 #' 
-#' Returns a matrix with abundances of each life stage/species over time
-#'
+#' This function returns a matrix with abundances of each life stage/species over time.
 #' The rows in the matrix are the lifestages/species id. The times are in the row names. To
 #' visualize the abundance matrix data we recomment the function \code{\link{stackplot}}.
+#'
 #' @param data	result of a simulation, created by \code{\link{community}}
 #' @param times	array of times at which the abundances will be calculated
-#' @param by.age T/F. Use this option to get the number of individuals to reach each age, instead of
+#' @param by.age Logical. Use this option to get the number of individuals to reach each age, instead of
 #' abundances for each time.
 #' @param cap.living Logical. Use this option with by.age=T, to set the time of death of living individuals to max
 #' simulation time. Otherwise, living individuals are excluded from the data. Either way, this data
@@ -105,7 +105,7 @@ abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age
     ab
 }
 
-#' longevity
+#' Individual longevity
 #' 
 #' Calculates the lifespan of each individual. Returns a data.frame with the individual's id,
 #' the last stage reached by that individual, the time of birth, time of death (if dead), and
@@ -113,6 +113,7 @@ abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age
 #'
 #' @param data	result of a simulation, created by \code{\link{community}}
 #' @export
+#' @import stats
 #' @examples
 #' data(malthusian)
 #' longevity(malthusian)

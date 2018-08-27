@@ -2,7 +2,7 @@
 % Please edit documentation in R/plots.R
 \name{stackplot}
 \alias{stackplot}
-\title{Plots}
+\title{Function for plotting the result of a simulation over time}
 \usage{
 stackplot(mat, col, legend, log.y = FALSE, perc = F, qt = 100, ...)
 }
@@ -23,9 +23,6 @@ can be coerced to matrix}
 \item{\dots}{Further parameters to be passed to the lower level plot function}
 }
 \description{
-Plotting functions.
-}
-\details{
 The \code{stackplot} function produces a stacked plot of the population over time.
 Notice that the population should have at least two stages for this function to work.
 }
