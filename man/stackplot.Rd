@@ -12,7 +12,7 @@ can be coerced to matrix}
 
 \item{col}{Optional. A color vector}
 
-\item{legend}{Optional. An array of names}
+\item{legend}{Optional. An array of names with the names of the stages. Use \code{legend=FALSE} to supress the legend.}
 
 \item{log.y}{Logical. Should the y-axis be plotted in a logarithmic scale?}
 
