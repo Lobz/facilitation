@@ -6,7 +6,7 @@
 \usage{
 community(maxtime, numstages, parameters, init, interactionsD, interactionsG,
   interactionsR, height = 100, width = 100, boundary = c("reflexive",
-  "absortive", "periodic"), dispKernel = c("exponential", "random"),
+  "absorptive", "periodic"), dispKernel = c("exponential", "random"),
   starttime = 0, maxpop = 30000, maxid = 0)
 }
 \arguments{
@@ -33,7 +33,7 @@ individual's radius, and are additive. Affects death rates (is subtracted from D
 
 \item{width}{Arena width}
 
-\item{boundary}{Type of boundary condition. Options are "reflexive", "absortive" and
+\item{boundary}{Type of boundary condition. Options are "reflexive", "absorptive" and
 "periodic". Default is reflexive.}
 
 \item{dispKernel}{Type of dispersion kernel. Options are "exponential" and "random", in which

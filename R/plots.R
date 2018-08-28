@@ -115,7 +115,7 @@ spatialanimation = function(data, times=seq(0,data$maxtime,length.out=50), inter
                             radius=data$param$radius[draw],
                             color=colorRampPalette(c("darkred","lightgreen"))(length(draw)),
                             movie.name="facilitationmovie.gif",
-                            xlim=c(0,data$w), ylim=c(0,data$h)
+                            xlim=c(0,data$width), ylim=c(0,data$height)
                             )
 {
     # creates list of dataframes, one for each time
@@ -175,5 +175,6 @@ spatialplot = function(dtlist, times, xlim, ylim, sp,
 #' data(twospecies)
 #' plotsnapshot(twospecies,t=10)
 plotsnapshot <- function(data,t,...) {
+    if (missing(t)) t<-data$maxtime
     spatialanimation(data,c(t,t),...)
 }
