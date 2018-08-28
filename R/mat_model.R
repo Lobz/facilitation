@@ -43,10 +43,14 @@ mat.model <- function(data, ns, combine.matrices=FALSE){
             n<-1
         }
         else {
+            if (sum(ns) != nrow(data))
+                stop("The number of stages in ns does not match the specified parameters")
             n <- length(ns)
         }
     }
     else {
+        if(!missing(ns))
+            warning("Parameter ns is ignored if 'data' is a simulation result")
         rates<-data$param
         n<-data$num.pop
         ns<-data$num.stages
@@ -63,8 +67,8 @@ mat.model <- function(data, ns, combine.matrices=FALSE){
                             mat.model.base(ns[i],r$D,r$G,r$R)
                         }
                     )
-        if(combine.matrices){
-            Matrix::bdiag(Ms)
+        if(combine.matrices){ # It's more clear if the return object is always from the same class
+            as.matrix(Matrix::bdiag(Ms))
         }
         else {
             Ms
@@ -78,6 +82,8 @@ mat.model <- function(data, ns, combine.matrices=FALSE){
 #' @importFrom Matrix expm
 #' @rdname mat.model
 solution.matrix <- function(p0, mat, times = c(1:10)){
+    if(length(p0) != ncol(mat)) 
+        stop("The initial condition must have the same length as the number of stages")
     expm <- function(mat) as.matrix(Matrix::expm(mat))
 
     S <- matrix(nrow=nrow(mat),ncol=length(times))
