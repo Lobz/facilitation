@@ -1,16 +1,15 @@
 context("Boundary conditions")
-# Generates a "blob" of individuals at the limit of the plot to test bound conditions
-set.seed(42)
-rates <- matrix(c(0,0,1),nrow=1)
-base <- community(maxtime=3,numstages=1,parameters=rates,init=20, width=5, height=5, boundary="reflexive")
-base$width = 50
-base$height = 50
-baseh = base
-baseh$data$x = baseh$data$x + 45
-baseh$data$y = baseh$data$y + 45
 #plotsnapshot(results)
 
 test_that("Working boundary conditions", {
+  # Generates a "blob" of individuals at the limit of the plot to test bound conditions
+  set.seed(42)
+  rates <- matrix(c(0,0,1),nrow=1)
+  base <- community(maxtime=3,numstages=1,parameters=rates,init=20, width=5, height=5, boundary="reflexive")
+  base$width = 50
+  base$height = 50
+
+  # Runs different simulations with the three boundary conditions
   refl = proceed(base, 1)
   Nrefl = abundance.matrix(refl)[50]
   abso = base
@@ -46,6 +45,14 @@ test_that("Working boundary conditions", {
 })
 
 test_that("Working boundary conditions for high X/Y", {
+  # Generates a "blob" of individuals at the UPPER limit of the plot to test bound conditions
+  set.seed(42)
+  rates <- matrix(c(0,0,1),nrow=1)
+  baseh <- community(maxtime=3,numstages=1,parameters=rates,init=20, width=5, height=5, boundary="reflexive")
+  baseh$width = 50
+  baseh$height = 50
+  baseh$data$x = baseh$data$x + 45
+  baseh$data$y = baseh$data$y + 45
   refl = proceed(baseh, 1)
   Nrefl = abundance.matrix(refl)[50]
   abso = baseh
@@ -81,4 +88,34 @@ test_that("Working boundary conditions for high X/Y", {
 })
 
 test_that("No dead zones (#18)", {
+  # Generates a "blob" of individuals at the CENTER of the plot to test bound conditions
+  set.seed(42)
+  param <- create.parameters(D=c(2,0,0), G=c(1,0.2), R=1) # create the parameter object
+  effects <- c(0,0,0, 0,-1,0, 0,0,-3)
+  base <- community(20,3,param,c(10,10,10),interactionsD=effects,height=1,width=1)
+  base$width = 20
+  base$height = 20
+  base$data$x = base$data$x + 14.5
+  base$data$y = base$data$y + 14.5
+
+  refl = proceed(base, 200)
+  abso = base
+  abso$boundary = "absorptive"
+  abso = proceed(abso, 200)
+  peri = base
+  peri$boundary = "periodic"
+  peri = proceed(peri, 200)
+
+  expect(any(refl$data$x > 19, na.rm=T), "Dead zones in refl BC")
+  expect(any(refl$data$y > 19, na.rm=T), "Dead zones in refl BC")
+  expect(any(refl$data$x < 1, na.rm=T), "Dead zones in refl BC")
+  expect(any(refl$data$y < 1, na.rm=T), "Dead zones in refl BC")
+  expect(any(abso$data$x > 19, na.rm=T), "Dead zones in abso BC")
+  expect(any(abso$data$y > 19, na.rm=T), "Dead zones in abso BC")
+  expect(any(abso$data$x < 1, na.rm=T), "Dead zones in abso BC")
+  expect(any(abso$data$y < 1, na.rm=T), "Dead zones in abso BC")
+  expect(any(refl$data$x > 19, na.rm=T), "Dead zones in refl BC")
+  expect(any(refl$data$y > 19, na.rm=T), "Dead zones in refl BC")
+  expect(any(refl$data$x < 1, na.rm=T), "Dead zones in refl BC")
+  expect(any(refl$data$y < 1, na.rm=T), "Dead zones in refl BC")
 })
