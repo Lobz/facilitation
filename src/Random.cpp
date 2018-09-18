@@ -1,3 +1,4 @@
+#define STRICT_R_HEADERS
 #include"Random.h"
 #include<Rcpp.h>
 #include<cmath>
