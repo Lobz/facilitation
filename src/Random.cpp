@@ -1,3 +1,4 @@
+#define STRICT_R_HEADERS
 #include"Random.h"
 #include<Rcpp.h>
 #include<cmath>
@@ -26,6 +27,6 @@ short RandomSign(){
 }
 
 Position RandomDirection(){
-	double teta = Random(2*PI);
+	double teta = Random(2*M_PI);
 	return Position(cos(teta),sin(teta));
 }

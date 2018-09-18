@@ -25,7 +25,7 @@ of the plot, half value at the middle of the plot, and so on, proportionally.}
 \item{n}{Number of stages in the population}
 }
 \description{
-Structures the parameters into the correct format for use in the function \code{\link{community}}
+Structures the parameters into the correct format for use in the function \code{\link{community}}. If only the parameter \code{n} is passed, returns random parameters for Ds, Gs, and Rs.
 }
 \examples{
 # create a sample parameters

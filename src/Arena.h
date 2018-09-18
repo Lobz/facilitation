@@ -1,3 +1,4 @@
+#define STRICT_R_HEADERS
 #ifndef ARENA_H
 #define ARENA_H
 #define FACILITATION_NUMPARAMETERS 7

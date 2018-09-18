@@ -1,6 +1,6 @@
 #' Helper for creating parameters 
 #'
-#' Structures the parameters into the correct format for use in the function \code{\link{community}}
+#' Structures the parameters into the correct format for use in the function \code{\link{community}}. If only the parameter \code{n} is passed, returns random parameters for Ds, Gs, and Rs.
 #'
 #' @param Ds		An array of death rates for the structured population, of length \code{n}
 #' @param Gs		An array of growth rates for the structured population, of length \code{n-1}
