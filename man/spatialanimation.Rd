@@ -9,7 +9,7 @@ spatialanimation(data, times = seq(0, data$maxtime, length.out = 50),
   interval = 0.1, draw = data$num.total:1,
   radius = data$param$radius[draw], color = colorRampPalette(c("darkred",
   "lightgreen"))(length(draw)), movie.name = "facilitationmovie.gif",
-  xlim = c(0, data$w), ylim = c(0, data$h))
+  xlim = c(0, data$width), ylim = c(0, data$height))
 
 plotsnapshot(data, t, ...)
 }

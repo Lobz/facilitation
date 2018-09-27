@@ -17,7 +17,7 @@
 #' @param interactionsR	Same as above, but affecting reproduction rates (is added to R) .
 #' @param height	Arena height
 #' @param width		Arena width
-#' @param boundary	Type of boundary condition. Options are "reflexive", "absortive" and
+#' @param boundary	Type of boundary condition. Options are "reflexive", "absorptive" and
 #' "periodic". Default is reflexive.
 #' @param dispKernel	Type of dispersion kernel. Options are "exponential" and "random", in which
 #' seeds are dispersed randomly regardless of parent position (note: "random" option ignores
@@ -37,7 +37,7 @@
 #' @import Rcpp
 community <- function(maxtime, numstages, parameters, init, # the main parameters
                          interactionsD, interactionsG, interactionsR, # interactions
-                         height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
+                         height=100, width=100, boundary=c("reflexive","absorptive","periodic"), # arena properties
                          dispKernel=c("exponential","random"), # type of dispersal
                          starttime=0,
                          maxpop=30000,
@@ -47,7 +47,7 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
 	dispKernel <- match.arg(dispKernel)
 	disp <- switch(dispKernel, random=0,exponential=1)
 	boundary <- match.arg(boundary)
-	bound <- switch(boundary,reflexive=1,absortive=0,periodic=2)
+	bound <- switch(boundary,reflexive=1,absorptive=0,periodic=2)
 
     ntot <- sum(numstages)
     npop <- length(numstages)
