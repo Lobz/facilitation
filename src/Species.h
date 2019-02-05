@@ -9,6 +9,7 @@ class Species {
 	double D, G, R, dispersalRadius, Rad, maxStressEffect;
 	int spnum, kernelType;
 	double totalRate;
+	int rolldown;
 
     Arena *arena;
 	std::list<Individual*> population;

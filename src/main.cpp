@@ -10,6 +10,7 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
         Rcpp::NumericVector interactionsG, 
         Rcpp::NumericVector interactionsR, 
         Rcpp::IntegerVector init, Rcpp::DataFrame history,
+	Rcpp::Function slopefunction,
         bool restore=false, double w=100, double h=100, int bcond=1,
         double starttime=0, int maxpop=30000, int maxid = 0){
     int *in, i,n, n_total=0,*nsts;
@@ -28,7 +29,7 @@ Rcpp::DataFrame simulation(double maxtime, int num_pops, Rcpp::IntegerVector num
         n_total+=nsts[i];
     }
 
-    arena = new Arena(n_total,par,w,h,bcond,starttime);
+    arena = new Arena(n_total,par,w,h,bcond,starttime,slopefunction);
 
     inter = interactionsD.begin();
     arena->setInteractionsD(inter); 

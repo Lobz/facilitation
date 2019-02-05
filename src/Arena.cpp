@@ -1,7 +1,7 @@
 #include"Individual.h"
 #include"Random.h"
 
-Arena::Arena(int maxspid, double *parameters, double w, double h, int bc, double starttime) :maxsp(maxspid),width(w),height(h),bcond(bc) {
+Arena::Arena(int maxspid, double *parameters, double w, double h, int bc, double starttime,Rcpp::Function slfunc) :maxsp(maxspid),width(w),height(h),bcond(bc),slopefunction(slfunc) {
 	int i;
     /* allocates vector of size n+1 so that we can ignore number 0 */
 	species = (Species**)malloc((1+maxsp)*(sizeof(Species*)));
@@ -253,3 +253,8 @@ void Arena::addToHistory(int sp, unsigned long id, double x, double y, double be
 double Arena::getStressValue(Position p){
     return p.x/width;
 }
+
+Position Arena::getSlope(Position p){
+    return Position(0,10);
+} 
+

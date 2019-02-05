@@ -34,9 +34,10 @@ class Arena {
 	Species **species;
 	int bcond;
 	History * history;
+	Rcpp::Function slopefunction;
 
 	public:
-	Arena(int numsp, double * baserates, double width, double height, int bcond, double starttime);
+	Arena(int numsp, double * baserates, double width, double height, int bcond, double starttime, Rcpp::Function slopefunction);
 
 	/* high level functions */
 	void createStructuredSpecies(int minId, int maxId);
@@ -53,6 +54,7 @@ class Arena {
 	std::list<Individual*> getPresent(int species_id, Position p);
 	void addAffectedByMe(Individual *ind);
 	double getStressValue(Position p);
+	Position getSlope(Position p);
 
 	Position boundaryCondition(Position p);
 

@@ -21,6 +21,7 @@
 #' @param dispKernel	Type of dispersion kernel. Options are "exponential" and "random", in which
 #' seeds are dispersed randomly regardless of parent position (note: "random" option ignores
 #' dispersal parameter)
+#' @param slopeFunction	A function with parameters x and y, must return two numbers.
 #' @param starttime 	Use for proceeding simulations. Time when simulation begins.
 #' @param maxpop	If the simulation reaches this many individuals total, it will stop. Default
 #' is 30000.
@@ -38,6 +39,7 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
                          interactionsD, interactionsG, interactionsR, # interactions
                          height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
                          dispKernel=c("exponential","random"), # type of dispersal
+			 slopeFunction=function(x,y){c(0,10)},
                          starttime=0,
                          maxpop=30000,
 			 maxid = 0){
@@ -131,6 +133,7 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
 	# run simulation
 	r <- simulation(maxtime,num_pops=npop,num_stages=numstages,parameters=c(t(M)),
                     interactionsD=interactionsD,interactionsG=interactionsG,interactionsR=interactionsR,
+		    slopefunction=slopeFunction,
                     init=initial,history=hist,restore=restore,h=height,w=width,bcond=bound,
                     starttime=starttime,maxpop=maxpop, maxid=maxid)
 

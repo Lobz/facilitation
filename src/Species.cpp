@@ -24,6 +24,7 @@ Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, 
         interactionsR[i]=0;
     }
     totalRate = 0;
+    rolldown=1; /* TODO make this settable */
 }
 
 Species::~Species(){
@@ -79,12 +80,19 @@ void Species::disperseIndividual(double x, double y){
 }
 
 void Species::disperseIndividual(Position p){
+    Position newPosition;
     if(kernelType==0){ /* Fully random on the arena */
-        seedStage->addIndividual(Position(Random(arena->getWidth()),Random(arena->getHeight())));
+        newPosition = Position(Random(arena->getWidth()),Random(arena->getHeight()));
     }
     else{
-        seedStage->addIndividual(p + dispersalKernel());
+        newPosition = p + dispersalKernel();
     }
+
+    if(rolldown){
+        newPosition += arena->getSlope(newPosition);
+    }
+
+    seedStage->addIndividual(newPosition);
 }
 
 Position Species::dispersalKernel(){
