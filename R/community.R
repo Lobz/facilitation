@@ -149,6 +149,7 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
 
 	list(data = r,num.pop = npop, num.total = ntot, num.stages = numstages, maxtime=maxtime,
 	     interactions=inter,param=data.frame(M),
+	     slopeFunction=slopeFunction,
 	     init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel)
 }
 
@@ -174,6 +175,7 @@ proceed <- function(data,time){
                    interactionsR=data$interactions$R, 
                    height=data$height,width=data$width,
                    boundary=data$boundary,dispKernel=data$dispKernel,
+		   slopeFunction=data$slopeFunction,
                    starttime=last.event.time, maxid = maxid)
 
     r<-c$data
@@ -210,6 +212,7 @@ restart <- function(data,time,start=0){
               interactionsG=data$interactions$G, 
               interactionsR=data$interactions$R, 
               height=data$height,width=data$width,
+	      slopeFunction=data$slopeFunction,
               boundary=data$boundary,dispKernel=data$dispKernel,
 	      maxid=maxid)
 }
