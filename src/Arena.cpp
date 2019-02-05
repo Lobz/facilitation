@@ -255,6 +255,7 @@ double Arena::getStressValue(Position p){
 }
 
 Position Arena::getSlope(Position p){
-    return Position(0,10);
+	Rcpp::NumericVector slope = slopefunction(p.x,p.y);
+	return Position(slope[0],slope[1]);
 } 
 
