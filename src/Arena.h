@@ -1,6 +1,6 @@
 #ifndef ARENA_H
 #define ARENA_H
-#define FACILITATION_NUMPARAMETERS 7
+#define FACILITATION_NUMPARAMETERS 8
 
 #include<list>
 #include<cstdlib>

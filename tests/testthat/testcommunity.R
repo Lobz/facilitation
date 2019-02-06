@@ -6,7 +6,7 @@ test_that("Basic community usage", {
   results <- community(maxtime=2.45,numstages=1,parameters=rates,init=11, height=189.9, width=91.1)
   # The resulting object should be a names list, with a predictable structure
   expect_equal(class(results), "list")
-  expect_equal(names(results), c("data","num.pop","num.total","num.stages","maxtime","interactions","param","init","height","width","boundary","dispKernel"))
+  expect_equal(names(results), c("data","num.pop","num.total","num.stages","maxtime","interactions","param","slopeFunction","init","height","width","boundary","dispKernel"))
   expect_equal(names(results$data), c("sp","id","x","y","begintime","endtime"))
   # Some general expectations from this simulation
   expect(all(results$data$sp ==1), "Wrong sp labels")

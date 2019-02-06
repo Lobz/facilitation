@@ -2,10 +2,10 @@
 #include"Random.h"
 #include<cstdio>
 
-Species::Species(Arena *ar,int myid, double *par) : Species(ar,myid,par[0],par[1],par[2],par[3],par[4],par[5],par[6]){}
+Species::Species(Arena *ar,int myid, double *par) : Species(ar,myid,par[0],par[1],par[2],par[3],par[4],par[5],par[6],par[7]){}
 
-Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, double dispersal=0, double radius=0, double maxEf=0, int dkernel=1)
-    :id(myid),D(death),G(growth),R(rep),dispersalRadius(dispersal),Rad(radius),maxStressEffect(maxEf),kernelType(dkernel)
+Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, double dispersal=0, double radius=0, double maxEf=0, int dkernel=1, int rolldown=0)
+    :id(myid),D(death),G(growth),R(rep),dispersalRadius(dispersal),Rad(radius),maxStressEffect(maxEf),kernelType(dkernel),rolldown(rolldown)
 {
     int i;
     nextStage = NULL;
@@ -24,7 +24,6 @@ Species::Species(Arena *ar,int myid, double death, double growth, double rep=0, 
         interactionsR[i]=0;
     }
     totalRate = 0;
-    rolldown=1; /* TODO make this settable */
 }
 
 Species::~Species(){

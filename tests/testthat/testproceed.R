@@ -15,7 +15,7 @@ test_that("Basic proceed usage", {
   procB <- proceed(resultsB, 1.24)
 
   expect_equal(class(procA), "list")
-  expect_equal(names(procA), c("data","num.pop","num.total","num.stages","maxtime","interactions","param","init","height","width","boundary","dispKernel"))
+  expect_equal(names(procA), c("data","num.pop","num.total","num.stages","maxtime","interactions","param","slopeFunction","init","height","width","boundary","dispKernel"))
   expect_equal(names(procA$data), c("sp","id","x","y","begintime","endtime"))
   expect(all(procA$data$sp == 1), "Wrong sp labels")
   expect(any(procB$data$sp == 2), "Wrong sp labels")

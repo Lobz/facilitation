@@ -19,7 +19,7 @@ class Species {
 
 	public:
 	Species(Arena *ar,int id, double *par);
-	Species(Arena *ar,int id, double D, double G, double R, double dispersal, double Rad, double maxStressEffect, int dkernel);
+	Species(Arena *ar,int id, double D, double G, double R, double dispersal, double Rad, double maxStressEffect, int dkernel, int rolldown);
 	~Species();
 	/* BASIC RUN ACTION */
 	void act();
