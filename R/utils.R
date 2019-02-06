@@ -150,3 +150,20 @@ age.data <- function(data,cap.living=F){
     data$age.data <- do.call("rbind",b)
 }
 
+# shading by size
+#
+# a structure to add the effect of living under the canopy of bigger lifestages
+#
+# @param param
+shade.smaller <- function(param,effect,unaffected=c(),no.canopy=c()){
+	n<-nrow(param)
+	mat<-matrix(0,n,n)
+	# fill according to size
+	mat[param$radius[col(mat)] < param$radius[row(mat)]] <- effect
+	# remove
+	mat[no.canopy,]<-0
+	mat[,unaffected]<-0
+	mat
+}
+
+
