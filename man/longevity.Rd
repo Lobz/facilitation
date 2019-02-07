@@ -16,5 +16,5 @@ longevity (if dead).
 }
 \examples{
 data(malthusian)
-longevity(malthusian)
+malthusian.longevity <- longevity(malthusian)
 }

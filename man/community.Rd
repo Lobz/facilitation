@@ -4,9 +4,10 @@
 \alias{community}
 \title{Main simulation function}
 \usage{
-community(maxtime, numstages, parameters, init, interactionsD, interactionsG,
-  interactionsR, height = 100, width = 100, boundary = c("reflexive",
-  "absorptive", "periodic"), dispKernel = c("exponential", "random"),
+community(maxtime, numstages, parameters, init, interactionsD,
+  interactionsG, interactionsR, height = 100, width = 100,
+  boundary = c("reflexive", "absorptive", "periodic"),
+  dispKernel = c("exponential", "random"), slopeFunction = NULL,
   starttime = 0, maxpop = 30000, maxid = 0)
 }
 \arguments{
@@ -39,6 +40,8 @@ individual's radius, and are additive. Affects death rates (is subtracted from D
 \item{dispKernel}{Type of dispersion kernel. Options are "exponential" and "random", in which
 seeds are dispersed randomly regardless of parent position (note: "random" option ignores
 dispersal parameter)}
+
+\item{slopeFunction}{A function with parameters x and y, must return two numbers.}
 
 \item{starttime}{Use for proceeding simulations. Time when simulation begins.}
 
