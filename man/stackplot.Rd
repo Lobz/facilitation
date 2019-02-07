@@ -2,7 +2,7 @@
 % Please edit documentation in R/plots.R
 \name{stackplot}
 \alias{stackplot}
-\title{Plots}
+\title{Function for plotting the result of a simulation over time}
 \usage{
 stackplot(mat, col, legend, log.y = FALSE, perc = F, qt = 100, ...)
 }
@@ -12,7 +12,7 @@ can be coerced to matrix}
 
 \item{col}{Optional. A color vector}
 
-\item{legend}{Optional. An array of names}
+\item{legend}{Optional. An array of names with the names of the stages. Use \code{legend=FALSE} to supress the legend.}
 
 \item{log.y}{Logical. Should the y-axis be plotted in a logarithmic scale?}
 
@@ -23,9 +23,6 @@ can be coerced to matrix}
 \item{\dots}{Further parameters to be passed to the lower level plot function}
 }
 \description{
-Plotting functions.
-}
-\details{
 The \code{stackplot} function produces a stacked plot of the population over time.
 Notice that the population should have at least two stages for this function to work.
 }

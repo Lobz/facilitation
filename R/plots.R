@@ -1,6 +1,4 @@
-#' Plots 
-#' 
-#' Plotting functions.
+#' Function for plotting the result of a simulation over time
 #' 
 #' The \code{stackplot} function produces a stacked plot of the population over time.
 #' Notice that the population should have at least two stages for this function to work.
@@ -8,7 +6,7 @@
 #' @param mat A population matrix, as produced by \code{\link{abundance.matrix}} or something that
 #' can be coerced to matrix
 #' @param col Optional. A color vector
-#' @param legend Optional. An array of names
+#' @param legend Optional. An array of names with the names of the stages. Use \code{legend=FALSE} to supress the legend.
 #' @param log.y Logical. Should the y-axis be plotted in a logarithmic scale?
 #' @param perc Logical. If set to true, will output the y-axis as a percentage instead of the absolute numbers
 #' @param qt Optional. For distributions, show only up to quantile qt (percentage)
@@ -26,7 +24,6 @@
 stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 	dots <- list(...)
 	if(missing(col))
-		#col <- terrain.colors(dim(mat)[2])
 		col <- colorRampPalette(c("darkred","pink"))(dim(mat)[2])
 	if (log.y) {
 		minp <- 1
@@ -76,13 +73,15 @@ stackplot <- function(mat, col, legend, log.y = FALSE, perc=F, qt=100, ...) {
 		y <- c(mat[,i], rev(mat[,i+1]))
 		polygon(x,y, col=col[i])
 	}
-    if(N>1){ # legend is unnecessary if N==1
+    if(N>1) { # legend is unnecessary if N==1
         if (missing(legend)) { 
             if(N == 2) legend <- c("Juveniles", "Adults")
             if(N == 3) legend <- c("Seeds", "Juveniles", "Adults")
             if(N > 3) legend <- c(1:N)
         }
-        legend("topleft", legend=legend, fill=col, bg="white")
+        if (!identical(legend, FALSE)) { # Only displays legend if it was not explicitly disabled by argument
+            legend("topleft", legend=legend, fill=col, bg="white")
+        }
     }
 }
 
@@ -117,7 +116,7 @@ spatialanimation = function(data, times=seq(0,data$maxtime,length.out=50), inter
                             radius=data$param$radius[draw],
                             color=colorRampPalette(c("darkred","lightgreen"))(length(draw)),
                             movie.name="facilitationmovie.gif",
-                            xlim=c(0,data$w), ylim=c(0,data$h)
+                            xlim=c(0,data$width), ylim=c(0,data$height)
                             )
 {
     # creates list of dataframes, one for each time
@@ -177,5 +176,6 @@ spatialplot = function(dtlist, times, xlim, ylim, sp,
 #' data(twospecies)
 #' plotsnapshot(twospecies,t=10)
 plotsnapshot <- function(data,t,...) {
+    if (missing(t)) t<-data$maxtime
     spatialanimation(data,c(t,t),...)
 }

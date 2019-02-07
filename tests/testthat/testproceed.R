@@ -9,7 +9,7 @@ test_that("Basic proceed usage", {
   ratesA <- matrix(c(0,0,1),nrow=1)
   ratesB <- matrix(c(0.01,0,0,0,0.1,0.1),nrow=2)
   resultsA <- community(maxtime=2.96,numstages=1,parameters=ratesA,init=20, height=81, width=72)
-  resultsB <- community(maxtime=1.76,numstages=c(1,1),parameters=ratesB,init=c(15,10), boundary="absortive")
+  resultsB <- community(maxtime=1.76,numstages=c(1,1),parameters=ratesB,init=c(15,10), boundary="absorptive")
 
   procA <- proceed(resultsA, 1.04)
   procB <- proceed(resultsB, 1.24)
@@ -28,10 +28,9 @@ test_that("Basic proceed usage", {
   # Passed arguments should be returned
   expect_equal(procA$width, 72)
   expect_equal(procA$height, 81)
-  expect_equal(procB$boundary, "absortive")
+  expect_equal(procB$boundary, "absorptive")
   expect_equal(procB$num.stages, c(1,1))
   expect_equal(procA$maxtime, 4.00) 
   expect_equal(procB$maxtime, 3.00) 
   expect_equal(as.numeric(procA$param[1:3]), as.numeric(ratesA))
 })
-# TODO: test that proceeded simulation is really compatible with previous object

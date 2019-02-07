@@ -1,11 +1,12 @@
-#' community
+#' Main simulation function
 #'
 #' Runs a simulation with any number of structured populations, for a limited time.
+#' See the vignette for a detailed explanation of each parameter and use cases.
 #' 
 #' @param maxtime 	How long the simulation must run
 #' @param numstages Array of number of stages for each population
 #' @param parameters 	Data.frame or matrix with one row for each stage. Columns:
-#' D,G,R,dispersal distance,radius(optional),maxstressefect (optional)
+#' D, G, R, dispersal distance, radius (optional), maxstressefect (optional). See \code{\link{create.parameters}}
 #' @param init		Either an array of initial numbers for each stage of each population, or a
 #' data.frame with the history of a simulation
 #' @param interactionsD	Optional. A square matrix of effects of life stages over each other, where element
@@ -16,7 +17,7 @@
 #' @param interactionsR	Same as above, but affecting reproduction rates (is added to R) .
 #' @param height	Arena height
 #' @param width		Arena width
-#' @param boundary	Type of boundary condition. Options are "reflexive", "absortive" and
+#' @param boundary	Type of boundary condition. Options are "reflexive", "absorptive" and
 #' "periodic". Default is reflexive.
 #' @param dispKernel	Type of dispersion kernel. Options are "exponential" and "random", in which
 #' seeds are dispersed randomly regardless of parent position (note: "random" option ignores
@@ -37,7 +38,7 @@
 #' @import Rcpp
 community <- function(maxtime, numstages, parameters, init, # the main parameters
                          interactionsD, interactionsG, interactionsR, # interactions
-                         height=100, width=100, boundary=c("reflexive","absortive","periodic"), # arena properties
+                         height=100, width=100, boundary=c("reflexive","absorptive","periodic"), # arena properties
                          dispKernel=c("exponential","random"), # type of dispersal
 			 slopeFunction=NULL,
                          starttime=0,
@@ -48,7 +49,7 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
 	dispKernel <- match.arg(dispKernel)
 	disp <- switch(dispKernel, random=0,exponential=1)
 	boundary <- match.arg(boundary)
-	bound <- switch(boundary,reflexive=1,absortive=0,periodic=2)
+	bound <- switch(boundary,reflexive=1,absorptive=0,periodic=2)
 
 	# slopeFunction
 	if (is.null(slopeFunction)){
@@ -173,12 +174,13 @@ community <- function(maxtime, numstages, parameters, init, # the main parameter
 	     init=init,height=height,width=width,boundary=boundary,dispKernel=dispKernel)
 }
 
-#' proceed
+#' Proceeding / restarting a simulation
 #'
-#' Proceed with a stopped simulation.
+#' The function \code{proceed} proceeds with a stopped simulation. The function \code{restart} 
+#' turns back time and restarts a simulation from time t.
 #'
 #' @param data result of a simulation, created by \code{\link{community}}
-#' @param time a number: for how long to extend the simulation
+#' @param time numeric: for how long to extend the simulation
 #' @export
 proceed <- function(data,time){
     d<-data$data
@@ -204,16 +206,9 @@ proceed <- function(data,time){
     c
 }
 
-#' restart
-#'
-#' Turn back time and restart a simulation from time t
-#'
-#' @param data result of a simulation, created by \code{\link{community}}
-#' @param time a number: for how long to extend the simulation
-#' @param start a number: an instant in time to begin from
-#'
-#'
+#' @param start numeric: an instant in time to begin from
 #' @export
+#' @rdname proceed
 restart <- function(data,time,start=0){
     d<-data$data
     if(start>0){

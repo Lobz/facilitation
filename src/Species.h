@@ -1,3 +1,4 @@
+#define STRICT_R_HEADERS
 #ifndef SPECIES_H
 #define SPECIES_H
 

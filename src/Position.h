@@ -1,3 +1,4 @@
+#define STRICT_R_HEADERS
 #ifndef POSITION_H
 #define POSITION_H
 class Position {

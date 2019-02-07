@@ -2,9 +2,15 @@
 % Please edit documentation in R/mat_model.R
 \name{mat.model}
 \alias{mat.model}
-\title{matrix population model}
+\alias{solution.matrix}
+\alias{limiting.rate}
+\title{Functions for matrix population model}
 \usage{
 mat.model(data, ns, combine.matrices = FALSE)
+
+solution.matrix(p0, mat, times = c(1:10))
+
+limiting.rate(mat)
 }
 \arguments{
 \item{data}{Either the result of a simulation, to extract the parameters from, or a
@@ -14,21 +20,42 @@ data.frame containing the parameters.}
 more than one population.}
 
 \item{combine.matrices}{Logical. Combine the matrices into a single, multi-population matrix?}
+
+\item{p0}{initial condition, as an array}
+
+\item{mat}{a square matrix}
+
+\item{times}{an array containing the times in which to calculate the solution}
 }
 \description{
-Produces the Matrix Population Model matrix for a continuous time structured
-population model, to be applied in a linear ODE. If there is more than one population,
+These functions produce the matrix population model matrices for a continuous time structured population model.
+Function \code{mat.model} receives as an input the result of a simulation (from function \code{community}), or a
+data.frame containing the model parameters
+If there is more than one population,
 returns a list of matrices, or one block-diagonal matrix created by the combination.
+The \code{solution.matrix} function returns the solution to a linear ODE of the form P' = MP,
+which is merely P(t) = exp(Mt)p0 where p0 is the initial condition.
+The function \code{limiting.rate} returns the real dominant eigenvalue of a Matrix Population Model matrix. 
+That is a real number that corresponds to the per-capita growth rate that a population
+approaches as time passes, in a model with no interactions.
+A structured population can grow at exactly this rate if the
+distribution between stages corresponds exactly to the distribution of the dominant
+eigenvector. The models that can be simulated by this package are of a class that always
+has a real dominant eigenvector. Note that these are continuous-time models, in which r >
+0 means the population will grow, and r < 0 means it will decrease. This function doesn't
+throw errors, instead it returns 'NA'.
 }
 \examples{
-# example 1
-mat.model(create.parameters(n=4))
+# Generating a mat model from random parameters and exploring the solution matrix
+mat <- mat.model(create.parameters(n=4))
+solution.matrix(c(1,0,0,0),mat)
 
-# example 2 
+# Extracting the mat model from a simulation object and checking the limiting rate
 data(malthusian)
-mat.model(malthusian)
+mat <- mat.model(malthusian)
+limiting.rate(mat)
 
-# example 3
+# Working with more than one species
 data(twospecies)
 mat.model(twospecies,combine.matrices=TRUE)
 }

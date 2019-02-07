@@ -1,3 +1,4 @@
+#define STRICT_R_HEADERS
 #include<cstdlib>
 #ifndef _RANDOM_MINE
 #define _RANDOM_MINE

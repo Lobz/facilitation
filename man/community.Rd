@@ -2,11 +2,11 @@
 % Please edit documentation in R/community.R
 \name{community}
 \alias{community}
-\title{community}
+\title{Main simulation function}
 \usage{
 community(maxtime, numstages, parameters, init, interactionsD, interactionsG,
   interactionsR, height = 100, width = 100, boundary = c("reflexive",
-  "absortive", "periodic"), dispKernel = c("exponential", "random"),
+  "absorptive", "periodic"), dispKernel = c("exponential", "random"),
   starttime = 0, maxpop = 30000, maxid = 0)
 }
 \arguments{
@@ -15,7 +15,7 @@ community(maxtime, numstages, parameters, init, interactionsD, interactionsG,
 \item{numstages}{Array of number of stages for each population}
 
 \item{parameters}{Data.frame or matrix with one row for each stage. Columns:
-D,G,R,dispersal distance,radius(optional),maxstressefect (optional)}
+D, G, R, dispersal distance, radius (optional), maxstressefect (optional). See \code{\link{create.parameters}}}
 
 \item{init}{Either an array of initial numbers for each stage of each population, or a
 data.frame with the history of a simulation}
@@ -33,7 +33,7 @@ individual's radius, and are additive. Affects death rates (is subtracted from D
 
 \item{width}{Arena width}
 
-\item{boundary}{Type of boundary condition. Options are "reflexive", "absortive" and
+\item{boundary}{Type of boundary condition. Options are "reflexive", "absorptive" and
 "periodic". Default is reflexive.}
 
 \item{dispKernel}{Type of dispersion kernel. Options are "exponential" and "random", in which
@@ -49,6 +49,7 @@ is 30000.}
 }
 \description{
 Runs a simulation with any number of structured populations, for a limited time.
+See the vignette for a detailed explanation of each parameter and use cases.
 }
 \examples{
 param <- data.frame(D=c(2,1,2,1),G=c(2,0,2,0),R=c(0,3,0,3),dispersal=c(0,2,0,20))

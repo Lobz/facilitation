@@ -1,3 +1,4 @@
+#define STRICT_R_HEADERS
 #include"Position.h"
 
 Position operator+(Position lhs, const Position& rhs)

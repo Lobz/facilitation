@@ -39,4 +39,4 @@ test_that("Community should not allow incorrect parameters", {
 
 })
 
-# TODO: test multiple stages / populations / interactions
+# TODO: test multiple stages / populations. Interactions go on their own file

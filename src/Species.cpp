@@ -1,3 +1,4 @@
+#define STRICT_R_HEADERS
 #include"Individual.h"
 #include"Random.h"
 #include<cstdio>

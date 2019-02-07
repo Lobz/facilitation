@@ -1,3 +1,4 @@
+#define STRICT_R_HEADERS
 #ifndef INDIVIDUAL_H
 #define INDIVIDUAL_H
 
