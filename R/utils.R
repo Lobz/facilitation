@@ -116,7 +116,7 @@ abundance.matrix <- function(data,times=seq(0,data$maxtime,length.out=50),by.age
 #' @import stats
 #' @examples
 #' data(malthusian)
-#' longevity(malthusian)
+#' malthusian.longevity <- longevity(malthusian)
 longevity <- function(data){
     d <- data$data[with(data$data,order(-endtime)),] #orders by endtime, last to first
     ind.life <- function(i){c(i$sp[1],i$id[1],min(i$begintime),i$endtime[1])}
